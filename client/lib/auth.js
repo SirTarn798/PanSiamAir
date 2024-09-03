@@ -31,7 +31,6 @@ export async function signIn(credential) {
     credential.password.trim(),
     user.password.trim()
   );
-  console.log(status);
   if (status) {
     const data = {
       id: user.id,
