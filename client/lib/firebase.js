@@ -3,7 +3,7 @@ import {getStorage} from "firebase/storage"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyACC2AOoQTvbf-tqfFh_q0orlgNO4sHrAQ",
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "centralair-a7c32.firebaseapp.com",
   projectId: "centralair-a7c32",
   storageBucket: "centralair-a7c32.appspot.com",

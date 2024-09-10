@@ -26,7 +26,6 @@ export default function Login() {
       if (response.status === 201) {
         const data = await response.json();
         dispatch(setId(data.user.id));
-        console.log(data.user);
       }
     } catch (err) {
       console.log(err.message);

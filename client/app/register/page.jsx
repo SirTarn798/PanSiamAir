@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-
+import "./register.css";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../lib/firebase";
 
@@ -14,22 +13,29 @@ export default function Register() {
   const [pic, setPic] = useState("/user.png");
   const [pfp, setPfp] = useState({
     file: null,
-    url: null,
+    url: "/user.png",
   });
   const [pfpStatus, setPfpStatus] = useState(false);
 
   const register = async (e) => {
     e.preventDefault();
-    // const response = await fetch("/api/registerApi", {
-    //   method: "POST",
-    //   headers: {
-    //     "content-type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     email: email,
-    //     password: password,
-    //   }),
-    // });
+    try {
+      const response = await fetch("/api/registerApi", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+      if(pfp.file != null) {
+        handleUploadPfp();
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   async function upload(file) {
@@ -38,7 +44,6 @@ export default function Register() {
     try {
       const snapshot = await uploadBytesResumable(storageRef, file);
       const imageLink = await getDownloadURL(snapshot.ref);
-      console.log(imageLink);
       return imageLink;
     } catch (err) {
       console.log(err);
@@ -85,11 +90,9 @@ export default function Register() {
         className="flex flex-col items-center rounded-xl w-3/12 p-8 bg-white gap-4 text-black"
       >
         <h1 className="text-6xl mb-6 font-bold">Sign Up</h1>
-        <div>
-          <Image
+        <div className="rounded-full">
+          <img
             src={pic}
-            width={100}
-            height={100}
             alt="user"
             onMouseEnter={() => setPic("/user-hovered.png")}
             onMouseLeave={() => {
@@ -97,7 +100,7 @@ export default function Register() {
               setPic(pfp.url);
             }}
             onClick={handleImageClick}
-            className="cursor-pointer rounded-full"
+            className="cursor-pointer profile"
           />
         </div>
         <input
@@ -134,7 +137,6 @@ export default function Register() {
         <button
           type="submit"
           className="text-white bg-rose-500 p-5 w-64 rounded drop-shadow-md cursor-pointer"
-          onClick={handleUploadPfp}
         >
           Sign Up
         </button>
