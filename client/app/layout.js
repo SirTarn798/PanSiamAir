@@ -1,6 +1,7 @@
 import "./globals.css";
 import { UserProvider } from "@/state/UserProvider";
 import Header from "./component/header";
+import NavBar from "./component/navBar";
 
 export default function RootLayout({ children }) {
   return (
@@ -8,7 +9,10 @@ export default function RootLayout({ children }) {
       <body>
         <UserProvider>
           <Header />
-          {children}
+          <div className="flex">
+            <NavBar />
+            {children}
+          </div>
         </UserProvider>
       </body>
     </html>
