@@ -25,7 +25,6 @@ export default function Chat() {
   return(
     <div className="flex gap-20">
       <input type="text" placeholder="message"></input>
-      <h1>xdd</h1>
       <button onClick={sendMsg} className="bg-white">Send</button>
     </div>
   )

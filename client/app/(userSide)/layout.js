@@ -1,7 +1,7 @@
-import "./globals.css";
+import "../globals.css";
 import { UserProvider } from "@/state/UserProvider";
-import Header from "./component/header";
-import NavBar from "./component/navBar";
+import Header from "../component/header";
+import NavBar from "../component/navBar";
 
 export default function RootLayout({ children }) {
   return (

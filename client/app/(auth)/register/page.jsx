@@ -3,7 +3,7 @@
 import { useState } from "react";
 import "./register.css";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../../lib/firebase";
+import { storage } from "../../../lib/firebase";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -30,7 +30,7 @@ export default function Register() {
           password: password,
         }),
       });
-      if(pfp.file != null) {
+      if (pfp.file != null) {
         handleUploadPfp();
       }
     } catch (err) {
