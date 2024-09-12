@@ -1,4 +1,4 @@
-import { signIn } from "@/lib/auth";
+import { signIn } from "../../../lib/auth";
 import { NextResponse } from "next/server";
 
 export const POST = async (request) => {
