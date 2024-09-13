@@ -1,17 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ListAC from "../component/listAC"
 
 export default function Home() {
   const userId = useSelector((state) => state.user.id); // Fetch the user id from Redux store
   const [id, setId] = useState("");
-  const [acs, setACs] = useState(null);
+  const [acs, setACs] = useState([]);
 
   useEffect(() => {
     if (userId) {
-      setId(userId); // Only set id when userId exists
+      setId(userId);
     }
-  }, [userId]); // Dependency array with userId
+  }, [userId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,17 +26,17 @@ export default function Home() {
             id,
           }),
         });
-        const data = await response.json()
-        console.log(data.acs);
+        const data = await response.json();
+        setACs(data.acs);
       } catch (err) {
         console.log(err.message);
       }
     };
 
     if (id) {
-      fetchData(); // Fetch data only when id is set
+      fetchData();
     }
-  }, [id]); // Dependency array with id
+  }, [id]);
 
   return (
     <main className="flex flex-col w-screen h-screen p-16">
@@ -49,6 +50,10 @@ export default function Home() {
           <p>สถานะการซ่อม</p>
           <p></p>
         </div>
+        {acs.map((ac) => {
+          console.log(ac)
+          return <ListAC ac={ac}/>
+        })}
       </div>
     </main>
   );
