@@ -1,12 +1,55 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function Home() {
-  const id = useSelector((state) => state.user.id);
-  console.log(id);
+  const userId = useSelector((state) => state.user.id); // Fetch the user id from Redux store
+  const [id, setId] = useState("");
+  const [acs, setACs] = useState(null);
+
+  useEffect(() => {
+    if (userId) {
+      setId(userId); // Only set id when userId exists
+    }
+  }, [userId]); // Dependency array with userId
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/getAC", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            id,
+          }),
+        });
+        const data = await response.json()
+        console.log(data.acs);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+
+    if (id) {
+      fetchData(); // Fetch data only when id is set
+    }
+  }, [id]); // Dependency array with id
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>Welcome</h1>
+    <main className="flex flex-col w-screen h-screen p-16">
+      <button className="self-end">+ เพิ่มรายการแอร์</button>
+      <div className="flex flex-col w-full bg-primaryBg rounded-t">
+        <div className="grid grid-cols-6 grid-rows-1 border-solid border-b-2 border-black p-3">
+          <p>หมายเลขเครื่อง</p>
+          <p>รุ่น</p>
+          <p>ที่อยู่</p>
+          <p>สถานะประกัน</p>
+          <p>สถานะการซ่อม</p>
+          <p></p>
+        </div>
+      </div>
     </main>
   );
 }
