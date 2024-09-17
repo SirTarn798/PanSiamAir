@@ -9,6 +9,7 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const login = async (e) => {
     e.preventDefault();
@@ -26,6 +27,9 @@ export default function Login() {
       if (response.status === 201) {
         const data = await response.json();
         dispatch(setId(data.user.id));
+      }
+      else if(response.status === 401) {
+        setError("Wrong email or password")
       }
     } catch (err) {
       console.log(err.message);
@@ -59,6 +63,7 @@ export default function Login() {
           Login
         </button>
         <h4 className="self-end text-rose-500 hover:underline underline-offset-1 cursor-pointer">Don't have an account?</h4>
+        <p className="text-red-500">{error}</p>
       </form>
     </div>
   );

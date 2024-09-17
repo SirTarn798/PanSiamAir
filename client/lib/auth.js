@@ -27,17 +27,22 @@ export async function signIn(credential) {
       email: credential.email,
     },
   });
-  const status = await compare(
-    credential.password.trim(),
-    user.password.trim()
-  );
-  if (status) {
-    const data = {
-      id: user.id,
-      email: user.email,
-    };
-    await login(data);
-    return data;
+  if (user) {
+    const status = await compare(
+      credential.password.trim(),
+      user.password.trim()
+    );
+    if (status) {
+      const data = {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      };
+      await login(data);
+      return data;
+    }
+  } else {
+    return;
   }
 }
 
