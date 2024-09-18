@@ -27,9 +27,14 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/admin", request.url));
       } else if (
         decryptedSession.user.role === "CUSTOMER" &&
-        pathname !== "/"
+        ["/", "/fixing"].includes(pathname)
       ) {
-        return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.next();
+      } else if (
+        decryptedSession.user.role === "SERVICE" &&
+        !(pathname.startsWith("/service"))
+      ) {
+        return NextResponse.redirect(new URL("/service", request.url));
       }
     } else {
       if (pathname !== "/login") {
@@ -58,6 +63,14 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/login", "/register", "/chat", "/add-ac", "/", "/admin", "/fixing"],
+  matcher: [
+    "/login",
+    "/register",
+    "/chat",
+    "/add-ac",
+    "/",
+    "/fixing",
+    "/admin/:path*",
+    "/service/:path*",
+  ],
 };
-

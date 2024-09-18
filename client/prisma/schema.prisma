@@ -11,9 +11,9 @@ generator client {
 enum Role {
   ADMIN
   CUSTOMER
-  SERVICE_D
+  SERVICE
   HEAD
-  MECH
+  MECHANIC
   STORE
   FINANCE
 }
@@ -22,8 +22,10 @@ model User {
   id       String          @id @default(uuid())
   email    String          @unique
   password String
+  tel      String
+  name     String
   WC       WARRANTY_CARD[]
-  role Role @default(CUSTOMER)
+  role     Role            @default(CUSTOMER)
 }
 
 model message {
@@ -37,14 +39,13 @@ model message {
 model WARRANTY_CARD {
   WC_Serial            String   @id @default(uuid())
   WC_Model             String
-  Customer             User     @relation(fields: [C_ID], references: [id])
-  C_ID                 String
+  Customer             User?    @relation(fields: [C_ID], references: [id])
+  C_ID                 String?
   WC_Store             String
   WC_Status            String
   WC_Address           String
-  WC_Image_link        String
+  WC_Image_link        String?
   WC_Installation_date DateTime
-  WC_Auth              Boolean
 }
 
 datasource db {

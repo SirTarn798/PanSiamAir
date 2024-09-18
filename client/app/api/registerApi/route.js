@@ -9,9 +9,13 @@ export const POST = async (request) => {
       data: {
         email: body.email,
         password: hashedPassword,
+        role: body.role,
+        tel: body.tel,
+        name: body.name,
       },
     });
   } catch (err) {
+    console.log(err.message)
     return new NextResponse(err.message, {
       status: 500,
     });

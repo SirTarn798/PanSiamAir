@@ -9,7 +9,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [num, setNum] = useState("");
+  const [tel, setTel] = useState("");
   const [pic, setPic] = useState("/user.png");
   const [pfp, setPfp] = useState({
     file: null,
@@ -28,6 +28,9 @@ export default function Register() {
         body: JSON.stringify({
           email: email,
           password: password,
+          tel: tel,
+          name: name,
+          role: "CUSTOMER"
         }),
       });
       if (pfp.file != null) {
@@ -127,11 +130,13 @@ export default function Register() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="p-2 w-64 bg-zinc-200 rounded"
+          required
+          minLength={8}
         />
         <input
           placeholder="Phone Number"
-          value={num}
-          onChange={(e) => setNum(e.target.value)}
+          value={tel}
+          onChange={(e) => setTel(e.target.value)}
           className="p-2 w-64 bg-zinc-200 rounded"
         />
         <button

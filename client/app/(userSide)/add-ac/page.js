@@ -17,7 +17,6 @@ export default function AddAC() {
     const ACData = Object.fromEntries(formData);
     ACData.C_ID = id;
     try {
-      console.log("ddx");
       // const reponse = await fetch("/api/addWC", {
       //   method: "POST",
       //   headers: {
