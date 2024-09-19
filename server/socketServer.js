@@ -13,8 +13,11 @@ const expressServer = app.listen(port, () => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-let userSockets = {};
-let userIds = {};
+let cusSockets = {};
+let cusIds = {};
+
+let serSockets = {};
+let serIds = {};
 
 const io = new Server(expressServer, {
   cors: {
@@ -23,24 +26,42 @@ const io = new Server(expressServer, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("register", (userId) => {
-    userSockets[userId] = socket.id;
-    userIds[socket.id] = userId;
+  socket.on("cusRegister", (userId) => {
+    cusSockets[userId] = socket.id;
+    cusIds[socket.id] = userId;
   });
 
-  socket.on("sendMsg", async (data) => {
-    if (userSockets[data.receiver]) {
-      io.to(userSockets[data.receiver]).emit("receiveMsg", data.message);
+  socket.on("serRegister", (userId) => {
+    serSockets[userId] = socket.id;
+    serIds[socket.id] = userId;
+  });
+
+  socket.on("cusSendMsg", async (data) => {
+    for (const [userId, socketId] of Object.entries(serSockets)) {
+      io.to(socketId).emit("receiveMsg", data.message);
     }
-    const sender = userIds[socket.id];
     await prisma.message.create({
       data: {
         message: data.message,
-        sender,
-        receiver: data.receiver,
+        sender: data.sender,
+        receiver: "services",
       },
     });
   });
+
+  // socket.on("sendMsg", async (data) => {
+  //   if (cusSockets[data.receiver]) {
+  //     io.to(cusSockets[data.receiver]).emit("receiveMsg", data.message);
+  //   }
+  //   const sender = userIds[socket.id];
+  //   await prisma.message.create({
+  //     data: {
+  //       message: data.message,
+  //       sender,
+  //       receiver: data.receiver,
+  //     },
+  //   });
+  // });
 });
 
 const corsOptions = {

@@ -2,11 +2,14 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ListAC from "../component/listAC"
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const userId = useSelector((state) => state.user.id); // Fetch the user id from Redux store
   const [id, setId] = useState("");
   const [acs, setACs] = useState([]);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (userId) {
@@ -40,7 +43,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col w-screen h-screen p-16">
-      <button className="self-end">+ เพิ่มรายการแอร์</button>
+      <button className="self-end" onClick={() => router.push("/add-ac")}>+ เพิ่มรายการแอร์</button>
       <div className="flex flex-col w-full bg-primaryBg rounded-t">
         <div className="grid grid-cols-6 grid-rows-1 border-solid border-b-2 border-black p-3">
           <p>หมายเลขเครื่อง</p>

@@ -6,16 +6,15 @@ import { io } from "socket.io-client";
 export default function Chat() {
   const id = useSelector((state) => state.user.id);
   const socket = io("ws://localhost:4000");
-  socket.emit("register", id);
+  socket.emit("cusRegister", id);
 
   const sendMsg = (e) => {
     e.preventDefault();
     const data = {
       message: "hello",
       sender: id,
-      receiver: "e52ec850-2e3d-422b-99b4-5ae821c49d48"
     }
-    socket.emit("sendMsg", data);
+    socket.emit("cusSendMsg", data);
   }
 
   socket.on("receiveMsg", data => {

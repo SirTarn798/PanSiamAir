@@ -4,6 +4,7 @@ import { useState } from "react";
 import "./register.css";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../lib/firebase";
+import upload from "../../../lib/upload";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -30,7 +31,7 @@ export default function Register() {
           password: password,
           tel: tel,
           name: name,
-          role: "CUSTOMER"
+          role: "CUSTOMER",
         }),
       });
       if (pfp.file != null) {
@@ -41,30 +42,18 @@ export default function Register() {
     }
   };
 
-  async function upload(file) {
-    let date = new Date();
-    let storageRef = ref(storage, `images/${date + file.name}`);
-    try {
-      const snapshot = await uploadBytesResumable(storageRef, file);
-      const imageLink = await getDownloadURL(snapshot.ref);
-      return imageLink;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   const handleUploadPfp = async (e) => {
     if (pfp.file) {
       const link = "http://localhost:3000/uploadPfp";
       try {
-        const uploadPfp = await upload(pfp.file);
-        // const response = await fetch(link, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({ link: uploadPfp, userid: currentUser }),
-        // });
+        const uploadPfp = await upload(pfp.file, "profiles");
+        const response = await fetch(link, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ link: uploadPfp, userid: currentUser }),
+        });
       } catch (err) {
         console.log(err.message);
       }

@@ -3,6 +3,7 @@
 import BackBtn from "@/app/component/backBtn";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import upload from "@/lib/upload";
 
 export default function AddAC() {
   const id = useSelector((state) => state.user.id);
@@ -10,24 +11,43 @@ export default function AddAC() {
     file: null,
     url: "",
   });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleAddAC = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const ACData = Object.fromEntries(formData);
-    ACData.C_ID = id;
+    const WCData = Object.fromEntries(formData);
+    if (!wc.file) {
+      setError("โปรดอัปโหลดรูปใบรับประกันด้วย");
+      return;
+    }
+    const wcPicLink = await upload(wc.file, "wcs");
+    WCData.C_ID = id;
+    WCData.wcPicLink = wcPicLink;
     try {
-      // const reponse = await fetch("/api/addWC", {
-      //   method: "POST",
-      //   headers: {
-      //     "content-type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     ACData,
-      //   }),
-      // });
+      const reponse = await fetch("/api/assignACtoCustomer", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          WCData,
+        }),
+      });
+      if (reponse.status === 201) {
+        setError(null);
+        setSuccess("ทำการเพิ่มแอร์สำเร็จแล้ว");
+      } else if (reponse.status === 400) {
+        setSuccess(null);
+        setError("ข้อมูลไม่ถูกต้อง");
+      } else if (reponse.status === 500) {
+        setSuccess(null);
+        setError("มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง");
+      }
     } catch (err) {
-      console.log(err.message);
+      setSuccess(null);
+      setError("มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง");
     }
   };
 
@@ -64,13 +84,15 @@ export default function AddAC() {
             onClick={handleImageClick}
           />
         </div>
-        <img src={wc.url} className="w-4/12 h-auto"/>
+        <img src={wc.url} className="w-4/12 h-auto" />
         <input
           type="file"
           id="fileInput"
           style={{ display: "none" }}
           onChange={handleFileChange}
         />
+        <p className="text-lime-500">{success}</p>
+        <p className="text-rose-500">{error}</p>
         <button className="bg-primary w-28 p-2 rounded-3xl self-center">
           บันทึกข้อมูล
         </button>

@@ -7,7 +7,7 @@ export default function ListAC(props) {
       <p>{ac.WC_Model}</p>
       <p>{ac.WC_Address}</p>
       <p>สถานะประกัน</p>
-      <p>สถานะการซ่อม</p>
+      <p>{ac.WC_Status}</p>
       <p></p>
     </div>
   );
