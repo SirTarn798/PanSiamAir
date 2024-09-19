@@ -49,6 +49,18 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("serSendMsg", async (data) => {
+    if (cusSockets[data.receiver]) {
+      io.to(cusSockets[data.receiver]).emit("receiveMsg", data.message);
+    }
+    await prisma.message.create({
+      data: {
+        message: data.message,
+        sender: "services",
+        receiver: data.receiver,
+      },
+    });
+  });
   // socket.on("sendMsg", async (data) => {
   //   if (cusSockets[data.receiver]) {
   //     io.to(cusSockets[data.receiver]).emit("receiveMsg", data.message);
