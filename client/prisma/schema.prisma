@@ -26,6 +26,7 @@ model User {
   name     String
   WC       WARRANTY_CARD[]
   role     Role            @default(CUSTOMER)
+  profile  String          @default("/user.png")
 }
 
 model message {

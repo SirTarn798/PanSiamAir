@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
     if (session) {
       const decryptedSession = (await decrypt(session)) as Session;
 
-      if (decryptedSession.user.role === "ADMIN" && pathname !== "/admin") {
+      if (decryptedSession.user.role === "ADMIN" && !(pathname.startsWith("/admin"))) {
         return NextResponse.redirect(new URL("/admin", request.url));
       } else if (
         decryptedSession.user.role === "CUSTOMER" &&

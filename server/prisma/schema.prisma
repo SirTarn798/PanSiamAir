@@ -8,18 +8,45 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  ADMIN
+  CUSTOMER
+  SERVICE
+  HEAD
+  MECHANIC
+  STORE
+  FINANCE
+}
+
 model User {
-  id       String @id @default(uuid())
-  email    String @unique
+  id       String          @id @default(uuid())
+  email    String          @unique
   password String
+  tel      String
+  name     String
+  WC       WARRANTY_CARD[]
+  role     Role            @default(CUSTOMER)
+  profile  String          @default("/user.png")
 }
 
 model message {
-  id String @id @default(uuid())
-  message String?
-  image String?
-  sender String
+  id       String  @id @default(uuid())
+  message  String?
+  image    String?
+  sender   String
   receiver String
+}
+
+model WARRANTY_CARD {
+  WC_Serial            String   @id @default(uuid())
+  WC_Model             String
+  Customer             User?    @relation(fields: [C_ID], references: [id])
+  C_ID                 String?
+  WC_Store             String
+  WC_Status            String
+  WC_Address           String
+  WC_Image_link        String?
+  WC_Installation_date DateTime
 }
 
 datasource db {

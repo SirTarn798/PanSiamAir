@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import "./register.css";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../../../lib/firebase";
 import upload from "../../../lib/upload";
 
 export default function Register() {
@@ -21,6 +19,10 @@ export default function Register() {
   const register = async (e) => {
     e.preventDefault();
     try {
+      let pfpLink = "/user.png"
+      if (pfp.file != null) {
+        pfpLink = await upload(pfp.file, "profiles");
+      }
       const response = await fetch("/api/registerApi", {
         method: "POST",
         headers: {
@@ -32,31 +34,11 @@ export default function Register() {
           tel: tel,
           name: name,
           role: "CUSTOMER",
+          profile: pfpLink
         }),
       });
-      if (pfp.file != null) {
-        handleUploadPfp();
-      }
     } catch (err) {
       console.log(err.message);
-    }
-  };
-
-  const handleUploadPfp = async (e) => {
-    if (pfp.file) {
-      const link = "http://localhost:3000/uploadPfp";
-      try {
-        const uploadPfp = await upload(pfp.file, "profiles");
-        const response = await fetch(link, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ link: uploadPfp, userid: currentUser }),
-        });
-      } catch (err) {
-        console.log(err.message);
-      }
     }
   };
 

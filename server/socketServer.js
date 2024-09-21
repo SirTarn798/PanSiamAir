@@ -3,6 +3,9 @@ import { Server } from "socket.io";
 import bodyParser from "body-parser";
 import cors from "cors";
 import prisma from "./lib/db.cjs";
+import { configDotenv } from "dotenv";
+
+configDotenv.apply();
 
 const app = express();
 const port = 4000;
@@ -29,6 +32,7 @@ io.on("connection", (socket) => {
   socket.on("cusRegister", (userId) => {
     cusSockets[userId] = socket.id;
     cusIds[socket.id] = userId;
+    console.log(socket.id);
   });
 
   socket.on("serRegister", (userId) => {
@@ -50,6 +54,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("serSendMsg", async (data) => {
+    console.log(dotenv)
     if (cusSockets[data.receiver]) {
       io.to(cusSockets[data.receiver]).emit("receiveMsg", data.message);
     }
@@ -61,19 +66,6 @@ io.on("connection", (socket) => {
       },
     });
   });
-  // socket.on("sendMsg", async (data) => {
-  //   if (cusSockets[data.receiver]) {
-  //     io.to(cusSockets[data.receiver]).emit("receiveMsg", data.message);
-  //   }
-  //   const sender = userIds[socket.id];
-  //   await prisma.message.create({
-  //     data: {
-  //       message: data.message,
-  //       sender,
-  //       receiver: data.receiver,
-  //     },
-  //   });
-  // });
 });
 
 const corsOptions = {

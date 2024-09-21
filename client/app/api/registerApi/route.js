@@ -12,6 +12,7 @@ export const POST = async (request) => {
         role: body.role,
         tel: body.tel,
         name: body.name,
+        profile: body.profile
       },
     });
   } catch (err) {

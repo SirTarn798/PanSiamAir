@@ -8,7 +8,7 @@ export default function Chat() {
   const id = useSelector((state) => state.user.id);
   const [msg, setMsg] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [text, setText] = useState("")
+  const [text, setText] = useState("");
 
   useEffect(() => {
     const newSocket = io("ws://localhost:4000");
@@ -43,7 +43,7 @@ export default function Chat() {
     if (!socket) return;
 
     const data = {
-      message: "hello",
+      message: text,
       sender: id,
     };
     socket.emit("cusSendMsg", data);
@@ -71,20 +71,20 @@ export default function Chat() {
           <img src="/user.png" height={50} width={50} alt="User" />
           <h1 className="text-white text-3xl font-bold">ADMIN</h1>
         </div>
-        <div className="h-full bg-white">
-          {/* {msg.map(message)} */}
-        </div>
+        <div className="h-full bg-white">{/* {msg.map(message)} */}</div>
         <div className="flex gap-5 w-full pt-5">
           <input
             type="text"
             placeholder="message"
             className="bg-white p-2 rounded w-full"
+            value={text}
+            onChange={(e) => {
+              setText(e.target.value);
+            }}
           />
           <button
             onClick={sendMsg}
             className="p-2 px-5 rounded bg-primary text-white font-bold"
-            value={text}
-            onChange={(e) => {setText(e.target.value)}}
           >
             Send
           </button>
