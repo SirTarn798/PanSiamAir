@@ -1,12 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Message from "@/app/component/message";
 
 export default function ChatPanel(props) {
-
   const [text, setText] = useState("");
+  const messagesEndRef = useRef(null);
+
   const sendMsg = () => {
-    props.sendMsg(text);
-  }
+    if (text.trim()) {
+      props.sendMsg(text);
+      setText("");
+    }
+  };
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [props]); // Scroll when messages change
 
   return (
     <div className="flex flex-col bg-primaryBg rounded p-5 w-full">
@@ -20,10 +34,13 @@ export default function ChatPanel(props) {
           {props.chat ? props.chat.user.name : ""}
         </h1>
       </div>
-      <div className="flex flex-col bg-white h-screen gap-1 overflow-scroll overflow-x-hidden	">
+      <div className="flex flex-col bg-white h-screen gap-1 overflow-scroll overflow-x-hidden">
         {props.chat?.messages.map((message) => {
-          return <Message message={message} side={props.side} key={message.id}/>;
+          return (
+            <Message message={message} side={props.side} key={message.id} />
+          );
         })}
+        <div ref={messagesEndRef} />
       </div>
       <div className="flex gap-5 w-full pt-5">
         <input
@@ -33,11 +50,11 @@ export default function ChatPanel(props) {
           onChange={(e) => {
             setText(e.target.value);
           }}
+          value={text}
         />
         <button
           onClick={sendMsg}
           className="p-2 px-5 rounded bg-primary text-white font-bold"
-          value={text}
         >
           Send
         </button>

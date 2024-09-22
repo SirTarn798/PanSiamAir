@@ -70,6 +70,7 @@ export default function Chat() {
       message: text,
       sender: "services",
       receiver: cusId,
+      dateTime: new Date()
     };
     socket.emit("serSendMsg", data);
   };

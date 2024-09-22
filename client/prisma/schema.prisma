@@ -30,11 +30,12 @@ model User {
 }
 
 model message {
-  id       String  @id @default(uuid())
+  id       String   @id @default(uuid())
   message  String?
   image    String?
   sender   String
   receiver String
+  dateTime DateTime @default(now())
 }
 
 model WARRANTY_CARD {

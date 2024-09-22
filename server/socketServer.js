@@ -32,7 +32,6 @@ io.on("connection", (socket) => {
   socket.on("cusRegister", (userId) => {
     cusSockets[userId] = socket.id;
     cusIds[socket.id] = userId;
-    console.log(socket.id);
   });
 
   socket.on("serRegister", (userId) => {
@@ -65,8 +64,20 @@ io.on("connection", (socket) => {
         message: data.message,
         sender: "services",
         receiver: data.receiver,
+        dateTime: data.dateTime
       },
     });
+  });
+
+  socket.on("disconnect", () => {
+    const userId = cusIds[socket.id] || serIds[socket.id];
+    if (cusIds[socket.id]) {
+      delete cusSockets[userId];
+      delete cusIds[socket.id];
+    } else if (serIds[socket.id]) {
+      delete serSockets[userId];
+      delete serIds[socket.id];
+    }
   });
 });
 
