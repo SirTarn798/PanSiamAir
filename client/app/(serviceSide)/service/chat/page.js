@@ -32,7 +32,6 @@ export default function Chat() {
           throw new Error("Failed to fetch chats");
         }
         const data = await response.json();
-        console.log(data);
         setChats(data);
       } catch (error) {
         console.error("Error fetching chats:", error);
