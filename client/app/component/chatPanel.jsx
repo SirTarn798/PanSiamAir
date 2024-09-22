@@ -1,7 +1,13 @@
 import { useState } from "react";
+import Message from "@/app/component/message";
 
 export default function ChatPanel(props) {
+
   const [text, setText] = useState("");
+  const sendMsg = () => {
+    props.sendMsg(text);
+  }
+
   return (
     <div className="flex flex-col bg-primaryBg rounded p-5 w-full">
       <div className="flex w-full justify-end p-3 bg-primary gap-6 items-center rounded-t">
@@ -14,7 +20,11 @@ export default function ChatPanel(props) {
           {props.chat ? props.chat.user.name : ""}
         </h1>
       </div>
-      <div className="flex flex-col bg-white h-screen"></div>
+      <div className="flex flex-col bg-white h-screen gap-1 overflow-scroll overflow-x-hidden	">
+        {props.chat?.messages.map((message) => {
+          return <Message message={message} side={props.side} key={message.id}/>;
+        })}
+      </div>
       <div className="flex gap-5 w-full pt-5">
         <input
           type="text"
@@ -25,7 +35,7 @@ export default function ChatPanel(props) {
           }}
         />
         <button
-          onClick={props.sendMsg}
+          onClick={sendMsg}
           className="p-2 px-5 rounded bg-primary text-white font-bold"
           value={text}
         >

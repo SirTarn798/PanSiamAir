@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import ChatBox from "../../../component/chatBox";
-import ChatPanel from "../../../component/chatPanel"
+import ChatPanel from "../../../component/chatPanel";
 
 export default function Chat() {
   const id = useSelector((state) => state.user.id);
 
   const [chats, setChats] = useState([]);
   const [chat, setChat] = useState();
+  const [cusId, setCusId] = useState();
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -43,30 +44,39 @@ export default function Chat() {
 
   useEffect(() => {
     if (!socket) return;
+    socket.emit("serRegister", id);
 
-    // Register user
-    socket.emit("resRegister", id);
+    // Handle incoming messages, but ensure it's not being re-attached
+    const handleMessage = (data) => {
+      setChats((prevChats) => {
+        const updatedChats = { ...prevChats };
 
-    // Handle incoming messages
-    socket.on("receiveMsg", (data) => {
-      //logic
-    });
+        updatedChats[data.receiver].messages.push(data);
 
-    // Cleanup on component unmount or socket change
-    return () => {
-      socket.off("receiveMsg");
+        return updatedChats;
+      });
     };
-  }, [socket, id]);
 
-  const sendMsg = (e) => {
-    e.preventDefault();
+    socket.on("receiveMsg", handleMessage);
+    return () => {
+      socket.off("receiveMsg", handleMessage);
+    };
+  }, [socket]);
+
+  const sendMsg = (text) => {
     if (!socket) return;
 
     const data = {
-      message: "hello",
+      message: text,
       sender: "services",
+      receiver: cusId,
     };
     socket.emit("serSendMsg", data);
+  };
+
+  const handleClickChat = (userId) => {
+    setChat(chats[userId]);
+    setCusId(userId);
   };
 
   return (
@@ -74,11 +84,26 @@ export default function Chat() {
       <div className="w-3/12 mr-3.5">
         <h2 className="font-extrabold text-3xl">รายการแชท</h2>
         {Object.entries(chats)?.map(([userId, chatData]) => {
-          return <ChatBox key={userId} chat={chatData} onClick={() => setChat(chatData)}/>;
+          return (
+            <ChatBox
+              key={userId}
+              chat={chatData}
+              onClick={() => handleClickChat(userId)}
+            />
+          );
         })}
       </div>
 
-      <ChatPanel setText={sendMsg} chat={chat}/>
+      {cusId ? (
+        <ChatPanel
+          sendMsg={sendMsg}
+          chat={chat}
+          side={"services"}
+          key={cusId}
+        />
+      ) : (
+        <div className="w-full"></div>
+      )}
     </div>
   );
 }

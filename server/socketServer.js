@@ -54,9 +54,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on("serSendMsg", async (data) => {
-    console.log(dotenv)
     if (cusSockets[data.receiver]) {
       io.to(cusSockets[data.receiver]).emit("receiveMsg", data.message);
+    }
+    for (const [userId, socketId] of Object.entries(serSockets)) {
+      io.to(socketId).emit("receiveMsg", data);
     }
     await prisma.message.create({
       data: {
