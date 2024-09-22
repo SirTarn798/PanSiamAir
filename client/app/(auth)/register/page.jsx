@@ -80,6 +80,7 @@ export default function Register() {
         <input
           type="file"
           id="fileInput"
+          accept="image/*"
           style={{ display: "none" }}
           onChange={handleFileChange}
         />

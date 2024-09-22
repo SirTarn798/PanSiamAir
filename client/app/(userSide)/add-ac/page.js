@@ -88,6 +88,7 @@ export default function AddAC() {
         <input
           type="file"
           id="fileInput"
+          accept="image/*"
           style={{ display: "none" }}
           onChange={handleFileChange}
         />

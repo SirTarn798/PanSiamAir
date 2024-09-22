@@ -1,9 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import Message from "@/app/component/message";
+import upload from "@/lib/upload";
 
 export default function ChatPanel(props) {
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
+  const [pic, setPic] = useState({
+    file: null,
+    url: "",
+  });
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [props]); // Scroll when messages change
 
   const sendMsg = () => {
     if (text.trim()) {
@@ -18,9 +27,26 @@ export default function ChatPanel(props) {
     }
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [props]); // Scroll when messages change
+  const handleFileChange = async (e) => {
+    if (e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+
+      setPic({
+        file: selectedFile,
+        url: URL.createObjectURL(selectedFile),
+      });
+
+      try {
+        const imgLink = await upload(selectedFile, "chats");
+
+        if (imgLink) {
+          props.sendPic(imgLink);
+        }
+      } catch (error) {
+        console.error("Upload failed:", error);
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col bg-primaryBg rounded p-5 w-full">
@@ -51,6 +77,21 @@ export default function ChatPanel(props) {
             setText(e.target.value);
           }}
           value={text}
+        />
+        <img
+          src="/photo.png"
+          alt="upload photo"
+          className="h-10 cursor-pointer"
+          onClick={() => {
+            document.getElementById("fileInput").click();
+          }}
+        />
+        <input
+          type="file"
+          id="fileInput"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={handleFileChange}
         />
         <button
           onClick={sendMsg}

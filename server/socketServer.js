@@ -61,7 +61,8 @@ io.on("connection", (socket) => {
     }
     await prisma.message.create({
       data: {
-        message: data.message,
+        message: data.message ? data.message : null,
+        image: data.image ? data.image : null,
         sender: "services",
         receiver: data.receiver,
         dateTime: data.dateTime

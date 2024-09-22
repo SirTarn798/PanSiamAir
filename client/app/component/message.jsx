@@ -18,7 +18,7 @@ export default function Message(props) {
           : "bg-red-200 place-self-start")
       }
     >
-      <p className="text-black break-words">{props.message.message}</p>
+      {props.message.message ? <p className="text-black break-words">{props.message.message}</p> : <img src={props.message.image}/>}
       <p className="text-xs text-zinc-500">
         {formatDistance(new Date(props.message.dateTime), new Date(), {
           addSuffix: true,

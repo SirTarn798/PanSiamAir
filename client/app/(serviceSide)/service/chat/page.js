@@ -74,6 +74,19 @@ export default function Chat() {
     socket.emit("serSendMsg", data);
   };
 
+  const sendPic = (picLink) => {
+    if (!socket) return;
+
+    const data = {
+      image : picLink,
+      sender: "services",
+      receiver: cusId,
+      dateTime: new Date()
+    };
+    socket.emit("serSendMsg", data);
+  };
+  
+
   const handleClickChat = (userId) => {
     setChat(chats[userId]);
     setCusId(userId);
@@ -97,6 +110,7 @@ export default function Chat() {
       {cusId ? (
         <ChatPanel
           sendMsg={sendMsg}
+          sendPic={sendPic}
           chat={chat}
           side={"services"}
           key={cusId}
