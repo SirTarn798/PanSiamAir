@@ -45,13 +45,12 @@ export default function Home() {
     <main className="flex flex-col w-screen h-screen p-16">
       <button className="self-end" onClick={() => router.push("/add-ac")}>+ เพิ่มรายการแอร์</button>
       <div className="flex flex-col w-full bg-primaryBg rounded-t">
-        <div className="grid grid-cols-6 grid-rows-1 border-solid border-b-2 border-black p-3">
+        <div className="grid grid-cols-5 grid-rows-1 border-solid border-b-2 border-black p-3">
           <p>หมายเลขเครื่อง</p>
           <p>รุ่น</p>
           <p>ที่อยู่</p>
           <p>สถานะประกัน</p>
           <p>สถานะการซ่อม</p>
-          <p></p>
         </div>
         {acs.map((ac) => {
           console.log(ac)

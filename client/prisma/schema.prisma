@@ -39,15 +39,24 @@ model message {
 }
 
 model WARRANTY_CARD {
-  WC_Serial            String   @id @default(uuid())
+  WC_Serial            String    @id @default(uuid())
   WC_Model             String
-  Customer             User?    @relation(fields: [C_ID], references: [id])
+  Customer             User?     @relation(fields: [C_ID], references: [id])
   C_ID                 String?
   WC_Store             String
   WC_Status            String
   WC_Address           String
   WC_Image_link        String?
   WC_Installation_date DateTime
+  Request              Request[]
+}
+
+model Request {
+  id        String        @id @default(uuid())
+  WC_Serial String
+  WC        WARRANTY_CARD @relation(fields: [WC_Serial], references: [WC_Serial])
+  Detail    String
+  Status    String
 }
 
 datasource db {
