@@ -50,7 +50,11 @@ export default function Chat() {
       setChats((prevChats) => {
         const updatedChats = { ...prevChats };
 
-        updatedChats[data.receiver].messages.push(data);
+        if (data.sender != "services") {
+          updatedChats[data.sender].messages?.push(data);
+        } else {
+          updatedChats[data.receiver].messages?.push(data);
+        }
 
         return updatedChats;
       });
@@ -69,7 +73,7 @@ export default function Chat() {
       message: text,
       sender: "services",
       receiver: cusId,
-      dateTime: new Date()
+      dateTime: new Date(),
     };
     socket.emit("serSendMsg", data);
   };
@@ -78,14 +82,13 @@ export default function Chat() {
     if (!socket) return;
 
     const data = {
-      image : picLink,
+      image: picLink,
       sender: "services",
       receiver: cusId,
-      dateTime: new Date()
+      dateTime: new Date(),
     };
     socket.emit("serSendMsg", data);
   };
-  
 
   const handleClickChat = (userId) => {
     setChat(chats[userId]);

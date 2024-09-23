@@ -41,20 +41,22 @@ io.on("connection", (socket) => {
 
   socket.on("cusSendMsg", async (data) => {
     for (const [userId, socketId] of Object.entries(serSockets)) {
-      io.to(socketId).emit("receiveMsg", data.message);
+      io.to(socketId).emit("receiveMsg", data);
     }
     await prisma.message.create({
       data: {
-        message: data.message,
+        message: data.message ? data.message : null,
+        image: data.image ? data.image : null,
         sender: data.sender,
         receiver: "services",
+        dateTime: data.dateTime,
       },
     });
   });
 
   socket.on("serSendMsg", async (data) => {
     if (cusSockets[data.receiver]) {
-      io.to(cusSockets[data.receiver]).emit("receiveMsg", data.message);
+      io.to(cusSockets[data.receiver]).emit("receiveMsg", data);
     }
     for (const [userId, socketId] of Object.entries(serSockets)) {
       io.to(socketId).emit("receiveMsg", data);
@@ -65,7 +67,7 @@ io.on("connection", (socket) => {
         image: data.image ? data.image : null,
         sender: "services",
         receiver: data.receiver,
-        dateTime: data.dateTime
+        dateTime: data.dateTime,
       },
     });
   });

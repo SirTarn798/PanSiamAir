@@ -2,9 +2,10 @@ import { formatDistance, subDays } from "date-fns";
 
 export default function Message(props) {
   let senderSelf;
+  
   if (props.side === "services" && props.message.sender === "services") {
     senderSelf = true;
-  } else if (props.side === "cus" && props.message.sender === props.id) {
+  } else if (props.side === "customer" && props.message.sender === props.id) {
     senderSelf = true;
   } else {
     senderSelf = false;
