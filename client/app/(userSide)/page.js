@@ -5,7 +5,7 @@ import ListAC from "../component/listAC"
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const userId = useSelector((state) => state.user.id); // Fetch the user id from Redux store
+  const userId = useSelector((state) => state.user.id);
   const [id, setId] = useState("");
   const [acs, setACs] = useState([]);
 
