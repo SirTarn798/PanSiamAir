@@ -4,11 +4,14 @@ import prisma from "../../../lib/db";
 export const POST = async (request) => {
   try {
     const body = await request.json();
-    
-    const ac = await prisma.wARRANTY_CARD.findUnique({
+
+    const ac = await prisma.wARRANTY_CARD.update({
       where: {
         C_ID: body.id,
         WC_Serial: body.serial,
+      },
+      data: {
+        WC_Status: "รอพิจารณาซ่อม",
       },
     });
 
@@ -16,8 +19,18 @@ export const POST = async (request) => {
       return NextResponse.json({ error: "AC does not exist" }, { status: 400 });
     }
 
-    return NextResponse.json({ ac }, { status: 201 });
+    await prisma.request.create({
+      data: {
+        WC: {
+          connect: {
+            WC_Serial: body.serial,
+          },
+        },
+        Detail: body.detail,
+      },
+    });
 
+    return NextResponse.json({ ac }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

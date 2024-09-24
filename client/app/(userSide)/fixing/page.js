@@ -8,15 +8,23 @@ import { useSelector } from "react-redux";
 
 export default function FixRequest() {
   const searchParams = useSearchParams();
-  const serial = searchParams.get("serial");
+  const serial = searchParams.get("serial") || ""; // Ensure serial is a string
   const id = useSelector((state) => state.user.id);
   const [status, setStatus] = useState(true);
   const [ac, setAC] = useState(null);
+  const [detail, setDetail] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!serial) {
+      setStatus(false);
+    }
+  }, [serial]);
 
   useEffect(() => {
     const getACInfo = async () => {
       try {
-        const response = await fetch("/api/verifyAC", {
+        const response = await fetch("/api/accessFixingAC", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -46,10 +54,36 @@ export default function FixRequest() {
   if (!status) {
     return (
       <div className="flex flex-col w-screen h-screen pl-16 pt-5 pr-3 items-center justify-center">
-        <p className="text-white bg-primary p-4">!! ข้อมูลไม่ถูกต้อง คุณไม่มีสิทธิ์จัดการแอร์ตัวนี้ หรือระบบอาจมีปัญหา กรุณารอก่อนลองอีกครั้ง !!</p>
+        <p className="text-white bg-primary p-4">
+          !! ข้อมูลที่กรอกไม่ถูกต้อง คุณไม่มีสิทธิ์จัดการแอร์ตัวนี้
+          ระบบอาจมีปัญหา หรือแอร์กำลังอยู่ในกระบวนการซ่อม กรุณาลองอีกครั้ง !!
+        </p>
       </div>
-    ); 
+    );
   }
+
+  const submit = async () => {
+    try {
+      const response = await fetch("/api/sendFixRequest", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          serial,
+          detail,
+          id,
+        }),
+      });
+      if (response.status === 201) {
+        alert("ท่านได้ส่งเรื่องซ่อมแล้ว");
+      } else {
+        throw new Error("ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   return (
     <div className="flex flex-col w-screen h-screen pl-16 pt-5 pr-3">
@@ -69,8 +103,18 @@ export default function FixRequest() {
           </div>
         </div>
         <h1>รายละเอียดปัญหา</h1>
-        <textarea type="text" className="h-20" />
-        <SubmitBtn />
+        <textarea
+          type="text"
+          className="h-20"
+          value={detail}
+          onChange={(e) => {
+            setDetail(e.target.value);
+          }}
+          placeholder="Provide additional details about the issue"
+          required
+        />
+        <p className="text-rose-500">{error}</p>
+        <SubmitBtn submit={submit} />
       </div>
     </div>
   );
