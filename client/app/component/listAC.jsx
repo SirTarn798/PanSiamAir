@@ -41,7 +41,7 @@ export default function ListAC(props) {
         className={"rounded-lg w-fit p-2 " + status[ac.WC_Status]}
         onClick={handleFixRequest}
       >
-        {ac.WC_Status}
+        {ac.WC_Status === "สถานะปกติ" ? "แจ้งซ่อม" : ac.WC_Status}
       </p>
     </div>
   );

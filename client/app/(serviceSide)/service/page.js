@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Request from "@/app/component/request"
 
 export default function Service() {
   const [reqState, setReqState] = useState(1);
+  const [requests, setRequests] = useState();
 
   const getRequest = async (state, type) => {
     setReqState(state);
     try {
-      const response = await fetch("getRequests", {
+      const response = await fetch("api/getRequests", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -17,10 +19,17 @@ export default function Service() {
           type,
         }),
       });
+      const data = await response.json();
+      console.log(data.requests)
+      setRequests(data.requests);
     } catch (error) {
       console.log(err.message);
     }
   };
+
+  useEffect(() => {
+    getRequest(1, "waiting");
+  }, []);
 
   return (
     <div className="flex flex-col gap-10 w-screen h-screen p-10">
@@ -31,7 +40,7 @@ export default function Service() {
             "p-4 hover:bg-primary rounded-full cursor-pointer " +
             (reqState === 1 ? "bg-primary" : "")
           }
-          onClick={() => getRequest(1, "wait")}
+          onClick={() => getRequest(1, "waiting")}
         >
           รอการยืนยัน
         </p>
@@ -54,6 +63,9 @@ export default function Service() {
           ดำเนินการเสร็จสิ้น
         </p>
       </div>
+      {requests?.map((request) => {
+        return <Request request={request}/>
+      })}
     </div>
   );
 }

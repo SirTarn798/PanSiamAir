@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import BackBtn from "../../component/backBtn";
 import SubmitBtn from "../../component/submitBtn";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ export default function FixRequest() {
   const [ac, setAC] = useState(null);
   const [detail, setDetail] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     if (!serial) {
@@ -77,6 +78,7 @@ export default function FixRequest() {
       });
       if (response.status === 201) {
         alert("ท่านได้ส่งเรื่องซ่อมแล้ว");
+        router.push("/")
       } else {
         throw new Error("ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
       }
@@ -110,7 +112,7 @@ export default function FixRequest() {
           onChange={(e) => {
             setDetail(e.target.value);
           }}
-          placeholder="Provide additional details about the issue"
+          placeholder="กรอกรายละเอียดปัญหา"
           required
         />
         <p className="text-rose-500">{error}</p>
