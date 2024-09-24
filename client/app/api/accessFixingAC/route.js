@@ -16,7 +16,7 @@ export const POST = async (request) => {
       where : {
         WC_Serial: body.serial, // This should be body.serial since it refers to WC_Serial
         Status: {
-          not : "เสร็จสิ้น",
+          not : "finished",
         },
       },
     });

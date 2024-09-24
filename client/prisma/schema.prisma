@@ -56,7 +56,7 @@ model Request {
   WC_Serial String
   WC        WARRANTY_CARD @relation(fields: [WC_Serial], references: [WC_Serial])
   Detail    String
-  Status    String        @default("รอพิจารณา")
+  Status    String        @default("waiting")
 }
 
 datasource db {
