@@ -1,3 +1,7 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 export default function Request(props) {
   let insurance;
   const installationDate = new Date(props.request.WC.WC_Installation_date);
@@ -10,6 +14,9 @@ export default function Request(props) {
   } else {
     insurance = false;
   }
+
+  const router = useRouter();
+
   return (
     <div className="flex flex-col bg-primaryBg rounded p-5 w-8/12">
       <div className="grid grid-cols-4 grid-rows-3 gap-3">
@@ -32,7 +39,12 @@ export default function Request(props) {
         <p className="font-bold">เบอร์โทร</p>
         <p>{props.request.WC.Customer.tel}</p>
       </div>
-      <p className="mt-10 p-3 bg-primary rounded-full w-fit justify-end self-end font-bold cursor-pointer">ดูรายละเอียด</p>
+      <p
+        className="mt-10 p-3 bg-primary rounded-full w-fit justify-end self-end font-bold cursor-pointer"
+        onClick={() => {router.push(`/request?id=${props.request.id}`)}}
+      >
+        ดูรายละเอียด
+      </p>
     </div>
   );
 }
