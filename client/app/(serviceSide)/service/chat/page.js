@@ -5,25 +5,30 @@ import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import ChatBox from "../../../component/chatBox";
 import ChatPanel from "../../../component/chatPanel";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function Chat() {
   const id = useSelector((state) => state.user.id);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const chatId = searchParams.get("chatId");
 
   const [chats, setChats] = useState([]);
-  const [chat, setChat] = useState();
-  const [cusId, setCusId] = useState();
+  const [chat, setChat] = useState(null);
+  const [cusId, setCusId] = useState(chatId);
   const [socket, setSocket] = useState(null);
 
+  // Set up socket connection
   useEffect(() => {
     const newSocket = io("ws://localhost:4000");
     setSocket(newSocket);
 
-    //disconnect when unmounted
     return () => {
       newSocket.disconnect();
     };
   }, []);
 
+  // Fetch chats
   useEffect(() => {
     const fetchChats = async () => {
       try {
@@ -41,19 +46,20 @@ export default function Chat() {
     fetchChats();
   }, []);
 
+  // Register socket for current user and handle incoming messages
   useEffect(() => {
     if (!socket) return;
+
     socket.emit("serRegister", id);
 
-    // Handle incoming messages, but ensure it's not being re-attached
     const handleMessage = (data) => {
       setChats((prevChats) => {
         const updatedChats = { ...prevChats };
 
-        if (data.sender != "services") {
-          updatedChats[data.sender].messages?.push(data);
+        if (data.sender !== "services") {
+          updatedChats[data.sender]?.messages.push(data);
         } else {
-          updatedChats[data.receiver].messages?.push(data);
+          updatedChats[data.receiver]?.messages.push(data);
         }
 
         return updatedChats;
@@ -61,13 +67,15 @@ export default function Chat() {
     };
 
     socket.on("receiveMsg", handleMessage);
+
     return () => {
       socket.off("receiveMsg", handleMessage);
     };
   }, [socket]);
 
+  // Handle sending a message
   const sendMsg = (text) => {
-    if (!socket) return;
+    if (!socket || !cusId) return;
 
     const data = {
       message: text,
@@ -78,8 +86,9 @@ export default function Chat() {
     socket.emit("serSendMsg", data);
   };
 
+  // Handle sending a picture
   const sendPic = (picLink) => {
-    if (!socket) return;
+    if (!socket || !cusId) return;
 
     const data = {
       image: picLink,
@@ -90,24 +99,32 @@ export default function Chat() {
     socket.emit("serSendMsg", data);
   };
 
+  // Handle chat selection
   const handleClickChat = (userId) => {
     setChat(chats[userId]);
     setCusId(userId);
+    router.push(`/service/chat?chatId=${userId}`);
   };
+
+  // Update chat and cusId when chatId changes
+  useEffect(() => {
+    if (chatId) {
+      console.log(chats);
+      setChat(chats[chatId]);
+    }
+  }, [chats, chatId]);
 
   return (
     <div className="flex w-screen h-screen justify-center p-5">
       <div className="w-3/12 mr-3.5">
         <h2 className="font-extrabold text-3xl">รายการแชท</h2>
-        {Object.entries(chats)?.map(([userId, chatData]) => {
-          return (
-            <ChatBox
-              key={userId}
-              chat={chatData}
-              onClick={() => handleClickChat(userId)}
-            />
-          );
-        })}
+        {Object.entries(chats)?.map(([userId, chatData]) => (
+          <ChatBox
+            key={userId}
+            chat={chatData}
+            onClick={() => handleClickChat(userId)}
+          />
+        ))}
       </div>
 
       {cusId ? (
@@ -119,7 +136,9 @@ export default function Chat() {
           key={cusId}
         />
       ) : (
-        <div className="w-full"></div>
+        <div className="flex h-full w-full justify-center items-center cursor-not-allowed">
+          <p className="text-white bg-primary p-4">โปรดคลิกเคลือกที่แชท</p>
+        </div>
       )}
     </div>
   );
