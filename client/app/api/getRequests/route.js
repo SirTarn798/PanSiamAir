@@ -5,12 +5,12 @@ export const POST = async (request) => {
     const body = await request.json();
 
     try {
-        const requests = await prisma.request.findMany({
+        const requests = await prisma.rEQUEST_PROBLEM.findMany({
             where: {
-                Status: body.type,
+                RP_Status: body.type,
             },
             include: {
-                WC: {
+                AC: {
                     include: {
                         Customer: true,
                     },

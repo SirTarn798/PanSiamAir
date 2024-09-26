@@ -1,0 +1,60 @@
+-- CreateEnum
+CREATE TYPE "ROLE" AS ENUM ('ADMIN', 'CUSTOMER', 'SERVICE', 'HEAD', 'MECHANIC', 'STORE', 'FINANCE');
+
+-- CreateTable
+CREATE TABLE "USER" (
+    "U_Id" TEXT NOT NULL,
+    "U_Email" TEXT NOT NULL,
+    "U_Password" TEXT NOT NULL,
+    "U_Tel" TEXT NOT NULL,
+    "U_Name" TEXT NOT NULL,
+    "U_Role" "ROLE" NOT NULL DEFAULT 'CUSTOMER',
+    "U_Profile" TEXT NOT NULL DEFAULT '/user.png',
+
+    CONSTRAINT "USER_pkey" PRIMARY KEY ("U_Id")
+);
+
+-- CreateTable
+CREATE TABLE "MESSAGE" (
+    "id" TEXT NOT NULL,
+    "message" TEXT,
+    "image" TEXT,
+    "sender" TEXT NOT NULL,
+    "receiver" TEXT NOT NULL,
+    "dateTime" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "MESSAGE_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "AIRCONDITION" (
+    "AC_Serial" TEXT NOT NULL,
+    "AC_Model" TEXT NOT NULL,
+    "U_Id" TEXT,
+    "AC_Store" TEXT NOT NULL,
+    "AC_Status" TEXT NOT NULL,
+    "AC_Address" TEXT NOT NULL,
+    "AC_Image_link" TEXT,
+    "WC_Installation_date" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "AIRCONDITION_pkey" PRIMARY KEY ("AC_Serial")
+);
+
+-- CreateTable
+CREATE TABLE "REQUEST_PROBLEM" (
+    "RP_Id" TEXT NOT NULL,
+    "AC_Serial" TEXT NOT NULL,
+    "RP_Detail" TEXT NOT NULL,
+    "RP_Status" TEXT NOT NULL DEFAULT 'waiting',
+
+    CONSTRAINT "REQUEST_PROBLEM_pkey" PRIMARY KEY ("RP_Id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "USER_U_Email_key" ON "USER"("U_Email");
+
+-- AddForeignKey
+ALTER TABLE "AIRCONDITION" ADD CONSTRAINT "AIRCONDITION_U_Id_fkey" FOREIGN KEY ("U_Id") REFERENCES "USER"("U_Id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "REQUEST_PROBLEM" ADD CONSTRAINT "REQUEST_PROBLEM_AC_Serial_fkey" FOREIGN KEY ("AC_Serial") REFERENCES "AIRCONDITION"("AC_Serial") ON DELETE RESTRICT ON UPDATE CASCADE;

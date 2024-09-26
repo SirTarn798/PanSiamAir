@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import checkInsurance from "@/lib/checkInsurance"
 
 export default function RequestPage() {
   const searchParams = useSearchParams();
@@ -9,23 +10,12 @@ export default function RequestPage() {
   const [error, setError] = useState(null);
   const id = searchParams.get("id") || "";
 
-  let insurance;
-  const installationDate = new Date(request?.WC.WC_Installation_date);
-  const currentDate = new Date();
-  const fourYearsLater = new Date(
-    installationDate.setFullYear(installationDate.getFullYear() + 4)
-  );
-
-  if (currentDate < fourYearsLater) {
-    insurance = true;
-  } else {
-    insurance = false;
-  }
+  let insurance = checkInsurance(request?.AC.AC_Installation_date)
 
   useEffect(() => {
     const getRequest = async () => {
       try {
-        const response = await fetch("api/getRequestById", {
+        const response = await fetch("/api/getRequestById", {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -61,14 +51,14 @@ export default function RequestPage() {
     return (
       <div className="w-screen flex justify-center">
         <div className="flex flex-col rounded p-5 bg-primaryBg m-5 w-full h-fit gap-5">
-        <p className="font-bold text-4xl">หมายเลขเครื่อง {request.WC.WC_Serial}</p>
+        <p className="font-bold text-4xl">หมายเลขเครื่อง {request.AC.AC_Serial}</p>
           <div className="grid grid-cols-2 grid-rows-5 gap-x-40 gap-y-5 w-fit">
             <p className="font-bold">ชื่อ - สกุล</p>
-            <p>{request.WC.Customer.name}</p>
+            <p>{request.AC.Customer.U_Name}</p>
             <p className="font-bold">รุ่น</p>
-            <p>{request.WC.WC_Model}</p>
+            <p>{request.AC.AC_Model}</p>
             <p className="font-bold">ที่อยู่</p>
-            <p>{request.WC.WC_Address}</p>
+            <p>{request.AC.AC_Address}</p>
             <p className="font-bold">ประกัน</p>
             <p
               className={
@@ -79,7 +69,7 @@ export default function RequestPage() {
               {insurance ? "อยู่ในประกัน" : "ไม่อยู่ในประกัน"}
             </p>
             <p className="font-bold">เบอร์โทร</p>
-            <p>{request.WC.Customer.tel}</p>
+            <p>{request.AC.Customer.U_Tel}</p>
           </div>
         </div>
       </div>

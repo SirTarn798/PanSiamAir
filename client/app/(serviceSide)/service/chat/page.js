@@ -55,11 +55,11 @@ export default function Chat() {
     const handleMessage = (data) => {
       setChats((prevChats) => {
         const updatedChats = { ...prevChats };
-
-        if (data.sender !== "services") {
-          updatedChats[data.sender]?.messages.push(data);
+        console.log(data);
+        if (data.M_Sender !== "services") {
+          updatedChats[data.M_Sender]?.messages.push(data);
         } else {
-          updatedChats[data.receiver]?.messages.push(data);
+          updatedChats[data.M_Receiver]?.messages.push(data);
         }
 
         return updatedChats;
@@ -76,12 +76,11 @@ export default function Chat() {
   // Handle sending a message
   const sendMsg = (text) => {
     if (!socket || !cusId) return;
-
     const data = {
-      message: text,
-      sender: "services",
-      receiver: cusId,
-      dateTime: new Date(),
+      M_Message: text,
+      M_Sender: "services",
+      M_Receiver: cusId,
+      M_DateTime: new Date(),
     };
     socket.emit("serSendMsg", data);
   };
@@ -91,10 +90,10 @@ export default function Chat() {
     if (!socket || !cusId) return;
 
     const data = {
-      image: picLink,
-      sender: "services",
-      receiver: cusId,
-      dateTime: new Date(),
+      M_Image: picLink,
+      M_Sender: "services",
+      M_Receiver: cusId,
+      M_DateTime: new Date(),
     };
     socket.emit("serSendMsg", data);
   };
@@ -109,7 +108,6 @@ export default function Chat() {
   // Update chat and cusId when chatId changes
   useEffect(() => {
     if (chatId) {
-      console.log(chats);
       setChat(chats[chatId]);
     }
   }, [chats, chatId]);

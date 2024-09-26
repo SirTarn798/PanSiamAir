@@ -53,7 +53,6 @@ export default function Home() {
           <p>สถานะการซ่อม</p>
         </div>
         {acs.map((ac) => {
-          console.log(ac)
           return <ListAC ac={ac}/>
         })}
       </div>

@@ -3,9 +3,9 @@ import { formatDistance, subDays } from "date-fns";
 export default function Message(props) {
   let senderSelf;
   
-  if (props.side === "services" && props.message.sender === "services") {
+  if (props.side === "services" && props.message.M_Sender === "services") {
     senderSelf = true;
-  } else if (props.side === "customer" && props.message.sender === props.id) {
+  } else if (props.side === "customer" && props.message.M_Sender === props.id) {
     senderSelf = true;
   } else {
     senderSelf = false;
@@ -19,9 +19,9 @@ export default function Message(props) {
           : "bg-red-200 place-self-start")
       }
     >
-      {props.message.message ? <p className="text-black break-words">{props.message.message}</p> : <img src={props.message.image}/>}
+      {props.message.M_Message ? <p className="text-black break-words">{props.message.M_Message}</p> : <img src={props.message.M_Image}/>}
       <p className="text-xs text-zinc-500">
-        {formatDistance(new Date(props.message.dateTime), new Date(), {
+        {formatDistance(new Date(props.message.M_DateTime), new Date(), {
           addSuffix: true,
         })}
       </p>

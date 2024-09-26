@@ -5,14 +5,14 @@ export const POST = async (request) => {
   const body = await request.json();
   const hashedPassword = await hash(body.password, 10);
   try {
-    await prisma.user.create({
+    await prisma.uSER.create({
       data: {
-        email: body.email,
-        password: hashedPassword,
-        role: body.role,
-        tel: body.tel,
-        name: body.name,
-        profile: body.profile
+        U_Email: body.email,
+        U_Password: hashedPassword,
+        U_Role: body.role,
+        U_Tel: body.tel,
+        U_Name: body.name,
+        U_Profile: body.profile
       },
     });
   } catch (err) {

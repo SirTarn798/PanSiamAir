@@ -3,24 +3,24 @@ import { NextResponse } from "next/server";
 
 export const GET = async (request) => {
   try {
-    const messages = await prisma.message.findMany();
+    const messages = await prisma.mESSAGE.findMany();
 
     // Step 1: Group messages by userId (sender and receiver), skipping "x"
     const groupedMessages = messages.reduce((acc, message) => {
       // Add messages where the user is the sender (but skip if sender is "x")
-      if (message.sender !== "x") {
-        if (!acc[message.sender]) {
-          acc[message.sender] = [];
+      if (message.M_Sender !== "x") {
+        if (!acc[message.M_Sender]) {
+          acc[message.M_Sender] = [];
         }
-        acc[message.sender].push(message);
+        acc[message.M_Sender].push(message);
       }
 
       // Add messages where the user is the receiver (but skip if receiver is "x")
-      if (message.receiver !== "x") {
-        if (!acc[message.receiver]) {
-          acc[message.receiver] = [];
+      if (message.M_Receiver !== "x") {
+        if (!acc[message.M_Receiver]) {
+          acc[message.M_Receiver] = [];
         }
-        acc[message.receiver].push(message);
+        acc[message.M_Receiver].push(message);
       }
 
       return acc;
@@ -29,23 +29,23 @@ export const GET = async (request) => {
     // Step 2: Fetch user details (name and profile URL) for all userIds in groupedMessages
     const userIds = Object.keys(groupedMessages);
 
-    const users = await prisma.user.findMany({
-      where: { id: { in: userIds } }, // Fetch users whose id is in userIds
+    const users = await prisma.uSER.findMany({
+      where: { U_Id: { in: userIds } }, // Fetch users whose id is in userIds
       select: {
-        id: true,
-        name: true,
-        profile: true,
+        U_Id: true,
+        U_Name: true,
+        U_Profile: true,
       },
     });
 
     // Step 3: Enhance groupedMessages with user details (name and profile_url)
     const result = userIds.reduce((acc, userId) => {
-      const user = users.find((u) => u.id === userId);
+      const user = users.find((u) => u.U_Id === userId);
       if (user) {
         acc[userId] = {
           user: {
-            name: user.name,
-            profile: user.profile,
+            name: user.U_Name,
+            profile: user.U_Profile,
           },
           messages: groupedMessages[userId], // Attach grouped messages
         };

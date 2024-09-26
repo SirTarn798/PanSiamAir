@@ -8,7 +8,7 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum Role {
+enum ROLE {
   ADMIN
   CUSTOMER
   SERVICE
@@ -18,45 +18,45 @@ enum Role {
   FINANCE
 }
 
-model User {
-  id       String          @id @default(uuid())
-  email    String          @unique
-  password String
-  tel      String
-  name     String
-  WC       WARRANTY_CARD[]
-  role     Role            @default(CUSTOMER)
-  profile  String          @default("/user.png")
+model USER {
+  U_Id       String         @id @default(uuid())
+  U_Email    String         @unique
+  U_Password String
+  U_Tel      String
+  U_Name     String
+  AC         AIRCONDITION[]
+  U_Role     ROLE           @default(CUSTOMER)
+  U_Profile  String         @default("/user.png")
 }
 
-model message {
-  id       String   @id @default(uuid())
-  message  String?
-  image    String?
-  sender   String
-  receiver String
-  dateTime DateTime @default(now())
+model MESSAGE {
+  M_Id       String   @id @default(uuid())
+  M_Message  String?
+  M_Image    String?
+  M_Sender   String
+  M_Receiver String
+  M_DateTime DateTime @default(now())
 }
 
-model WARRANTY_CARD {
-  WC_Serial            String    @id @default(uuid())
-  WC_Model             String
-  Customer             User?     @relation(fields: [C_ID], references: [id])
-  C_ID                 String?
-  WC_Store             String
-  WC_Status            String
-  WC_Address           String
-  WC_Image_link        String?
-  WC_Installation_date DateTime
-  Request              Request[]
+model AIRCONDITION {
+  AC_Serial            String            @id @default(uuid())
+  AC_Model             String
+  Customer             USER?             @relation(fields: [U_Id], references: [U_Id])
+  U_Id                 String?
+  AC_Store             String
+  AC_Status            String
+  AC_Address           String
+  AC_Image_link        String?
+  AC_Installation_date DateTime
+  Request              REQUEST_PROBLEM[]
 }
 
-model Request {
-  id        String        @id @default(uuid())
-  WC_Serial String
-  WC        WARRANTY_CARD @relation(fields: [WC_Serial], references: [WC_Serial])
-  Detail    String
-  Status    String
+model REQUEST_PROBLEM {
+  RP_Id     String       @id @default(uuid())
+  AC_Serial String
+  AC        AIRCONDITION @relation(fields: [AC_Serial], references: [AC_Serial])
+  RP_Detail String
+  RP_Status String       @default("waiting")
 }
 
 datasource db {

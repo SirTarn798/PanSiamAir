@@ -5,17 +5,17 @@ export const POST = async (request) => {
   try {
     const body = await request.json();
     
-    const ac = await prisma.wARRANTY_CARD.findUnique({
+    const ac = await prisma.aIRCONDITION.findUnique({
       where: {
-        C_ID: body.id,
-        WC_Serial: body.serial,
+        U_Id: body.id,
+        AC_Serial: body.serial,
       },
     });
 
-    const req = await prisma.request.findFirst({
+    const req = await prisma.rEQUEST_PROBLEM.findFirst({
       where : {
-        WC_Serial: body.serial, // This should be body.serial since it refers to WC_Serial
-        Status: {
+        AC_Serial: body.serial, // This should be body.serial since it refers to WC_Serial
+        RP_Status: {
           not : "finished",
         },
       },

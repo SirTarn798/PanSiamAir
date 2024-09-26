@@ -5,13 +5,13 @@ export const POST = async (request) => {
   try {
     const body = await request.json();
 
-    const ac = await prisma.wARRANTY_CARD.update({
+    const ac = await prisma.aIRCONDITION.update({
       where: {
-        C_ID: body.id,
-        WC_Serial: body.serial,
+        U_Id: body.id,
+        AC_Serial: body.serial,
       },
       data: {
-        WC_Status: "รอพิจารณาซ่อม",
+        AC_Status: "รอพิจารณาซ่อม",
       },
     });
 
@@ -19,14 +19,14 @@ export const POST = async (request) => {
       return NextResponse.json({ error: "AC does not exist" }, { status: 400 });
     }
 
-    await prisma.request.create({
+    await prisma.rEQUEST_PROBLEM.create({
       data: {
-        WC: {
+        AC: {
           connect: {
-            WC_Serial: body.serial,
+            AC_Serial: body.serial,
           },
         },
-        Detail: body.detail,
+        RP_Detail: body.detail,
       },
     });
 

@@ -5,14 +5,14 @@ export const POST = async (request) => {
   const temp = await request.json();
   const body = temp.WCData
   try {
-    const wc = await prisma.WARRANTY_CARD.update({
+    const wc = await prisma.aIRCONDITION.update({
       where: {
-        WC_Serial: body.serial,
-        WC_Model: body.model,
+        AC_Serial: body.serial,
+        AC_Model: body.model,
       },
       data: {
-        WC_Image_link: body.wcPicLink,
-        C_ID: body.C_ID,
+        AC_Image_link: body.wcPicLink,
+        U_Id: body.C_ID,
       },
     });
     return NextResponse.json(

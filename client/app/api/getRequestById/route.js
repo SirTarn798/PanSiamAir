@@ -5,12 +5,12 @@ export const POST = async (request) => {
   const body = await request.json();
 
   try {
-    const requests = await prisma.request.findUnique({
+    const requests = await prisma.rEQUEST_PROBLEM.findUnique({
       where: {
-        id: body.id,
+        RP_Id: body.id,
       },
       include: {
-        WC: {
+        AC: {
           include: {
             Customer: true,
           },

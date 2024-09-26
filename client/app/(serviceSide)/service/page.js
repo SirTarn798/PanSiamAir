@@ -20,7 +20,6 @@ export default function Service() {
         }),
       });
       const data = await response.json();
-      console.log(data.requests)
       setRequests(data.requests);
     } catch (error) {
       console.log(err.message);

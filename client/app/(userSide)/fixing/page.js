@@ -5,6 +5,7 @@ import BackBtn from "../../component/backBtn";
 import SubmitBtn from "../../component/submitBtn";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import checkInsurance from "@/lib/checkInsurance";
 
 export default function FixRequest() {
   const searchParams = useSearchParams();
@@ -15,6 +16,7 @@ export default function FixRequest() {
   const [detail, setDetail] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  let insurance = checkInsurance(ac?.AC_Installation_date);
 
   useEffect(() => {
     if (!serial) {
@@ -78,7 +80,7 @@ export default function FixRequest() {
       });
       if (response.status === 201) {
         alert("ท่านได้ส่งเรื่องซ่อมแล้ว");
-        router.push("/")
+        router.push("/");
       } else {
         throw new Error("ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
       }
@@ -94,13 +96,23 @@ export default function FixRequest() {
       <div className="flex flex-col bg-primaryBg p-5 rounded gap-5">
         <div className="flex gap-40 justify-center">
           <div className="flex flex-col gap-5">
-            <p>หมายเลขเครื่อง {ac?.WC_Serial}</p>
-            <p>รุ่น {ac?.WC_Model}</p>
-            <p>สถานะรับประกัน {ac?.WC_WarrantyStatus}</p>
+            <p>หมายเลขเครื่อง {ac?.AC_Serial}</p>
+            <p>รุ่น {ac?.AC_Model}</p>
+            <div className="flex gap-3">
+              <p>สถานะรับประกัน {ac?.AC_WarrantyStatus}</p>
+              <p
+                className={
+                  "font-bold " +
+                  (insurance ? "text-emerald-600	" : "text-rose-700")
+                }
+              >
+                {insurance ? "อยู่ในประกัน" : "ไม่อยู่ในประกัน"}
+              </p>
+            </div>
           </div>
           <div className="flex flex-col gap-5">
             <p>ชื่อ-นามสกุล ปีปี้ โปโป้</p>
-            <p>ที่อยู่ {ac?.WC_Address}</p>
+            <p>ที่อยู่ {ac?.AC_Address}</p>
             <p>เบอร์โทร 19195195194</p>
           </div>
         </div>

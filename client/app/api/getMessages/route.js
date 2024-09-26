@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 export const POST = async (request) => {
   const body = await request.json();
   const id = body.id;
-  const data = await prisma.message.findMany({
+  const data = await prisma.mESSAGE.findMany({
     where: {
-      OR: [{ sender: id }, { receiver: id }],
+      OR: [{ M_Sender: id }, { M_Receiver: id }],
     },
   });
 

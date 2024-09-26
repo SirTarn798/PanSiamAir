@@ -43,13 +43,13 @@ io.on("connection", (socket) => {
     for (const [userId, socketId] of Object.entries(serSockets)) {
       io.to(socketId).emit("receiveMsg", data);
     }
-    await prisma.message.create({
+    await prisma.mESSAGE.create({
       data: {
-        message: data.message ? data.message : null,
-        image: data.image ? data.image : null,
-        sender: data.sender,
-        receiver: "services",
-        dateTime: data.dateTime,
+        M_Message: data.M_Message ? data.M_Message : null,
+        M_Image: data.M_Image ? data.M_Image : null,
+        M_Sender: data.M_Sender,
+        M_Receiver: "services",
+        M_DateTime: data.M_DateTime,
       },
     });
   });
@@ -61,13 +61,13 @@ io.on("connection", (socket) => {
     for (const [userId, socketId] of Object.entries(serSockets)) {
       io.to(socketId).emit("receiveMsg", data);
     }
-    await prisma.message.create({
+    await prisma.mESSAGE.create({
       data: {
-        message: data.message ? data.message : null,
-        image: data.image ? data.image : null,
-        sender: "services",
-        receiver: data.receiver,
-        dateTime: data.dateTime,
+        M_Message: data.M_Message ? data.M_Message : null,
+        M_Image: data.M_Image ? data.M_Image : null,
+        M_Sender: "services",
+        M_Receiver: data.M_Receiver,
+        M_DateTime: data.M_DateTime,
       },
     });
   });

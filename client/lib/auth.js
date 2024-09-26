@@ -22,21 +22,21 @@ export async function decrypt(input) {
 }
 
 export async function signIn(credential) {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.uSER.findUnique({
     where: {
-      email: credential.email,
+      U_Email: credential.email,
     },
   });
   if (user) {
     const status = await compare(
       credential.password.trim(),
-      user.password.trim()
+      user.U_Password.trim()
     );
     if (status) {
       const data = {
-        id: user.id,
-        email: user.email,
-        role: user.role,
+        id: user.U_Id,
+        email: user.U_Email,
+        role: user.U_Role,
       };
       await login(data);
       return data;

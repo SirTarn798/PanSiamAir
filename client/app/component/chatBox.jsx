@@ -12,8 +12,8 @@ export default function ChatBox(props) {
       <div className="flex flex-col gap-1">
         <p className="text-lg font-bold">{props.chat.user.name}</p>
         <p>
-          {props.chat.messages[props.chat.messages.length - 1].message
-            ? props.chat.messages[props.chat.messages.length - 1].message
+          {props.chat.messages[props.chat.messages.length - 1].M_Message
+            ? props.chat.messages[props.chat.messages.length - 1].M_Message
             : "ส่งรูปภาพ"}
         </p>
       </div>

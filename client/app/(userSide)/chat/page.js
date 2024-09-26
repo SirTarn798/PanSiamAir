@@ -44,10 +44,10 @@ export default function Chat() {
     if (!socket) return;
 
     const data = {
-      message: text,
-      sender: id,
-      receiver: "services",
-      dateTime: new Date(),
+      M_Message: text,
+      M_Sender: id,
+      M_Receiver: "services",
+      M_DateTime: new Date(),
     };
 
     // Update chat with new message
@@ -63,10 +63,10 @@ export default function Chat() {
     if (!socket) return;
 
     const data = {
-      image: picLink,
-      sender: id,
-      receiver: "services",
-      dateTime: new Date(),
+      M_Image: picLink,
+      M_Sender: id,
+      M_Receiver: "services",
+      M_DateTime: new Date(),
     };
 
     setChat((prevChat) => {

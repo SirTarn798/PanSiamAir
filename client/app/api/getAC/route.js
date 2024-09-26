@@ -4,9 +4,9 @@ import prisma from "../../../lib/db";
 export const POST = async (request) => {
   const body = await request.json();
   try {
-    const acs = await prisma.wARRANTY_CARD.findMany({
+    const acs = await prisma.aIRCONDITION.findMany({
       where: {
-        C_ID: body.id,
+        U_Id: body.id,
       },
     });
     return NextResponse.json({acs: acs}, {status: 201})
