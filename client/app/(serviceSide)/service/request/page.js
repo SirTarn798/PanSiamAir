@@ -27,7 +27,6 @@ export default function RequestPage() {
         });
         if (response.status === 200) {
           const data = await response.json();
-          console.log(data.requests);
           setRequest(data.requests);
         } else if (response.status === 400) {
           throw new Error("ไม่สามารถเข้าถึงได้เนื่องจากรหัสคำขอซ่อมไม่ถูกต้อง");
@@ -41,9 +40,49 @@ export default function RequestPage() {
     getRequest();
   }, [id]);
 
+  const handleAcceptRequest = async (e) => {
+    e.preventDefault();
+    console.log("ddx")
+    let temp;
+    if(insurance) {
+      temp = "รอเลือกวันนัดหมาย"
+    } else {
+      temp = "รออนุมติใบเสนอราคา"
+    }
+    await updateRequest(temp)
+  };
+
+  const handleRejectRequest = async (e) => {
+    e.preventDefault();
+    await updateRequest("สถานะปกติ")
+  };
+
+  const updateRequest = async (status) => {
+    try {
+      const response = await fetch("/api/updateRequest", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          serial: request.AC.AC_Serial,
+          id,
+          status,
+        }),
+      });
+      if (response.status === 200) {
+        router.push("/");
+      } else {
+        throw new Error("ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   if (error) {
     return (
-      <div className="flex flex-col w-screen h-screen pl-16 pt-5 pr-3 items-center justify-center">
+      <div className="flex flex-col w-screen h-screen pl-16 pt-5 pr-3 items-center justify-center cursor-not-allowed">
         <p className="text-white bg-primary p-4">{"!! " + error + " !!"}</p>
       </div>
     );
@@ -51,7 +90,23 @@ export default function RequestPage() {
   if (request)
     return (
       <div className="w-screen flex flex-col items-center">
-        <div className="flex flex-col rounded-t p-5 bg-primaryBg mt-5 mx-5 w-9/12 h-fit gap-5">
+        {request.RP_Status === "waiting" ? (
+          <div className="flex gap-5 w-9/12 my-2 bg-primaryBg h-fit p-2 rounded-full">
+            <button
+              className="bg-primary font-bold text-white rounded-full p-3 px-5"
+              onClick={handleAcceptRequest}
+            >
+              ยืนยัน
+            </button>
+            <button
+              className="bg-gray-400 font-bold text-white rounded-full p-3 px-5"
+              onClick={handleRejectRequest}
+            >
+              ยกเลิก
+            </button>
+          </div>
+        ) : null}
+        <div className="flex flex-col rounded-t p-5 bg-primaryBg mt-1 mx-5 w-9/12 h-fit gap-5">
           <p className="font-bold text-4xl">
             หมายเลขเครื่อง {request.AC.AC_Serial}
           </p>
@@ -76,8 +131,10 @@ export default function RequestPage() {
           </div>
         </div>
         <div
-          className="flex items-center justify-center w-full bg-primary mx-5 rounded-b w-9/12 text-white font-bold h-14 text-2xl cursor-pointer"
-          onClick={() => router.push(`/service/chat?chatId=${request.AC.Customer.U_Id}`)}
+          className="flex items-center justify-center bg-primary mx-5 rounded-b w-9/12 text-white font-bold h-14 text-2xl cursor-pointer"
+          onClick={() =>
+            router.push(`/service/chat?chatId=${request.AC.Customer.U_Id}`)
+          }
         >
           <p>ไปที่แชท</p>
         </div>

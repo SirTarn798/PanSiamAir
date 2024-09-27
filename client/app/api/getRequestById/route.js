@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "../../../lib/db";
+import { error } from "console";
 
 export const POST = async (request) => {
   const body = await request.json();
@@ -17,15 +18,14 @@ export const POST = async (request) => {
         },
       },
     });
+    if(!requests) {
+      return NextResponse.json({error : "Can't find request"}, {status: 400})
+    }
     return NextResponse.json({ requests }, { status: 200 });
   } catch (error) {
-    if (error.code === "P2025") {
-      return NextResponse.json({ error: "Request not found" }, { status: 400 });
-    } else {
-      return NextResponse.json(
-        { error: "Unexpected error happens" },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json(
+      { error: "Unexpected error happens" },
+      { status: 500 }
+    );
   }
 };
