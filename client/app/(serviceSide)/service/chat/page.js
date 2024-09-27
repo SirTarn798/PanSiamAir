@@ -125,7 +125,7 @@ export default function Chat() {
         ))}
       </div>
 
-      {cusId ? (
+      {cusId && chat ? (
         <ChatPanel
           sendMsg={sendMsg}
           sendPic={sendPic}

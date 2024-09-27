@@ -2,18 +2,25 @@
 
 import { useSelector } from "react-redux";
 import "../(auth)/register/register.css";
+import { useRouter } from "next/navigation";
 
 function Header() {
+  const router = useRouter();
   const id = useSelector((state) => state.user.id);
 
   const logout = async () => {
-    const response = await fetch("/api/logoutAPI", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: {},
-    });
+    try {
+      const response = await fetch("/api/logoutAPI", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: {},
+      });
+      router.push("/login");
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (

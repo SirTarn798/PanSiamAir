@@ -1,16 +1,17 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import checkInsurance from "@/lib/checkInsurance"
+import checkInsurance from "@/lib/checkInsurance";
 
 export default function RequestPage() {
   const searchParams = useSearchParams();
   const [request, setRequest] = useState();
   const [error, setError] = useState(null);
   const id = searchParams.get("id") || "";
+  const router = useRouter();
 
-  let insurance = checkInsurance(request?.AC.AC_Installation_date)
+  let insurance = checkInsurance(request?.AC.AC_Installation_date);
 
   useEffect(() => {
     const getRequest = async () => {
@@ -49,9 +50,11 @@ export default function RequestPage() {
   }
   if (request)
     return (
-      <div className="w-screen flex justify-center">
-        <div className="flex flex-col rounded p-5 bg-primaryBg m-5 w-full h-fit gap-5">
-        <p className="font-bold text-4xl">หมายเลขเครื่อง {request.AC.AC_Serial}</p>
+      <div className="w-screen flex flex-col items-center">
+        <div className="flex flex-col rounded-t p-5 bg-primaryBg mt-5 mx-5 w-9/12 h-fit gap-5">
+          <p className="font-bold text-4xl">
+            หมายเลขเครื่อง {request.AC.AC_Serial}
+          </p>
           <div className="grid grid-cols-2 grid-rows-5 gap-x-40 gap-y-5 w-fit">
             <p className="font-bold">ชื่อ - สกุล</p>
             <p>{request.AC.Customer.U_Name}</p>
@@ -71,6 +74,12 @@ export default function RequestPage() {
             <p className="font-bold">เบอร์โทร</p>
             <p>{request.AC.Customer.U_Tel}</p>
           </div>
+        </div>
+        <div
+          className="flex items-center justify-center w-full bg-primary mx-5 rounded-b w-9/12 text-white font-bold h-14 text-2xl cursor-pointer"
+          onClick={() => router.push(`/service/chat?chatId=${request.AC.Customer.U_Id}`)}
+        >
+          <p>ไปที่แชท</p>
         </div>
       </div>
     );

@@ -3,16 +3,21 @@
 import { useState } from "react";
 import { setId } from "@/state/user/userSlice";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const [loginState, setLoginState] = useState("normal");
+
   const login = async (e) => {
     e.preventDefault();
+    setLoginState("process")
     try {
       const response = await fetch("/api/loginApi", {
         method: "POST",
@@ -27,12 +32,14 @@ export default function Login() {
       if (response.status === 201) {
         const data = await response.json();
         dispatch(setId(data.user.id));
-      }
-      else if(response.status === 401) {
-        setError("Wrong email or password")
+        router.push("/")
+      } else if (response.status === 401) {
+        setError("Wrong email or password");
+        setLoginState("error")
       }
     } catch (err) {
       console.log(err.message);
+      setLoginState("error")
     }
   };
 
@@ -58,11 +65,16 @@ export default function Login() {
         ></input>
         <button
           type="submit"
-          className="text-white bg-rose-500 p-5 w-64 rounded drop-shadow-md cursor-pointer"
+          className={
+            `text-white p-5 w-64 rounded drop-shadow-md ` +
+            (loginState === "process" ? "bg-gray-400 cursor-not-allowed" : "bg-rose-500")
+          }
         >
           Login
         </button>
-        <h4 className="self-end text-rose-500 hover:underline underline-offset-1 cursor-pointer">Don't have an account?</h4>
+        <h4 className="self-end text-rose-500 hover:underline underline-offset-1 cursor-pointer">
+          Don't have an account?
+        </h4>
         <p className="text-red-500">{error}</p>
       </form>
     </div>
