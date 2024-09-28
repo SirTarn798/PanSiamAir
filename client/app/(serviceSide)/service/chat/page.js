@@ -114,15 +114,17 @@ export default function Chat() {
 
   return (
     <div className="flex w-screen h-screen justify-center p-5">
-      <div className="w-3/12 mr-3.5">
+      <div className="w-3/12 mr-2.5">
         <h2 className="font-extrabold text-3xl">รายการแชท</h2>
-        {Object.entries(chats)?.map(([userId, chatData]) => (
-          <ChatBox
-            key={userId}
-            chat={chatData}
-            onClick={() => handleClickChat(userId)}
-          />
-        ))}
+        <div className="overflow-scroll overflow-x-hidden h-full">
+          {Object.entries(chats)?.map(([userId, chatData]) => (
+            <ChatBox
+              key={userId}
+              chat={chatData}
+              onClick={() => handleClickChat(userId)}
+            />
+          ))}
+        </div>
       </div>
 
       {cusId && chat ? (
