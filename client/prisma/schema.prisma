@@ -52,11 +52,21 @@ model AIRCONDITION {
 }
 
 model REQUEST_PROBLEM {
-  RP_Id     String       @id @default(uuid())
-  AC_Serial String
-  AC        AIRCONDITION @relation(fields: [AC_Serial], references: [AC_Serial])
-  RP_Detail String
-  RP_Status String       @default("waiting")
+  RP_Id        String        @id @default(uuid())
+  AC_Serial    String
+  AC           AIRCONDITION  @relation(fields: [AC_Serial], references: [AC_Serial])
+  RP_Detail    String
+  RP_Status    String        @default("waiting")
+  Request_form REQUEST_FORM?
+}
+
+model REQUEST_FORM {
+  RF_Id             String          @id @default(uuid())
+  RF_Cause          String
+  RF_Repair_details String?
+  RF_Date           DateTime
+  RP_Id             String          @unique
+  Request_problem   REQUEST_PROBLEM @relation(fields: [RP_Id], references: [RP_Id])
 }
 
 model QUOTATION {
