@@ -55,8 +55,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("serSendMsg", async (data) => {
-    if (cusSockets[data.receiver]) {
-      io.to(cusSockets[data.receiver]).emit("receiveMsg", data);
+    if (cusSockets[data.M_Receiver]) {
+      io.to(cusSockets[data.M_Receiver]).emit("receiveMsg", data);
     }
     for (const [userId, socketId] of Object.entries(serSockets)) {
       io.to(socketId).emit("receiveMsg", data);

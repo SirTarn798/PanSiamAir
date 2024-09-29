@@ -17,6 +17,7 @@ export default function Chat() {
   const [chat, setChat] = useState(null);
   const [cusId, setCusId] = useState(chatId);
   const [socket, setSocket] = useState(null);
+  const [cus, setCus] = useState();
 
   // Set up socket connection
   useEffect(() => {
@@ -73,6 +74,35 @@ export default function Chat() {
     };
   }, [socket]);
 
+  // Update chat and cusId when chatId changes
+  useEffect(() => {
+    if (chatId) {
+      setChat(chats[chatId]);
+    }
+  }, [chats, chatId]);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await fetch("/api/getCusById", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            cusId,
+          }),
+        });
+        const data = await response.json();
+        console.log(data.user);
+        setCus(data.user);
+      } catch (error) {
+        console.error("Error fetching user:", error.message);
+      }
+    };
+    getUser();
+  }, [cusId]);
+
   // Handle sending a message
   const sendMsg = (text) => {
     if (!socket || !cusId) return;
@@ -105,13 +135,6 @@ export default function Chat() {
     router.push(`/service/chat?chatId=${userId}`);
   };
 
-  // Update chat and cusId when chatId changes
-  useEffect(() => {
-    if (chatId) {
-      setChat(chats[chatId]);
-    }
-  }, [chats, chatId]);
-
   return (
     <div className="flex w-screen h-screen justify-center p-5">
       <div className="w-3/12 mr-2.5">
@@ -126,18 +149,18 @@ export default function Chat() {
           ))}
         </div>
       </div>
-
-      {cusId && chat ? (
+      {cus ? (
         <ChatPanel
           sendMsg={sendMsg}
           sendPic={sendPic}
           chat={chat}
           side={"services"}
           key={cusId}
+          user={cus}
         />
       ) : (
         <div className="flex h-full w-full justify-center items-center cursor-not-allowed">
-          <p className="text-white bg-primary p-4">โปรดคลิกเคลือกที่แชท</p>
+          <p className="text-white bg-primary p-4">Please Click Chat</p>
         </div>
       )}
     </div>

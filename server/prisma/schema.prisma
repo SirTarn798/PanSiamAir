@@ -52,11 +52,51 @@ model AIRCONDITION {
 }
 
 model REQUEST_PROBLEM {
-  RP_Id     String       @id @default(uuid())
-  AC_Serial String
-  AC        AIRCONDITION @relation(fields: [AC_Serial], references: [AC_Serial])
-  RP_Detail String
-  RP_Status String       @default("waiting")
+  RP_Id        String        @id @default(uuid())
+  AC_Serial    String
+  AC           AIRCONDITION  @relation(fields: [AC_Serial], references: [AC_Serial])
+  RP_Detail    String
+  RP_Status    String        @default("waiting")
+  Request_form REQUEST_FORM?
+}
+
+model REQUEST_FORM {
+  RF_Id             String          @id @default(uuid())
+  RF_Cause          String
+  RF_Repair_details String?
+  RF_Date           DateTime
+  RP_Id             String          @unique
+  Request_problem   REQUEST_PROBLEM @relation(fields: [RP_Id], references: [RP_Id])
+}
+
+model QUOTATION {
+  Q_Id              String         @id @default(uuid())
+  Spare_detail      SPARE_DETAIL[]
+  Q_Customer_stauts Boolean
+  Q_Manager_stauts  Boolean
+  Q_Total           Float
+  Q_Discount        Float
+  Q_Vat             Float
+  Q_Grand_total     Float
+  Q_Date            DateTime
+  RF_Id             String
+}
+
+model SPARE {
+  S_Id         String         @id @default(uuid())
+  S_Name       String
+  S_Price      Float
+  Spare_detail SPARE_DETAIL[]
+}
+
+model SPARE_DETAIL {
+  Q_Id        String
+  S_Id        String
+  SD_Quantity Int
+  Quotation   QUOTATION @relation(fields: [Q_Id], references: [Q_Id])
+  Spare       SPARE     @relation(fields: [S_Id], references: [S_Id])
+
+  @@id([Q_Id, S_Id])
 }
 
 datasource db {
