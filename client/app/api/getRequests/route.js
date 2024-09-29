@@ -3,11 +3,12 @@ import prisma from "../../../lib/db";
 
 export const POST = async (request) => {
     const body = await request.json();
-
     try {
         const requests = await prisma.rEQUEST_PROBLEM.findMany({
             where: {
-                RP_Status: body.type,
+                RP_Status: {
+                    startsWith: body.type
+                }
             },
             include: {
                 AC: {
@@ -17,9 +18,9 @@ export const POST = async (request) => {
                 },
             },
         });
-
         return NextResponse.json({ requests }, { status: 200 });
     } catch (error) {
+        console.log(error)
         return NextResponse.json({ error: error.message }, { status: 400 });
     }
 };

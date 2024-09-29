@@ -27,6 +27,7 @@ export const POST = async (request) => {
           },
         },
         RP_Detail: body.detail,
+        RP_Status : "waiting"
       },
     });
 

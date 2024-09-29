@@ -17,7 +17,7 @@ export default function ListAC(props) {
     สถานะปกติ: "bg-primary cursor-pointer",
     รอพิจารณาซ่อม: "bg-black text-white cursor-not-allowed",
     รอยืนยันราคา: "bg-black text-white curor-pointer",
-    รอเลือกวันซ่อม: "bg-black text-white cursor-pointer",
+    รอเลือกวันนัดหมาย: "bg-black text-white cursor-pointer",
     อยู่ในขั้นตอนการซ่อม: "bg-black text-white cursor-not-allowed",
   };
 

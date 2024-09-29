@@ -8,6 +8,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// enum REQUEST_STATUS {
+//   waiting
+//   accepted_wait_write_quotation
+//   accepted_wait_leader_quotation
+//   accpeted_wait_cus_quotation
+//   accepted_wait_pick_calendar
+//   rejected
+//   finished
+// }
+
 enum ROLE {
   ADMIN
   CUSTOMER
@@ -56,7 +66,7 @@ model REQUEST_PROBLEM {
   AC_Serial    String
   AC           AIRCONDITION  @relation(fields: [AC_Serial], references: [AC_Serial])
   RP_Detail    String
-  RP_Status    String        @default("waiting")
+  RP_Status    String
   Request_form REQUEST_FORM?
 }
 

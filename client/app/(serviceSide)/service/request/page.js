@@ -42,22 +42,19 @@ export default function RequestPage() {
 
   const handleAcceptRequest = async (e) => {
     e.preventDefault();
-    console.log("ddx")
-    let temp;
-    if(insurance) {
-      temp = "รอเลือกวันนัดหมาย"
+    if (insurance) {
+      await updateRequest("รอเลือกวันนัดหมาย", "accepted_wait_pick_calendar");
     } else {
-      temp = "รอทางบริษัทเสนอราคา"
+      await updateRequest("รอทางบริษัทเสนอราคา", "  accepted_wait_write_quotation");
     }
-    await updateRequest(temp)
   };
 
   const handleRejectRequest = async (e) => {
     e.preventDefault();
-    await updateRequest("สถานะปกติ")
+    await updateRequest("สถานะปกติ", "rejected");
   };
 
-  const updateRequest = async (status) => {
+  const updateRequest = async (statusAc, statusRp) => {
     try {
       const response = await fetch("/api/updateRequest", {
         method: "POST",
@@ -67,7 +64,8 @@ export default function RequestPage() {
         body: JSON.stringify({
           serial: request.AC.AC_Serial,
           id,
-          status,
+          statusAc,
+          statusRp,
         }),
       });
       if (response.status === 200) {
