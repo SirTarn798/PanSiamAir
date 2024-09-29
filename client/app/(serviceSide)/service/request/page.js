@@ -47,7 +47,7 @@ export default function RequestPage() {
     if(insurance) {
       temp = "รอเลือกวันนัดหมาย"
     } else {
-      temp = "รออนุมติใบเสนอราคา"
+      temp = "รอทางบริษัทเสนอราคา"
     }
     await updateRequest(temp)
   };
