@@ -45,8 +45,12 @@ export default function RequestPage() {
     if (insurance) {
       await updateRequest("รอเลือกวันนัดหมาย", "accepted_wait_pick_calendar");
     } else {
-      await updateRequest("รอทางบริษัทเสนอราคา", "  accepted_wait_write_quotation");
+      await updateRequest(
+        "รอทางบริษัทเสนอราคา",
+        "  accepted_wait_write_quotation"
+      );
     }
+    await createRequestForm();
   };
 
   const handleRejectRequest = async (e) => {
@@ -75,6 +79,25 @@ export default function RequestPage() {
       }
     } catch (error) {
       console.log(error.message);
+    }
+  };
+
+  const createRequestForm = async () => {
+    try {
+      const response = await fetch("/api/createRequestForm", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      });
+      if (response.status != 200) {
+        throw new Error("ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
+      }
+    } catch (error) {
+      alert(error.message);
     }
   };
 

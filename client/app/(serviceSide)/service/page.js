@@ -10,7 +10,7 @@ export default function Service() {
   const getRequest = async (state, type) => {
     setReqState(state);
     try {
-      const response = await fetch("api/getRequests", {
+      const response = await fetch("/api/getRequests", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -22,7 +22,7 @@ export default function Service() {
       const data = await response.json();
       setRequests(data.requests);
     } catch (error) {
-      console.log(err.message);
+      console.log(error.message);
     }
   };
 

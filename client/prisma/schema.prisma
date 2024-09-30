@@ -72,11 +72,12 @@ model REQUEST_PROBLEM {
 
 model REQUEST_FORM {
   RF_Id             String          @id @default(uuid())
-  RF_Cause          String
+  RF_Cause          String?
   RF_Repair_details String?
   RF_Date           DateTime
   RP_Id             String          @unique
   Request_problem   REQUEST_PROBLEM @relation(fields: [RP_Id], references: [RP_Id])
+  QUOTATION         QUOTATION?
 }
 
 model QUOTATION {
@@ -89,7 +90,8 @@ model QUOTATION {
   Q_Vat             Float
   Q_Grand_total     Float
   Q_Date            DateTime
-  RF_Id             String
+  RF_Id             String         @unique
+  Reaquest_form     REQUEST_FORM   @relation(fields: [RF_Id], references: [RF_Id])
 }
 
 model SPARE {
