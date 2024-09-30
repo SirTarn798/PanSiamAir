@@ -13,7 +13,7 @@ function ServiceNavBar() {
 
   return (
     <div className={`flex flex-col gap-10 bg-primaryBg w-3/12 h-screen`}>
-      <button className="flex items-center p-5 gap-5 hover:bg-neutral-200">
+      <button className="flex items-center p-5 gap-5 hover:bg-neutral-200" onClick={() => router.push("/service")}>
         <img src="/list-items.png" alt="ac list icon" width={35} height={35} />
         <p className="font-bold">รายการแจ้งซ่อม</p>
       </button>
@@ -44,8 +44,8 @@ function ServiceNavBar() {
     }`}
   >
     <div className="flex flex-col gap-2 pl-16">
-      <button className="text-left p-3 hover:bg-neutral-200">ใบขอรับบริการ</button>
-      <button className="text-left p-3 hover:bg-neutral-200">ใบเสนอราคา</button>
+      <button className="text-left p-3 hover:bg-neutral-200" onClick={() => router.push("/service/docs/request_form")}>ใบขอรับบริการ</button>
+      <button className="text-left p-3 hover:bg-neutral-200" onClick={() => router.push("/service/docs/quotation")}>ใบเสนอราคา</button>
       <button className="text-left p-3 hover:bg-neutral-200">ใบสำคัญจ่าย</button>
       <button className="text-left p-3 hover:bg-neutral-200">ใบสำคัญรับ</button>
     </div>
