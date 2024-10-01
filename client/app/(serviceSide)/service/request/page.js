@@ -47,7 +47,7 @@ export default function RequestPage() {
     } else {
       await updateRequest(
         "รอทางบริษัทเสนอราคา",
-        "  accepted_wait_write_quotation"
+        "accepted_wait_write_quotation"
       );
     }
     await createRequestForm();
@@ -149,6 +149,8 @@ export default function RequestPage() {
             </p>
             <p className="font-bold">เบอร์โทร</p>
             <p>{request.AC.Customer.U_Tel}</p>
+            <p className="font-bold">รายละเอียด</p>
+            <p>{request.RP_Detail}</p>
           </div>
         </div>
         <div

@@ -63,7 +63,7 @@ export default function Service() {
         </p>
       </div>
       {requests?.map((request) => {
-        return <Request request={request}/>
+        return <Request request={request} key={request.RP_Id}/>
       })}
     </div>
   );

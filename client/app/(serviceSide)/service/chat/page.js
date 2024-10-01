@@ -94,7 +94,6 @@ export default function Chat() {
           }),
         });
         const data = await response.json();
-        console.log(data.user);
         setCus(data.user);
       } catch (error) {
         console.error("Error fetching user:", error.message);

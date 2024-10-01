@@ -9,7 +9,6 @@ export default function ChatPanel(props) {
     file: null,
     url: "",
   });
-  console.log(props.user);
 
   useEffect(() => {
     scrollToBottom();
