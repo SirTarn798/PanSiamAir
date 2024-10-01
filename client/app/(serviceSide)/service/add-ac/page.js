@@ -1,14 +1,16 @@
 "use client";
 
 import BackBtn from "@/app/component/backBtn";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function AddAC() {
 
   const id = useSelector((state) => state.user.id);
-
+  const [status, setStatus] = useState(1);
   const handleAddAC = async (e) => {
     e.preventDefault();
+    setStatus(2);
     const formData = new FormData(e.target);
     const ACData = Object.fromEntries(formData);
     try {
@@ -21,6 +23,7 @@ export default function AddAC() {
           ACData,
         }),
       });
+      setStatus(1)
     } catch (err) {
       console.log(err.message);
     }
@@ -43,7 +46,7 @@ export default function AddAC() {
         <input type="text" name="address" required />
         <p>ร้านค้า</p>
         <input type="text" name="store" required/>
-        <button className="bg-primary w-28 p-2 rounded-3xl self-center">
+        <button className={`w-28 p-2 rounded-3xl self-center ` + (status === 1 ? "bg-primary" : "bg-primaryBg")} disabled={status === 2}>
           บันทึกข้อมูล
         </button>
       </form>

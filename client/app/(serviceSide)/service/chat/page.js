@@ -159,7 +159,7 @@ export default function Chat() {
         />
       ) : (
         <div className="flex h-full w-full justify-center items-center cursor-not-allowed">
-          <p className="text-white bg-primary p-4">Please Click Chat</p>
+          <p className="text-white bg-primary p-4">ข้อมูล ID ใน URL ไม่ถูกต้องหรือกดเลือกที่แชท</p>
         </div>
       )}
     </div>

@@ -1,15 +1,16 @@
 "use client"
 
 import BackBtn from "@/app/component/backBtn";
+import { useRouter } from "next/navigation";
 
 export default function AddEmployee() {
-
+  const router = useRouter();
   const addEmployee = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const userData = Object.fromEntries(formData);
     try {
-      const reponse = await fetch("/api/registerApi", {
+      const response = await fetch("/api/registerApi", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -22,8 +23,14 @@ export default function AddEmployee() {
           name: userData.name,
         }),
       });
+      if(response.status === 201) {
+        alert("เพิ่มพนักงานสำเร็จ")
+        router.push("/admin/add-employee")
+      } else if(response.status === 500) {
+        throw new Error("อีเมลล์ได้ถูกใช้ไปแล้ว โปรดลองอีเมลล์อื่น");
+      }
     } catch (err) {
-      console.log(err.message);
+      alert(err.message)
     }
   }
   return (
@@ -37,7 +44,7 @@ export default function AddEmployee() {
         <p>รหัสผ่าน</p>
         <input type="password" required name="password" minLength={8}/>
         <p>เบอร์โทร</p>
-        <input type="text" required name="tel" minLength={8}/>
+        <input type="number" required name="tel" minLength={8}/>
         <p>ตำแหน่ง</p>
         <select required name="role">
           <option value="" disabled selected>

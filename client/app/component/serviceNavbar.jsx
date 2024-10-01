@@ -17,7 +17,7 @@ function ServiceNavBar() {
         <img src="/list-items.png" alt="ac list icon" width={35} height={35} />
         <p className="font-bold">รายการแจ้งซ่อม</p>
       </button>
-      <button className="flex items-center p-5 gap-5 hover:bg-neutral-200" onClick={() => router.push("/service/addWC")}>
+      <button className="flex items-center p-5 gap-5 hover:bg-neutral-200" onClick={() => router.push("/service/add-ac")}>
         <img src="/card.png" alt="ac list icon" width={35} height={35} />
         <p className="font-bold">เพิ่มแอร์เข้าสู่ระบบ</p>
       </button>

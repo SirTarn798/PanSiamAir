@@ -11,15 +11,15 @@ export default function AddAC() {
     file: null,
     url: "",
   });
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [status, setStatus] = useState(0);
+  const statusList = ["", "ทำการเพิ่มแอร์สำเร็จแล้ว", "ข้อมูลไม่ถูกต้อง", "โปรดอัปโหลดรูปใบรับประกันด้วย", "มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง"]
 
   const handleAddAC = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const WCData = Object.fromEntries(formData);
     if (!wc.file) {
-      setError("โปรดอัปโหลดรูปใบรับประกันด้วย");
+      setStatus(3); //"โปรดอัปโหลดรูปใบรับประกันด้วย"
       return;
     }
     const wcPicLink = await upload(wc.file, "wcs");
@@ -36,18 +36,14 @@ export default function AddAC() {
         }),
       });
       if (reponse.status === 201) {
-        setError(null);
-        setSuccess("ทำการเพิ่มแอร์สำเร็จแล้ว");
+        setStatus(1); //"ทำการเพิ่มแอร์สำเร็จแล้ว"
       } else if (reponse.status === 400) {
-        setSuccess(null);
-        setError("ข้อมูลไม่ถูกต้อง");
+        setStatus(2); //"ข้อมูลไม่ถูกต้อง"
       } else if (reponse.status === 500) {
-        setSuccess(null);
-        setError("มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง");
+        setStatus(4); //"มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง"
       }
     } catch (err) {
-      setSuccess(null);
-      setError("มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง");
+      setStatus(4);
     }
   };
 
@@ -92,8 +88,7 @@ export default function AddAC() {
           style={{ display: "none" }}
           onChange={handleFileChange}
         />
-        <p className="text-lime-500">{success}</p>
-        <p className="text-rose-500">{error}</p>
+        <p className={`bg-zinc-800 font-bold p-2 rounded w-fit ` + (status === 1 ? "text-lime-500" : "text-rose-500")}>{statusList[status]}</p>
         <button className="bg-primary w-28 p-2 rounded-3xl self-center">
           บันทึกข้อมูล
         </button>
