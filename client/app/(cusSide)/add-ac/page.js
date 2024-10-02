@@ -26,7 +26,7 @@ export default function AddAC() {
     WCData.C_ID = id;
     WCData.wcPicLink = wcPicLink;
     try {
-      const reponse = await fetch("/api/assignACtoCustomer", {
+      const response = await fetch("/api/assignACtoCustomer", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -35,11 +35,11 @@ export default function AddAC() {
           WCData,
         }),
       });
-      if (reponse.status === 201) {
+      if (response.status === 201) {
         setStatus(1); //"ทำการเพิ่มแอร์สำเร็จแล้ว"
-      } else if (reponse.status === 400) {
+      } else if (response.status === 400) {
         setStatus(2); //"ข้อมูลไม่ถูกต้อง"
-      } else if (reponse.status === 500) {
+      } else if (response.status === 500) {
         setStatus(4); //"มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง"
       }
     } catch (err) {

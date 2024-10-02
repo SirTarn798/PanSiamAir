@@ -17,7 +17,7 @@ function StoreNavBar() {
         <img src="/approve.png" alt="ac list icon" width={35} height={35} />
         <p className="font-bold">การอนุมัติเอกสาร</p>
       </button>
-      <button className="flex items-center p-5 gap-5 hover:bg-neutral-200">
+      <button className="flex items-center p-5 gap-5 hover:bg-neutral-200" onClick={() => router.push("/store/add-spare")}>
         <img src="/ac-ventilation.png" alt="ac list icon" width={35} height={35} />
         <p className="font-bold">เพิ่มอะไหล่เข้าสู่ระบบ</p>
       </button>

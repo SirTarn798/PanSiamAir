@@ -95,15 +95,15 @@ model QUOTATION {
 }
 
 model SPARE {
-  S_Id         String         @id @default(uuid())
-  S_Name       String
+  S_Id         Int            @id @default(autoincrement())
+  S_Name       String         @unique
   S_Price      Float
   Spare_detail SPARE_DETAIL[]
 }
 
 model SPARE_DETAIL {
   Q_Id        String
-  S_Id        String
+  S_Id        Int
   SD_Quantity Int
   Quotation   QUOTATION @relation(fields: [Q_Id], references: [Q_Id])
   Spare       SPARE     @relation(fields: [S_Id], references: [S_Id])

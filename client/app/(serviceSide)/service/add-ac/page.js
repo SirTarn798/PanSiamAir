@@ -2,11 +2,9 @@
 
 import BackBtn from "@/app/component/backBtn";
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
 export default function AddAC() {
 
-  const id = useSelector((state) => state.user.id);
   const [status, setStatus] = useState(1);
   const handleAddAC = async (e) => {
     e.preventDefault();
@@ -14,7 +12,7 @@ export default function AddAC() {
     const formData = new FormData(e.target);
     const ACData = Object.fromEntries(formData);
     try {
-      const reponse = await fetch("/api/addWC", {
+      const response = await fetch("/api/addAC", {
         method: "POST",
         headers: {
           "content-type": "application/json",
