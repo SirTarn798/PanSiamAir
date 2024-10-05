@@ -6,14 +6,14 @@ export const POST = async (request) => {
   try {
     const requestProblems = await prisma.rEQUEST_PROBLEM.findMany({
       where: {
-        RP_Status: body.type, // Filter by the status
+        RP_Status: body.type,
       },
       include: {
-        Request_form: true, // Include the related Request_form
+        Request_form: true,
         AC: {
           select: {
-            AC_Serial: true, // Select the AC_Serial
-            AC_Model: true, // Select the AC_Model
+            AC_Serial: true,
+            AC_Model: true,
           },
         },
       },

@@ -40,6 +40,11 @@ export async function middleware(request: NextRequest) {
         !(pathname.startsWith("/store"))
       ) {
         return NextResponse.redirect(new URL("/store", request.url));
+      } else if (
+        decryptedSession.user.role === "HEAD" &&
+        !(pathname.startsWith("/head"))
+      ) {
+        return NextResponse.redirect(new URL("/head", request.url));
       }
     } else {
       if (pathname !== "/login") {

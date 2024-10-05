@@ -83,15 +83,15 @@ model REQUEST_FORM {
 model QUOTATION {
   Q_Id              String         @id @default(uuid())
   Spare_detail      SPARE_DETAIL[]
-  Q_Customer_stauts Boolean
-  Q_Manager_stauts  Boolean
-  Q_Total           Float
-  Q_Discount        Float
-  Q_Vat             Float
-  Q_Grand_total     Float
-  Q_Date            DateTime
+  Q_Customer_stauts Boolean?
+  Q_Manager_stauts  Boolean?
+  Q_Total           Float?
+  Q_Discount        Float?
+  Q_Vat             Float?
+  Q_Grand_total     Float?
+  Q_Date            DateTime?
   RF_Id             String         @unique
-  Reaquest_form     REQUEST_FORM   @relation(fields: [RF_Id], references: [RF_Id])
+  Request_form     REQUEST_FORM   @relation(fields: [RF_Id], references: [RF_Id])
 }
 
 model SPARE {

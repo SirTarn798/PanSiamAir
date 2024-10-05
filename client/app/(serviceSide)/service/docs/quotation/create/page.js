@@ -8,14 +8,11 @@ export default function CreateQuotation() {
   const RF_Id = searchParams.get("RF_Id");
   const [status, setStatus] = useState(null);
   const [rf, setRF] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [items, setItems] = useState([
-    // Sample items (example)
-    // { S_Id: 1380833, S_Name: "แผงคอนโทรล" },
-    // { S_Id: 1380824, S_Name: "พัดลม" },
-    // { S_Id: 1380835, S_Name: "ค่าบริการทั่วไป" },
-  ]);
+  const [showModal, setShowModal] = useState(false); // Modal state
+  const [selectedItems, setSelectedItems] = useState([]); // Selected items for table rows
+  const [items, setItems] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [submitStatus, setSubmitStatus] = useState(1)
 
   // Reference for the modal
   const modalRef = useRef(null);
@@ -66,13 +63,23 @@ export default function CreateQuotation() {
     getSpares();
   }, []);
 
-  // Toggle modal visibility
+  useEffect(() => {
+    if (showModal) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showModal]);
+
   const handleAddItemClick = () => {
-    setShowModal(!showModal);
+    setShowModal(!showModal); // Toggle modal visibility
   };
 
-  // Check if the item is already selected
   const handleSelectItem = (item) => {
+    // Check if the item is already selected
     const itemExists = selectedItems.some(
       (selectedItem) => selectedItem.S_Id === item.S_Id
     );
@@ -82,8 +89,8 @@ export default function CreateQuotation() {
     }
   };
 
-  // Remove item from selected items
   const handleRemoveItem = (itemId) => {
+    // Remove item from selected items
     setSelectedItems(selectedItems.filter((item) => item.S_Id !== itemId));
   };
 
@@ -111,16 +118,39 @@ export default function CreateQuotation() {
     }
   };
 
-  useEffect(() => {
-    if (showModal) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
+  const handleMakeQuotation = async () => {
+    setSubmitStatus(2);
+    try {
+      const response = await fetch("/api/createQuotation", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          selectedItems,
+          RF_Id
+        }),
+      });
+      if(response.status === 200) {
+        alert("เพิ่มใบเสนอราคาสำเร็จ")
+        location.reload()
+      }
+      else if(response.status === 400) {
+        throw new Error("หมายเลขใบขอรับบริการไม่ถูกต้อง")
+      }
+      else {
+        throw new Error("ขออภัย เกิดข้อผิดพลาด โปรดลองใหม่อีกครั้ง")
+      }
+    } catch (error) {
+      alert(error.message)
     }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showModal]);
+    setSubmitStatus(1);
+  };
+
+  // Filter items based on searchQuery
+  const filteredItems = items.filter((item) =>
+    item.S_Name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (status === true) {
     return (
@@ -148,7 +178,10 @@ export default function CreateQuotation() {
           </thead>
           <tbody>
             {selectedItems.map((item, index) => (
-              <tr key={index} className={`odd:bg-gray-100 even:bg-gray-200`}>
+              <tr
+                key={index}
+                className={`odd:bg-gray-100 even:bg-gray-200`} // Alternating row colors
+              >
                 <td className="p-3">{item.S_Name}</td>
                 <td className="p-3">
                   <button
@@ -168,7 +201,7 @@ export default function CreateQuotation() {
                 <td className="p-3">{item.S_Price}</td>
                 <td className="p-3">0.00</td>
                 <td className="p-3">
-                  {(item.S_Price * item.quantity).toFixed(2)}{" "}
+                  {(item.S_Price * item.quantity).toFixed(2)}
                 </td>
                 <td className="p-3">
                   <img
@@ -197,30 +230,56 @@ export default function CreateQuotation() {
           {showModal && (
             <div
               ref={modalRef}
-              className="absolute top-full mt-2 left-0 bg-white p-4 rounded shadow-lg w-64 max-h-60 overflow-y-auto"
+              className="absolute top-full mt-2 left-0 bg-white p-4 rounded shadow-lg w-64 max-h-60 overflow-y-auto" // Added height and scroll
             >
               <p className="font-bold">เลือกสินค้า</p>
+
+              {/* Search bar */}
+              <input
+                type="text"
+                placeholder="ค้นหา..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full p-2 mb-2 border border-gray-300 rounded"
+              />
+
               <ul className="mt-2">
-                {items
-                  .filter(
-                    (item) =>
-                      !selectedItems.some(
-                        (selectedItem) => selectedItem.S_Id === item.S_Id
-                      )
-                  ) // Filter out selected items
-                  .map((item) => (
-                    <li
-                      key={item.S_Id}
-                      onClick={() => handleSelectItem(item)}
-                      className="cursor-pointer p-2 hover:bg-gray-200"
-                    >
-                      {item.S_Name}
-                    </li>
-                  ))}
+                {filteredItems.length > 0 ? (
+                  filteredItems
+                    .filter(
+                      (item) =>
+                        !selectedItems.some(
+                          (selectedItem) => selectedItem.S_Id === item.S_Id
+                        )
+                    )
+                    .map((item) => (
+                      <li
+                        key={item.S_Id}
+                        onClick={() => handleSelectItem(item)}
+                        className="cursor-pointer p-2 hover:bg-gray-200"
+                      >
+                        <span className="font-bold">
+                          {/* Ensure S_Id has 5 digits by padding with zeros */}
+                          {String(item.S_Id).padStart(5, "0")}
+                        </span>{" "}
+                        | {item.S_Name}
+                      </li>
+                    ))
+                ) : (
+                  <p className="text-center text-gray-500">ไม่มีอะไหล่</p>
+                )}
               </ul>
             </div>
           )}
         </div>
+        <div className="flex-grow"></div>
+
+        <button
+          className={`p-3 rounded-3xl text-white font-bold place-self-start ` + (submitStatus === 1 ? "bg-primary" : "bg-primaryBg")} disabled={(submitStatus === 2)}
+          onClick={handleMakeQuotation}
+        >
+          ยืนยันใบเสนอราคา
+        </button>
       </div>
     );
   } else {
