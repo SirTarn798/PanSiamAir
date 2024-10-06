@@ -11,6 +11,7 @@ export const POST = async (request) => {
       const newQuotation = await prisma.qUOTATION.create({
         data: {
           RF_Id,
+          Q_Date : new Date()
         },
       });
 

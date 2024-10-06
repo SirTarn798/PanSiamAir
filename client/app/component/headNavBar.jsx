@@ -11,8 +11,8 @@ function HeadNavBar() {
         className="flex items-center p-5 gap-5 hover:bg-neutral-200"
         onClick={() => router.push("/head/approve-docs")}
       >
-        <img src="/list-items.png" alt="ac list icon" width={35} height={35} />
-        <p className="font-bold">รายการแจ้งซ่อม</p>
+        <img src="/approve.png" alt="ac list icon" width={35} height={35} />
+        <p className="font-bold">การอนุมัติเอกสาร</p>
       </button>
     </div>
   );
