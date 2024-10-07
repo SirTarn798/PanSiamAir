@@ -13,6 +13,7 @@ export default function CreateQuotation() {
   const [items, setItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [submitStatus, setSubmitStatus] = useState(1)
+  const [discount, setDiscount] = useState("");
 
   // Reference for the modal
   const modalRef = useRef(null);
@@ -128,7 +129,8 @@ export default function CreateQuotation() {
         },
         body: JSON.stringify({
           selectedItems,
-          RF_Id
+          RF_Id,
+          discount,
         }),
       });
       if(response.status === 200) {
@@ -169,7 +171,6 @@ export default function CreateQuotation() {
               <td className="p-3">สินค้า</td>
               <td className="p-3">จำนวน</td>
               <td className="p-3">ราคาต่อหน่วย</td>
-              <td className="p-3">ส่วนลด</td>
               <td className="p-3">มูลค่า</td>
               <td className="p-3">
                 <img src="/settings.png" alt="setting" width={20} height={20} />
@@ -199,7 +200,6 @@ export default function CreateQuotation() {
                   </button>
                 </td>
                 <td className="p-3">{item.S_Price}</td>
-                <td className="p-3">0.00</td>
                 <td className="p-3">
                   {(item.S_Price * item.quantity).toFixed(2)}
                 </td>
@@ -273,7 +273,7 @@ export default function CreateQuotation() {
           )}
         </div>
         <div className="flex-grow"></div>
-
+          <input type="number" placeholder="ส่วนลด" className="bg-white p-5 rounded-xl w-3/12" onChange={(e) => {setDiscount(e.target.value)}} value={discount}/>
         <button
           className={`p-3 rounded-3xl text-white font-bold place-self-start ` + (submitStatus === 1 ? "bg-primary" : "bg-primaryBg")} disabled={(submitStatus === 2)}
           onClick={handleMakeQuotation}

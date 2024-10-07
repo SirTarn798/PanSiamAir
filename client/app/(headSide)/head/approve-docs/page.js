@@ -30,7 +30,7 @@ export default function ApproveDocsPage() {
         <>
           {docs.quotations && docs.quotations.length > 0 && (
             <div className="flex flex-col gap-3">
-              <h2 className="text-3xl font-bold">Quotations</h2>
+              <h2 className="text-3xl font-bold">ใบเสนอราคา</h2>
               <div className="flex gap-2 overflow-x-scroll overflow-y-hidden">
                 {docs.quotations.map((quotation, index) => (
                   <div key={`quotation-${index}`} className="shrink-0">

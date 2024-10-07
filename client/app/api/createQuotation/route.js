@@ -32,7 +32,7 @@ export const POST = async (request) => {
         return acc + (item.S_Price * item.quantity);
       }, 0);
 
-      const discount = body.Q_Discount || 0;
+      const discount = parseFloat(body.discount) || 0;
       const vat = 0.07 * (totalPrice - discount);
       const grandTotal = totalPrice - discount + vat;
 
@@ -68,6 +68,7 @@ export const POST = async (request) => {
 
     return NextResponse.json({ createdQuotation }, { status: 200 });
   } catch (error) {
+    console.log(error)
     if (error.code === "P2002") {
       return NextResponse.json({ error: "Existing RF_Id" }, { status: 400 });
     }
