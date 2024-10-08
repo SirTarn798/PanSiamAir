@@ -7,17 +7,23 @@ export const POST = async (request) => {
 
   try {
     const createdQuotation = await prisma.$transaction(async (prisma) => {
-      // Create the new quotation
-      const newQuotation = await prisma.qUOTATION.create({
-        data: {
-          RF_Id,
-          Q_Date : new Date()
-        },
+      // Check if a quotation with the given RF_Id already exists
+      let quotation = await prisma.qUOTATION.findUnique({
+        where: { RF_Id },
       });
+
+      if (!quotation) {
+        // Create the new quotation if it doesn't exist
+        quotation = await prisma.qUOTATION.create({
+          data: {
+            RF_Id,
+          },
+        });
+      }
 
       // Prepare spare details for the quotation
       const spareDetails = selectedItems.map((item) => ({
-        Q_Id: newQuotation.Q_Id,
+        Q_Id: quotation.Q_Id,
         S_Id: item.S_Id,
         SD_Quantity: item.quantity,
       }));
@@ -38,12 +44,13 @@ export const POST = async (request) => {
 
       // Update the quotation with calculated totals
       const updatedQuotation = await prisma.qUOTATION.update({
-        where: { Q_Id: newQuotation.Q_Id },
+        where: { Q_Id: quotation.Q_Id },
         data: {
           Q_Total: totalPrice,
           Q_Discount: discount,
           Q_Vat: vat,
           Q_Grand_total: grandTotal,
+          Q_Date: new Date(),
         },
       });
 
@@ -56,10 +63,10 @@ export const POST = async (request) => {
       // Update the status of the Request_Problem
       await prisma.rEQUEST_PROBLEM.update({
         where: {
-          RP_Id: requestForm.Request_problem.RP_Id,  // Use the fetched RP_Id
+          RP_Id: requestForm.Request_problem.RP_Id, // Use the fetched RP_Id
         },
         data: {
-          RP_Status: "accepted_wait_leader_quotation",  // You can change this to the desired status
+          RP_Status: "accepted_wait_leader_quotation", // Change this to the desired status
         },
       });
 
@@ -68,7 +75,7 @@ export const POST = async (request) => {
 
     return NextResponse.json({ createdQuotation }, { status: 200 });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (error.code === "P2002") {
       return NextResponse.json({ error: "Existing RF_Id" }, { status: 400 });
     }

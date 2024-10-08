@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreateQuotation() {
   const searchParams = useSearchParams();
@@ -14,6 +15,7 @@ export default function CreateQuotation() {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [submitStatus, setSubmitStatus] = useState(1)
   const [discount, setDiscount] = useState("");
+  const router = useRouter();
 
   // Reference for the modal
   const modalRef = useRef(null);
@@ -135,7 +137,7 @@ export default function CreateQuotation() {
       });
       if(response.status === 200) {
         alert("เพิ่มใบเสนอราคาสำเร็จ")
-        location.reload()
+        router.push("/service/docs/quotation")
       }
       else if(response.status === 400) {
         throw new Error("หมายเลขใบขอรับบริการไม่ถูกต้อง")

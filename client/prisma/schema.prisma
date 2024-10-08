@@ -89,7 +89,7 @@ model QUOTATION {
   Q_Discount        Float?
   Q_Vat             Float?
   Q_Grand_total     Float?
-  Q_Date            DateTime
+  Q_Date            DateTime?
   RF_Id             String         @unique
   Request_form     REQUEST_FORM   @relation(fields: [RF_Id], references: [RF_Id])
 }
