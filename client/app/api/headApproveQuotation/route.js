@@ -1,50 +1,55 @@
 import { NextResponse } from "next/server";
-import prisma from "../../../lib/db";
+import db from "@/lib/dbA";
 
 export const POST = async (request) => {
   const body = await request.json();
+
   try {
+
     if (body.status) {
-      await prisma.qUOTATION.update({
-        where: {
-          Q_Id: parseInt(body.id),
-        },
-        data: {
-          Q_Manager_stauts: true,
-          Request_form: {
-            update: {
-              Request_problem: {
-                update: {
-                  RP_Status: "accpeted_wait_cus_quotation",
-                },
-              },
-            },
-          },
-        },
-      });
+      // Update QUOTATION and related tables
+      await db.query(`
+        UPDATE "QUOTATION"
+        SET "Q_Manager_stauts" = true
+        WHERE "Q_Id" = $1
+      `, [body.id]);
+
+      await db.query(`
+        UPDATE "REQUEST_PROBLEM"
+        SET "RP_Status" = 'accpeted_wait_cus_quotation'
+        WHERE "RP_Id" = (
+          SELECT "RP_Id"
+          FROM "REQUEST_FORM"
+          WHERE "RF_Id" = (
+            SELECT "RF_Id"
+            FROM "QUOTATION"
+            WHERE "Q_Id" = $1
+          )
+        )
+      `, [body.id]);
     } else {
-      await prisma.qUOTATION.update({
-        where: {
-          Q_Id: parseInt(body.id),
-        },
-        data: {
-          Request_form: {
-            update: {
-              Request_problem: {
-                update: {
-                  RP_Status: "accepted_wait_write_quotation",
-                },
-              },
-            },
-          },
-        },
-      });
-      await prisma.sPARE_DETAIL.deleteMany({
-        where: {
-          Q_Id: parseInt(body.id),
-        },
-      });
+      // Update REQUEST_PROBLEM status
+      await db.query(`
+        UPDATE "REQUEST_PROBLEM"
+        SET "RP_Status" = 'accepted_wait_write_quotation'
+        WHERE "RP_Id" = (
+          SELECT "RP_Id"
+          FROM "REQUEST_FORM"
+          WHERE "RF_Id" = (
+            SELECT "RF_Id"
+            FROM "QUOTATION"
+            WHERE "Q_Id" = $1
+          )
+        )
+      `, [body.id]);
+
+      // Delete related SPARE_DETAIL entries
+      await db.query(`
+        DELETE FROM "SPARE_DETAIL"
+        WHERE "Q_Id" = $1
+      `, [body.id]);
     }
+
     return NextResponse.json({ message: "Update successful" }, { status: 200 });
   } catch (error) {
     console.log(error);

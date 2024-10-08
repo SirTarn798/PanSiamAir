@@ -1,35 +1,30 @@
 import { NextResponse } from "next/server";
-import prisma from "../../../lib/db";
+import db from "@/lib/dbA";
 
 export const POST = async (request) => {
   try {
     const body = await request.json();
 
-    const ac = await prisma.aIRCONDITION.update({
-      where: {
-        U_Id: body.id,
-        AC_Serial: body.serial,
-      },
-      data: {
-        AC_Status: "รอพิจารณาซ่อม",
-      },
-    });
+    // Update AIRCONDITION
+    const acResult = await db.query(`
+      UPDATE "AIRCONDITION"
+      SET "AC_Status" = 'รอพิจารณาซ่อม'
+      WHERE "U_Id" = $1 AND "AC_Serial" = $2
+      RETURNING *
+    `, [body.id, body.serial]);
 
-    if (!ac) {
+    if (acResult.rows.length === 0) {
+      await db.query('ROLLBACK');
       return NextResponse.json({ error: "AC does not exist" }, { status: 400 });
     }
 
-    await prisma.rEQUEST_PROBLEM.create({
-      data: {
-        AC: {
-          connect: {
-            AC_Serial: body.serial,
-          },
-        },
-        RP_Detail: body.detail,
-        RP_Status : "waiting"
-      },
-    });
+    const ac = acResult.rows[0];
+
+    // Create REQUEST_PROBLEM
+    await db.query(`
+      INSERT INTO "REQUEST_PROBLEM" ("AC_Serial", "RP_Detail", "RP_Status")
+      VALUES ($1, $2, $3)
+    `, [body.serial, body.detail, "waiting"]);
 
     return NextResponse.json({ ac }, { status: 201 });
   } catch (error) {
