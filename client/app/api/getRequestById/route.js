@@ -7,7 +7,7 @@ export const POST = async (request) => {
   try {
     const requests = await prisma.rEQUEST_PROBLEM.findUnique({
       where: {
-        RP_Id: body.id,
+        RP_Id: parseInt(body.id),
       },
       include: {
         AC: {
@@ -22,6 +22,7 @@ export const POST = async (request) => {
     }
     return NextResponse.json({ requests }, { status: 200 });
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { error: "Unexpected error happens" },
       { status: 500 }

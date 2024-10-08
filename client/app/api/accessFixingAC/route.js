@@ -1,38 +1,41 @@
 import { NextResponse } from "next/server";
-import prisma from "../../../lib/db";
+import db from "@/lib/dbA";
 
 export const POST = async (request) => {
   try {
     const body = await request.json();
-    
-    const ac = await prisma.aIRCONDITION.findUnique({
-      where: {
-        U_Id: body.id,
-        AC_Serial: body.serial,
-      },
-    });
 
-    const req = await prisma.rEQUEST_PROBLEM.findFirst({
-      where : {
-        AC_Serial: body.serial, // This should be body.serial since it refers to WC_Serial
-        RP_Status: {
-          not : "finished",
-        },
-      },
-    });
+    const acQuery = `
+      SELECT * 
+      FROM "AIRCONDITION"
+      WHERE "U_Id" = $1
+        AND "AC_Serial" = $2
+    `;
+    const acValues = [body.id, body.serial];
+    const acResult = await db.query(acQuery, acValues);
 
-    if (!ac) {
-      // If AC doesn't exist
+    if (acResult.rows.length === 0) {
       return NextResponse.json({ error: "AC does not exist" }, { status: 400 });
     }
 
-    if (req) {
-      // If a request with WC_Serial exists and is not finished
-      return NextResponse.json({ error: "Request is still pending" }, { status: 400 });
+    const reqQuery = `
+      SELECT * 
+      FROM "REQUEST_PROBLEM"
+      WHERE "AC_Serial" = $1
+        AND "RP_Status" <> 'finished'
+      LIMIT 1
+    `;
+    const reqValues = [body.serial];
+    const reqResult = await db.query(reqQuery, reqValues);
+
+    if (reqResult.rows.length > 0) {
+      return NextResponse.json(
+        { error: "Request is still pending" },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ ac }, { status: 201 });
-
+    return NextResponse.json({ ac: acResult.rows[0] }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

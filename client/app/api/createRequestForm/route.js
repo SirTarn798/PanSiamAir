@@ -1,23 +1,40 @@
 import { NextResponse } from "next/server";
-import prisma from "../../../lib/db";
+import db from "@/lib/dbA";
 
 export const POST = async (request) => {
     const date = new Date();
     try {
-    const body = await request.json();
-    await prisma.rEQUEST_FORM.create({
-        data : {
-            RP_Id : body.id,
-            RF_Date : date
-        }
-    })
+        const body = await request.json();
+        
+        const query = `
+            INSERT INTO "REQUEST_FORM" ("RP_Id", "RF_Date")
+            VALUES ($1, $2)
+            RETURNING *
+        `;
+        
+        const values = [parseInt(body.id), date];
+        
+        const result = await db.query(query, values);
 
-    return NextResponse.json({}, { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "Unexpected error occurred" },
-      { status: 500 }
-    );
-  }
+        return NextResponse.json({ createdForm: result.rows[0] }, { status: 200 });
+    } catch (error) {
+        console.error('Detailed error:', error);
+        
+        if (error.code === '23505') {  // unique_violation
+            return NextResponse.json(
+                { error: "A REQUEST_FORM with this RP_Id already exists" },
+                { status: 400 }
+            );
+        } else if (error.code === '23503') {  // foreign_key_violation
+            return NextResponse.json(
+                { error: "Related REQUEST_PROBLEM not found" },
+                { status: 400 }
+            );
+        }
+        
+        return NextResponse.json(
+            { error: "Unexpected error occurred" },
+            { status: 500 }
+        );
+    }
 };

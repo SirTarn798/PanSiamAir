@@ -1,34 +1,34 @@
-import prisma from "../../../lib/db";
+import db from "@/lib/dbA";
 import { NextResponse } from "next/server";
 
 export const POST = async (request) => {
   const body = await request.json();
+
   try {
-    const rf = await prisma.rEQUEST_FORM.findFirst({
-      where: {
-        RF_Id: body.RF_Id,
-      },
-      include: {
-        Request_problem: {
-          select: {
-            AC: {
-                select : {
-                    Customer : {
-                        select : {
-                            U_Name : true
-                        }
-                    },
-                    AC_Address : true,
-                    AC_Model : true,
-                    AC_Serial : true,
-                }
-            }
-          },
-        },
-      },
-    });
-    if (rf) {
-      return NextResponse.json({rf},{ status: 200 });
+    const query = `
+      SELECT 
+        rf.*,
+        ac."AC_Address",
+        ac."AC_Model",
+        ac."AC_Serial",
+        u."U_Name"
+      FROM 
+        "REQUEST_FORM" rf
+      JOIN 
+        "REQUEST_PROBLEM" rp ON rf."RP_Id" = rp."RP_Id"
+      JOIN 
+        "AIRCONDITION" ac ON rp."AC_Serial" = ac."AC_Serial"
+      JOIN 
+        "USER" u ON ac."U_Id" = u."U_Id"
+      WHERE 
+        rf."RF_Id" = $1;
+    `;
+
+    const values = [body.RF_Id];
+    const result = await db.query(query, values);
+
+    if (result.rows.length > 0) {
+      return NextResponse.json({ rf: result.rows[0] }, { status: 200 });
     } else {
       throw new Error("Can't find Request Form");
     }

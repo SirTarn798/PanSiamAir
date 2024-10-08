@@ -7,7 +7,7 @@ export const POST = async (request) => {
     if (body.status) {
       await prisma.qUOTATION.update({
         where: {
-          Q_Id: body.id,
+          Q_Id: parseInt(body.id),
         },
         data: {
           Q_Manager_stauts: true,
@@ -25,7 +25,7 @@ export const POST = async (request) => {
     } else {
       await prisma.qUOTATION.update({
         where: {
-          Q_Id: body.id,
+          Q_Id: parseInt(body.id),
         },
         data: {
           Request_form: {
@@ -40,13 +40,14 @@ export const POST = async (request) => {
         },
       });
       await prisma.sPARE_DETAIL.deleteMany({
-        where : {
-            Q_Id : body.id
-        }
-      })
+        where: {
+          Q_Id: parseInt(body.id),
+        },
+      });
     }
     return NextResponse.json({ message: "Update successful" }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 };

@@ -15,7 +15,7 @@ export const POST = async (request) => {
 
     await prisma.rEQUEST_PROBLEM.update({
       where: {
-        RP_Id: body.id,
+        RP_Id: parseInt(body.id),
       },
       data: {
         RP_Status: body.statusRp,

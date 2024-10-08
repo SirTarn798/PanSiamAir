@@ -6,7 +6,7 @@ export const POST = async (request) => {
   try {
     const quotation = await prisma.qUOTATION.findUnique({
       where: {
-        Q_Id: body.id,
+        Q_Id: parseInt(body.id),
       },
       select: {
         Q_Id: true,
@@ -32,6 +32,7 @@ export const POST = async (request) => {
       );
     }
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { error: "เซิร์ฟเวอร์มีปัญหา กรุณาลองอีกครั้ง" },
       { status: 500 }

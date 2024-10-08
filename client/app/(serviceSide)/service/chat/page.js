@@ -17,7 +17,7 @@ export default function Chat() {
   const [chat, setChat] = useState(null);
   const [cusId, setCusId] = useState(chatId);
   const [socket, setSocket] = useState(null);
-  const [cus, setCus] = useState();
+  const [cus, setCus] = useState(null);
 
   // Set up socket connection
   useEffect(() => {
@@ -56,7 +56,6 @@ export default function Chat() {
     const handleMessage = (data) => {
       setChats((prevChats) => {
         const updatedChats = { ...prevChats };
-        console.log(data);
         if (data.M_Sender !== "services") {
           updatedChats[data.M_Sender]?.messages.push(data);
         } else {

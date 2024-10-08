@@ -17,7 +17,7 @@ export default function CreateQuotation() {
   const [discount, setDiscount] = useState("");
   const router = useRouter();
 
-  // Reference for the modal
+  // Reference for the modal AC
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -160,11 +160,11 @@ export default function CreateQuotation() {
     return (
       <div className="flex flex-col w-screen p-16 bg-primaryBg m-10 rounded-3xl gap-10">
         <div className="flex flex-col gap-3 font-bold">
-          <p>ชื่อ - นามสกุล : {rf.Request_problem.AC.Customer.U_Name}</p>
-          <p>ที่อยู่ : {rf.Request_problem.AC.AC_Address}</p>
+          <p>ชื่อ - นามสกุล : {rf.U_Name}</p>
+          <p>ที่อยู่ : {rf.AC_Address}</p>
           <p>รหัสใบขอรับบริการ : {rf.RF_Id}</p>
-          <p>หมายเลขเครื่อง : {rf.Request_problem.AC.AC_Serial}</p>
-          <p>รุ่น : {rf.Request_problem.AC.AC_Model}</p>
+          <p>หมายเลขเครื่อง : {rf.AC_Serial}</p>
+          <p>รุ่น : {rf.AC_Model}</p>
         </div>
 
         <table className="w-full border-collapse rounded-lg overflow-hidden p-5">

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -49,7 +43,7 @@ model MESSAGE {
 }
 
 model AIRCONDITION {
-  AC_Serial            String            @id @default(uuid())
+  AC_Serial            String            @id
   AC_Model             String
   Customer             USER?             @relation(fields: [U_Id], references: [U_Id])
   U_Id                 String?
@@ -62,7 +56,7 @@ model AIRCONDITION {
 }
 
 model REQUEST_PROBLEM {
-  RP_Id        String        @id @default(uuid())
+  RP_Id        Int            @id @default(autoincrement())
   AC_Serial    String
   AC           AIRCONDITION  @relation(fields: [AC_Serial], references: [AC_Serial])
   RP_Detail    String
@@ -71,17 +65,17 @@ model REQUEST_PROBLEM {
 }
 
 model REQUEST_FORM {
-  RF_Id             String          @id @default(uuid())
+  RF_Id             Int            @id @default(autoincrement())
   RF_Cause          String?
   RF_Repair_details String?
   RF_Date           DateTime
-  RP_Id             String          @unique
+  RP_Id             Int          @unique
   Request_problem   REQUEST_PROBLEM @relation(fields: [RP_Id], references: [RP_Id])
   QUOTATION         QUOTATION?
 }
 
 model QUOTATION {
-  Q_Id              String         @id @default(uuid())
+  Q_Id              Int            @id @default(autoincrement())
   Spare_detail      SPARE_DETAIL[]
   Q_Customer_stauts Boolean?
   Q_Manager_stauts  Boolean?
@@ -90,7 +84,7 @@ model QUOTATION {
   Q_Vat             Float?
   Q_Grand_total     Float?
   Q_Date            DateTime?
-  RF_Id             String         @unique
+  RF_Id             Int         @unique
   Request_form     REQUEST_FORM   @relation(fields: [RF_Id], references: [RF_Id])
 }
 
@@ -102,7 +96,7 @@ model SPARE {
 }
 
 model SPARE_DETAIL {
-  Q_Id        String
+  Q_Id        Int
   S_Id        Int
   SD_Quantity Int
   Quotation   QUOTATION @relation(fields: [Q_Id], references: [Q_Id])

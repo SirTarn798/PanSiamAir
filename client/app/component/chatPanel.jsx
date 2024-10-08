@@ -3,6 +3,7 @@ import Message from "@/app/component/message";
 import upload from "@/lib/upload";
 
 export default function ChatPanel(props) {
+  console.log(props)
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
   const [pic, setPic] = useState({
@@ -52,12 +53,12 @@ export default function ChatPanel(props) {
     <div className="flex flex-col bg-primaryBg rounded p-5 w-full">
       <div className="flex w-full justify-end p-3 bg-primary gap-6 items-center rounded-t">
         <img
-          src={props.side === "customer" ? "/user.png" : props.user.U_Profile}
+          src={props.side === "customer" ? "/user.png" : props.chat.user.profile}
           alt="User"
           className="w-20 h-20 rounded-full"
         />
         <h1 className="text-white text-3xl font-bold">
-          {props.side === "customer" ? "Admin" : props.user.U_Name}
+          {props.side === "customer" ? "Admin" : props.chat.user.name}
         </h1>
       </div>
       <div className="flex flex-col bg-white h-screen gap-1 overflow-scroll overflow-x-hidden">
