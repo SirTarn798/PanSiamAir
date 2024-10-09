@@ -22,11 +22,22 @@ export async function decrypt(input) {
 }
 
 export async function signIn(credential) {
-  const user = await prisma.uSER.findUnique({
-    where: {
-      U_Email: credential.email,
-    },
-  });
+  let user = null;
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/getUser`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        credential,
+      }),
+    });
+    const data = await response.json();
+    user = data.user.rows[0]
+  } catch(error) {
+    console.log(error.message)
+  }
   if (user) {
     const status = await compare(
       credential.password.trim(),

@@ -9,9 +9,9 @@ export const GET = async (request) => {
     `;
     const messages = await db.query(messagesQuery);
 
-    // Step 2: Group messages by userId (sender and receiver), skipping "x"
+    // Step 2: Group messages by userId (sender and receiver), skipping "services"
     const groupedMessages = messages.rows.reduce((acc, message) => {
-      // Add messages where the user is the sender (but skip if sender is "x")
+      // Add messages where the user is the sender (but skip if sender is "services")
       if (message.M_Sender !== "services") {
         if (!acc[message.M_Sender]) {
           acc[message.M_Sender] = [];
@@ -19,7 +19,7 @@ export const GET = async (request) => {
         acc[message.M_Sender].push(message);
       }
 
-      // Add messages where the user is the receiver (but skip if receiver is "x")
+      // Add messages where the user is the receiver (but skip if receiver is "services")
       if (message.M_Receiver !== "services") {
         if (!acc[message.M_Receiver]) {
           acc[message.M_Receiver] = [];

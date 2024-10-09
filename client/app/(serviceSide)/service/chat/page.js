@@ -82,6 +82,7 @@ export default function Chat() {
 
   useEffect(() => {
     const getUser = async () => {
+      if(cusId != null)
       try {
         const response = await fetch("/api/getCusById", {
           method: "POST",
@@ -147,6 +148,7 @@ export default function Chat() {
           ))}
         </div>
       </div>
+      {console.log(cus)}
       {cus ? (
         <ChatPanel
           sendMsg={sendMsg}
