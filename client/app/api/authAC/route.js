@@ -17,26 +17,7 @@ export const POST = async (request) => {
     if (acResult.rows.length === 0) {
       return NextResponse.json({ error: "AC does not exist" }, { status: 400 });
     }
-
-    const reqQuery = `
-      SELECT * 
-      FROM "REQUEST_PROBLEM"
-      WHERE "AC_Serial" = $1
-        AND "RP_Status" NOT IN ('finished', 'rejected')
-      LIMIT 1
-    `;
-
-    const reqValues = [body.serial];
-    const reqResult = await db.query(reqQuery, reqValues);
-
-    if (reqResult.rows.length > 0) {
-      return NextResponse.json(
-        { error: "Request is still pending" },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json({ ac: acResult.rows[0] }, { status: 201 });
+    return NextResponse.json({}, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

@@ -148,7 +148,6 @@ export default function Chat() {
           ))}
         </div>
       </div>
-      {console.log(cus)}
       {cus ? (
         <ChatPanel
           sendMsg={sendMsg}

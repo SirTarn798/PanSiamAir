@@ -25,7 +25,6 @@ export default function QuotationPage() {
         });
         const data = await response.json();
         if (response.status === 200) {
-          console.log(data);
           setQuotation(data.quotation);
         } else {
           setError(data.error);

@@ -5,18 +5,21 @@ export const POST = async (request) => {
   const body = await request.json();
 
   try {
-
     if (body.status) {
       // Update QUOTATION and related tables
-      await db.query(`
+      await db.query(
+        `
         UPDATE "QUOTATION"
         SET "Q_Manager_stauts" = true
         WHERE "Q_Id" = $1
-      `, [body.id]);
+      `,
+        [body.id]
+      );
 
-      await db.query(`
+      await db.query(
+        `
         UPDATE "REQUEST_PROBLEM"
-        SET "RP_Status" = 'accpeted_wait_cus_quotation'
+        SET "RP_Status" = 'accepted_wait_cus_quotation'
         WHERE "RP_Id" = (
           SELECT "RP_Id"
           FROM "REQUEST_FORM"
@@ -26,10 +29,34 @@ export const POST = async (request) => {
             WHERE "Q_Id" = $1
           )
         )
-      `, [body.id]);
+      `,
+        [body.id]
+      );
+
+      await db.query(
+        `
+        UPDATE "AIRCONDITION"
+        SET "AC_Status" = 'รอยืนยันราคา'
+        WHERE "AC_Serial" = (
+          SELECT "AC_Serial"
+          FROM "REQUEST_PROBLEM"
+          WHERE "RP_Id" = (
+            SELECT "RP_Id"
+            FROM "REQUEST_FORM"
+            WHERE "RF_Id" = (
+              SELECT "RF_Id"
+              FROM "QUOTATION"
+              WHERE "Q_Id" = $1
+            )
+          )
+        )
+      `,
+        [body.id]
+      );
     } else {
       // Update REQUEST_PROBLEM status
-      await db.query(`
+      await db.query(
+        `
         UPDATE "REQUEST_PROBLEM"
         SET "RP_Status" = 'accepted_wait_write_quotation'
         WHERE "RP_Id" = (
@@ -41,13 +68,18 @@ export const POST = async (request) => {
             WHERE "Q_Id" = $1
           )
         )
-      `, [body.id]);
+      `,
+        [body.id]
+      );
 
       // Delete related SPARE_DETAIL entries
-      await db.query(`
+      await db.query(
+        `
         DELETE FROM "SPARE_DETAIL"
         WHERE "Q_Id" = $1
-      `, [body.id]);
+      `,
+        [body.id]
+      );
     }
 
     return NextResponse.json({ message: "Update successful" }, { status: 200 });

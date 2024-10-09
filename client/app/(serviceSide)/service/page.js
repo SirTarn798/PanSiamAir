@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Request from "@/app/component/request"
+import Request from "@/app/component/request";
 
 export default function Service() {
   const [reqState, setReqState] = useState(1);
@@ -62,9 +62,11 @@ export default function Service() {
           ดำเนินการเสร็จสิ้น
         </p>
       </div>
-      {requests?.map((request) => {
-        return <Request request={request} key={request.RP_Id}/>
-      })}
+      <div className="flex flex-col gap-5 w-full h-full overflow-y-auto">
+        {requests?.map((request) => {
+          return <Request request={request} key={request.RP_Id} />;
+        })}
+      </div>
     </div>
   );
 }

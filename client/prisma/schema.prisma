@@ -6,7 +6,7 @@ generator client {
 //   waiting
 //   accepted_wait_write_quotation
 //   accepted_wait_leader_quotation
-//   accpeted_wait_cus_quotation
+//   accepted_wait_cus_quotation
 //   accepted_wait_pick_calendar
 //   rejected
 //   finished

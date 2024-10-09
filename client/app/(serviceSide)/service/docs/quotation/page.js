@@ -61,7 +61,7 @@ export default function QuitationPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 3 ? "bg-primary" : "")
           }
-          onClick={() => getQuotations(3, "accpeted_wait_cus_quotation")}
+          onClick={() => getQuotations(3, "accepted_wait_cus_quotation")}
         >
           รอการอนุมัติจากลูกค้า
         </p>
