@@ -13,6 +13,8 @@ export default function ListAC(props) {
     } else if (ac.AC_Status === "รอยืนยันราคา") {
       router.push(`/approve-docs/quotation?serial=${ac.AC_Serial}`);
       return;
+    } else if (ac.AC_Status === "รอเลือกวันนัดหมาย") {
+      router.push(`/pick-calendar?serial=${ac.AC_Serial}`)
     }
   };
 

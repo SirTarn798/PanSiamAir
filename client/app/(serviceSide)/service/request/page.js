@@ -8,6 +8,8 @@ export default function RequestPage() {
   const searchParams = useSearchParams();
   const [request, setRequest] = useState();
   const [error, setError] = useState(null);
+  const [estimatedHours, setEstimatedHours] = useState(0);
+  const [estimatedMinutes, setEstimatedMinutes] = useState(0);
   const id = searchParams.get("id") || "";
   const router = useRouter();
 
@@ -83,7 +85,12 @@ export default function RequestPage() {
   };
 
   const createRequestForm = async () => {
+    if(estimatedHours === 0 && estimatedMinutes === 0) {
+      alert("โปรดประมาณเวลาในการซ่อม");
+      return;
+    }
     try {
+      const totalMinutes = parseInt(estimatedHours) * 60 + parseInt(estimatedMinutes);
       const response = await fetch("/api/createRequestForm", {
         method: "POST",
         headers: {
@@ -91,6 +98,7 @@ export default function RequestPage() {
         },
         body: JSON.stringify({
           id,
+          estimatedFixTimeMinutes: totalMinutes,
         }),
       });
       if (response.status != 200) {
@@ -151,6 +159,31 @@ export default function RequestPage() {
             <p>{request.AC.Customer.U_Tel}</p>
             <p className="font-bold">รายละเอียด</p>
             <p>{request.RP_Detail}</p>
+          </div>
+          {/* Input estimate fix time */}
+          <div className="flex flex-col gap-2">
+            <p className="font-bold">ประมาณเวลาซ่อม</p>
+            <div className="flex gap-4">
+              <input
+                type="number"
+                min="0"
+                value={estimatedHours}
+                onChange={(e) => setEstimatedHours(e.target.value)}
+                className="w-20 p-2 border rounded"
+                placeholder="ชั่วโมง"
+                required
+              />
+              <input
+                type="number"
+                min="0"
+                max="59"
+                value={estimatedMinutes}
+                onChange={(e) => setEstimatedMinutes(e.target.value)}
+                className="w-20 p-2 border rounded"
+                placeholder="นาที"
+                required
+              />
+            </div>
           </div>
         </div>
         <div

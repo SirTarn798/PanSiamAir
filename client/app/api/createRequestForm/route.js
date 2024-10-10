@@ -7,12 +7,12 @@ export const POST = async (request) => {
         const body = await request.json();
         
         const query = `
-            INSERT INTO "REQUEST_FORM" ("RP_Id", "RF_Date")
-            VALUES ($1, $2)
+            INSERT INTO "REQUEST_FORM" ("RP_Id", "RF_Date", "RF_EFT")
+            VALUES ($1, $2, $3)
             RETURNING *
         `;
         
-        const values = [parseInt(body.id), date];
+        const values = [parseInt(body.id), date, body.estimatedFixTimeMinutes];
         
         const result = await db.query(query, values);
 
