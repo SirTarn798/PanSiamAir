@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const DAYS = [
   "Sunday",
@@ -34,34 +35,39 @@ const MONTHS = [
   "December",
 ];
 
-const AppointmentCalendar = ({ initialDuration = 60 }) => {
+const AppointmentCalendar = (props) => {
+  const initialDuration = props.initialDuration;
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [allAppointments, setAllAppointments] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const searchParams = useSearchParams();
+  const serial = searchParams.get("serial");
+  const router = useRouter();
+
   const exampleAppointments = [
     {
-      date: '2024-05-15T00:00:00+07:00',
-      start: '2024-05-15T10:00:00+07:00',
-      end: '2024-05-15T11:00:00+07:00'
+      date: "2024-05-15T00:00:00+07:00",
+      start: "2024-05-15T10:00:00+07:00",
+      end: "2024-05-15T11:00:00+07:00",
     },
     {
-      date: '2024-05-15T00:00:00+07:00',
-      start: '2024-05-15T14:30:00+07:00',
-      end: '2024-05-15T15:30:00+07:00'
+      date: "2024-05-15T00:00:00+07:00",
+      start: "2024-05-15T14:30:00+07:00",
+      end: "2024-05-15T15:30:00+07:00",
     },
     {
-      date: '2024-05-20T00:00:00+07:00',
-      start: '2024-05-20T09:00:00+07:00',
-      end: '2024-05-20T10:30:00+07:00'
+      date: "2024-05-20T00:00:00+07:00",
+      start: "2024-05-20T09:00:00+07:00",
+      end: "2024-05-20T10:30:00+07:00",
     },
     {
-      date: '2024-05-25T00:00:00+07:00',
-      start: '2024-05-25T13:00:00+07:00',
-      end: '2024-05-25T14:00:00+07:00'
-    }
+      date: "2024-05-25T00:00:00+07:00",
+      start: "2024-05-25T13:00:00+07:00",
+      end: "2024-05-25T14:00:00+07:00",
+    },
   ];
 
   useEffect(() => {
@@ -70,7 +76,7 @@ const AppointmentCalendar = ({ initialDuration = 60 }) => {
         const response = await fetch("/api/getAppointments");
         if (response.ok) {
           const data = await response.json();
-          setAllAppointments(exampleAppointments);
+          setAllAppointments(data);
         } else {
           console.error("Failed to fetch appointments");
         }
@@ -101,17 +107,12 @@ const AppointmentCalendar = ({ initialDuration = 60 }) => {
       const isSelected =
         selectedDate && date.toDateString() === selectedDate.toDateString();
       const isToday = date.toDateString() === new Date().toDateString();
-      const hasAppointments = allAppointments.some(
-        (app) => new Date(app.date).toDateString() === date.toDateString()
-      );
 
       days.push(
         <Button
           key={day}
           variant={isSelected ? "default" : "outline"}
-          className={`h-12 ${isToday ? "border-primary" : ""} ${
-            hasAppointments ? "bg-red-100" : ""
-          }`}
+          className={`h-12 ${isToday ? "border-primary" : ""}`}
           onClick={() => handleDateClick(date)}
         >
           {day}
@@ -133,10 +134,9 @@ const AppointmentCalendar = ({ initialDuration = 60 }) => {
       date.getTime() - date.getTimezoneOffset() * 60000
     );
     const dateString = localDate.toISOString().split("T")[0];
-    console.log("Selected date:", dateString);
 
     const dayAppointments = allAppointments.filter((app) => {
-      const appDate = new Date(app.date);
+      const appDate = new Date(app.start);
       const appLocalDate = new Date(
         appDate.getTime() - appDate.getTimezoneOffset() * 60000
       );
@@ -144,7 +144,6 @@ const AppointmentCalendar = ({ initialDuration = 60 }) => {
       return appDateString === dateString;
     });
 
-    console.log("Filtered appointments:", dayAppointments);
 
     const slots = [];
 
@@ -193,10 +192,23 @@ const AppointmentCalendar = ({ initialDuration = 60 }) => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  const handleSlotSelection = (slot) => {
-    console.log("Selected slot:", slot);
-    // Here you would typically handle the slot selection, e.g., by opening a confirmation dialog
-    // or by sending the selection to a parent component
+  const handleSlotSelection = async (slot) => {
+    try {
+      const response = await fetch("/api/createAppointment", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          slot,
+          duration : initialDuration,
+          serial,
+        }),
+      });
+      router.push("/");
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (

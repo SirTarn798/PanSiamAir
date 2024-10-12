@@ -6,10 +6,14 @@ export const POST = async (request) => {
     const body = await request.json();
 
     const acQuery = `
-      SELECT * 
-      FROM "AIRCONDITION"
-      WHERE "U_Id" = $1
-        AND "AC_Serial" = $2
+      SELECT rf."RF_EFT" 
+      FROM "AIRCONDITION" ac
+      JOIN
+        "REQUEST_PROBLEM" rp on ac."AC_Serial" = rp."AC_Serial"
+      JOIN
+        "REQUEST_FORM" rf on rp."RP_Id" = rf."RP_Id"
+      WHERE ac."U_Id" = $1
+        AND ac."AC_Serial" = $2
     `;
     const acValues = [body.id, body.serial];
     const acResult = await db.query(acQuery, acValues);

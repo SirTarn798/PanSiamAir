@@ -10,6 +10,7 @@ export default function PickCalendarPage() {
   const serial = searchParams.get("serial");
   const id = useSelector((state) => state.user.id);
   const [status, setStatus] = useState(null);
+  const [duration, setDuration] = useState(null);
 
   useEffect(() => {
     const getAccess = async () => {
@@ -25,6 +26,8 @@ export default function PickCalendarPage() {
           }),
         });
         if (response.status === 201) {
+          const data = await response.json();
+          setDuration(data.ac.RF_EFT);
           setStatus(true);
         } else {
           throw new Error("Access denied");
@@ -39,7 +42,7 @@ export default function PickCalendarPage() {
   if (status) {
     return (
       <div className="w-screen h-screen flex justify-center items-center">
-        <AppointmentCalendar />
+        <AppointmentCalendar initialDuration={duration} />
       </div>
     );
   } else {
