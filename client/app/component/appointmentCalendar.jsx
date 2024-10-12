@@ -171,7 +171,6 @@ const AppointmentCalendar = (props) => {
   };
 
   const handleSlotSelection = async (slot) => {
-  
     const formattedSlot = new Date(slot).toLocaleString("en-US", {
       year: "numeric",
       month: "short",
@@ -187,7 +186,7 @@ const AppointmentCalendar = (props) => {
     if (!confirmProceed) {
       return;
     }
-  
+
     try {
       const response = await fetch("/api/createAppointment", {
         method: "POST",
@@ -205,7 +204,6 @@ const AppointmentCalendar = (props) => {
       console.log(error.message);
     }
   };
-  
 
   return (
     <Card className="w-full max-w-3xl mx-auto bg-white">
@@ -243,17 +241,21 @@ const AppointmentCalendar = (props) => {
           <ScrollArea className="h-[300px] w-full rounded-md border p-4 bg-primaryBg">
             <div className="grid grid-cols-2 gap-2">
               {availableSlots.map((slot, index) => (
-                <Button
-                  key={index}
-                  onClick={() => !slot.isPast && handleSlotSelection(slot.time)}
-                  variant="outline"
-                  className={`w-full ${
-                    slot.isPast ? "text-gray-400 cursor-not-allowed" : ""
-                  }`}
-                  disabled={slot.isPast}
-                >
-                  {formatTime(slot.time)}
-                </Button>
+                <div className={slot.isPast ? "cursor-not-allowed" : ""}>
+                  <Button
+                    key={index}
+                    onClick={() =>
+                      !slot.isPast && handleSlotSelection(slot.time)
+                    }
+                    variant="outline"
+                    className={`w-full ${
+                      slot.isPast ? "text-gray-400" : ""
+                    }`}
+                    disabled={slot.isPast}
+                  >
+                    {formatTime(slot.time)}
+                  </Button>
+                </div>
               ))}
             </div>
             {availableSlots.length === 0 && (

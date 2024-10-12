@@ -45,6 +45,11 @@ export async function middleware(request: NextRequest) {
         !(pathname.startsWith("/head"))
       ) {
         return NextResponse.redirect(new URL("/head", request.url));
+      } else if (
+        decryptedSession.user.role === "MECHANIC" &&
+        !(pathname.startsWith("/mechanic"))
+      ) {
+        return NextResponse.redirect(new URL("/mechanic", request.url));
       }
     } else {
       if (pathname !== "/login") {

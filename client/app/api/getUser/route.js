@@ -3,7 +3,6 @@ import db from "@/lib/dbA";
 
 export const POST = async (request) => {
   const body = await request.json();
-  console.log(body)
   try {
     const result = await db.query(
       `
