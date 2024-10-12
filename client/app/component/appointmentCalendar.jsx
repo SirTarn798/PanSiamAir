@@ -47,29 +47,6 @@ const AppointmentCalendar = (props) => {
   const serial = searchParams.get("serial");
   const router = useRouter();
 
-  const exampleAppointments = [
-    {
-      date: "2024-05-15T00:00:00+07:00",
-      start: "2024-05-15T10:00:00+07:00",
-      end: "2024-05-15T11:00:00+07:00",
-    },
-    {
-      date: "2024-05-15T00:00:00+07:00",
-      start: "2024-05-15T14:30:00+07:00",
-      end: "2024-05-15T15:30:00+07:00",
-    },
-    {
-      date: "2024-05-20T00:00:00+07:00",
-      start: "2024-05-20T09:00:00+07:00",
-      end: "2024-05-20T10:30:00+07:00",
-    },
-    {
-      date: "2024-05-25T00:00:00+07:00",
-      start: "2024-05-25T13:00:00+07:00",
-      end: "2024-05-25T14:00:00+07:00",
-    },
-  ];
-
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -144,13 +121,11 @@ const AppointmentCalendar = (props) => {
       return appDateString === dateString;
     });
 
-
     const slots = [];
+    const now = new Date();
 
     for (let hour = 8; hour < 20; hour++) {
-      // Assuming business hours from 8 AM to 8 PM
       for (let minute = 0; minute < 60; minute += 15) {
-        // 15-minute intervals
         const startTime = new Date(
           date.getFullYear(),
           date.getMonth(),
@@ -168,7 +143,10 @@ const AppointmentCalendar = (props) => {
         });
 
         if (isAvailable) {
-          slots.push(startTime);
+          slots.push({
+            time: startTime,
+            isPast: startTime < now,
+          });
         }
       }
     }
@@ -193,6 +171,23 @@ const AppointmentCalendar = (props) => {
   };
 
   const handleSlotSelection = async (slot) => {
+  
+    const formattedSlot = new Date(slot).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+
+    const confirmProceed = window.confirm(
+      "ท่านแน่ใจหรือไม่ว่าต้องการเลือกวัน " + formattedSlot
+    );
+    if (!confirmProceed) {
+      return;
+    }
+  
     try {
       const response = await fetch("/api/createAppointment", {
         method: "POST",
@@ -200,8 +195,8 @@ const AppointmentCalendar = (props) => {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          slot,
-          duration : initialDuration,
+          slot: formattedSlot,
+          duration: initialDuration,
           serial,
         }),
       });
@@ -210,6 +205,7 @@ const AppointmentCalendar = (props) => {
       console.log(error.message);
     }
   };
+  
 
   return (
     <Card className="w-full max-w-3xl mx-auto bg-white">
@@ -249,12 +245,14 @@ const AppointmentCalendar = (props) => {
               {availableSlots.map((slot, index) => (
                 <Button
                   key={index}
-                  onClick={() => handleSlotSelection(slot)}
+                  onClick={() => !slot.isPast && handleSlotSelection(slot.time)}
                   variant="outline"
-                  className="w-full"
+                  className={`w-full ${
+                    slot.isPast ? "text-gray-400 cursor-not-allowed" : ""
+                  }`}
+                  disabled={slot.isPast}
                 >
-                  {formatTime(slot)}
-                  {" XX"}
+                  {formatTime(slot.time)}
                 </Button>
               ))}
             </div>
