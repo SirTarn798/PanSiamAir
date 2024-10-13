@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import RequestList from "@/app/component/requestList";
 
-export default function QuotationPage() {
+export default function RequisitionPage() {
   const [reqState, setReqState] = useState(1);
   const [requests, setRequests] = useState();
 
@@ -31,7 +31,7 @@ export default function QuotationPage() {
   };
 
   useEffect(() => {
-    getRequests(1, "accepted_wait_write_quotation");
+    getRequests(1, "accepted_wait_write_requisition");
   }, []);
 
   return (

@@ -11,6 +11,7 @@ export const POST = async (request) => {
         ac."AC_Address",
         ac."AC_Model",
         ac."AC_Serial",
+        ac."AC_Installation_date",
         u."U_Name"
       FROM 
         "REQUEST_FORM" rf

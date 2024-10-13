@@ -3,9 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import checkInsurance from "@/lib/checkInsurance";
 
-export default function CreateQuotation() {
+export default function CreateRequisition() {
   const searchParams = useSearchParams();
   const RF_Id = searchParams.get("RF_Id");
   const [status, setStatus] = useState(null);
@@ -14,9 +13,8 @@ export default function CreateQuotation() {
   const [selectedItems, setSelectedItems] = useState([]); // Selected items for table rows
   const [items, setItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
-  const [submitStatus, setSubmitStatus] = useState(1);
+  const [submitStatus, setSubmitStatus] = useState(1)
   const [discount, setDiscount] = useState("");
-  const [insurance, setInsurance] = useState(true);
   const router = useRouter();
 
   // Reference for the modal AC
@@ -37,7 +35,6 @@ export default function CreateQuotation() {
         if (response.status === 200) {
           const data = await response.json();
           setRF(data.rf);
-          setInsurance(checkInsurance(data.rf.AC_Installation_date));
           setStatus(true);
         } else {
           throw new Error("ขออภัย หมายเลขใบขอรับบริการไม่ถูกต้อง");
@@ -136,19 +133,20 @@ export default function CreateQuotation() {
           selectedItems,
           RF_Id,
           discount,
-          insurance,
         }),
       });
-      if (response.status === 200) {
-        alert("เพิ่มใบเสนอราคาสำเร็จ");
-        router.push("/service/docs/quotation");
-      } else if (response.status === 400) {
-        throw new Error("หมายเลขใบขอรับบริการไม่ถูกต้อง");
-      } else {
-        throw new Error("ขออภัย เกิดข้อผิดพลาด โปรดลองใหม่อีกครั้ง");
+      if(response.status === 200) {
+        alert("เพิ่มใบเสนอราคาสำเร็จ")
+        router.push("/service/docs/quotation")
+      }
+      else if(response.status === 400) {
+        throw new Error("หมายเลขใบขอรับบริการไม่ถูกต้อง")
+      }
+      else {
+        throw new Error("ขออภัย เกิดข้อผิดพลาด โปรดลองใหม่อีกครั้ง")
       }
     } catch (error) {
-      alert(error.message);
+      alert(error.message)
     }
     setSubmitStatus(1);
   };
@@ -167,16 +165,6 @@ export default function CreateQuotation() {
           <p>รหัสใบขอรับบริการ : {rf.RF_Id}</p>
           <p>หมายเลขเครื่อง : {rf.AC_Serial}</p>
           <p>รุ่น : {rf.AC_Model}</p>
-          <p className="flex">
-            สถานะประกัน :{" "}
-            <p
-              className={
-                "ml-1 " + (insurance ? "text-emerald-600" : "text-rose-700")
-              }
-            >
-              {insurance ? " มีประกัน" : " ไม่มีประกัน"}
-            </p>
-          </p>
         </div>
 
         <table className="w-full border-collapse rounded-lg overflow-hidden p-5">
@@ -287,22 +275,8 @@ export default function CreateQuotation() {
           )}
         </div>
         <div className="flex-grow"></div>
-        <input
-          type="number"
-          placeholder="ส่วนลด"
-          className={"bg-white p-5 rounded-xl w-3/12 " + (insurance ? "cursor-not-allowed" : "cursor-pointer")}
-          onChange={(e) => {
-            setDiscount(e.target.value);
-          }}
-          value={discount}
-          disabled={insurance}
-        />
         <button
-          className={
-            `p-3 rounded-3xl text-white font-bold place-self-start ` +
-            (submitStatus === 1 ? "bg-primary" : "bg-primaryBg")
-          }
-          disabled={submitStatus === 2}
+          className={`p-3 rounded-3xl text-white font-bold place-self-start ` + (submitStatus === 1 ? "bg-primary" : "bg-primaryBg")} disabled={(submitStatus === 2)}
           onClick={handleMakeQuotation}
         >
           ยืนยันใบเสนอราคา

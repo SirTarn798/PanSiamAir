@@ -3,7 +3,7 @@ import db from "@/lib/dbA";
 
 export const POST = async (request) => {
   const body = await request.json();
-  const { selectedItems, RF_Id, discount } = body;
+  const { selectedItems, RF_Id, discount, insurance } = body;
 
   try {
     await db.query('BEGIN');
@@ -35,7 +35,10 @@ export const POST = async (request) => {
     }
 
     // Calculate totals
-    const totalPrice = selectedItems.reduce((acc, item) => acc + (item.S_Price * item.quantity), 0);
+    let totalPrice = selectedItems.reduce((acc, item) => acc + (item.S_Price * item.quantity), 0);
+    if(insurance) {
+      totalPrice = 0;
+    }
     const discountAmount = parseFloat(discount) || 0;
     const vat = 0.07 * (totalPrice - discountAmount);
     const grandTotal = totalPrice - discountAmount + vat;

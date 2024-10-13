@@ -44,14 +44,7 @@ export default function RequestPage() {
 
   const handleAcceptRequest = async (e) => {
     e.preventDefault();
-    if (insurance) {
-      await updateRequest("รอเลือกวันนัดหมาย", "accepted_wait_pick_calendar");
-    } else {
-      await updateRequest(
-        "รอทางบริษัทเสนอราคา",
-        "accepted_wait_write_quotation"
-      );
-    }
+    await updateRequest("รอทางบริษัทเสนอราคา", "accepted_wait_write_quotation");
     await createRequestForm();
   };
 
@@ -85,12 +78,13 @@ export default function RequestPage() {
   };
 
   const createRequestForm = async () => {
-    if(estimatedHours === 0 && estimatedMinutes === 0) {
+    if (estimatedHours === 0 && estimatedMinutes === 0) {
       alert("โปรดประมาณเวลาในการซ่อม");
       return;
     }
     try {
-      const totalMinutes = parseInt(estimatedHours) * 60 + parseInt(estimatedMinutes);
+      const totalMinutes =
+        parseInt(estimatedHours) * 60 + parseInt(estimatedMinutes);
       const response = await fetch("/api/createRequestForm", {
         method: "POST",
         headers: {

@@ -52,7 +52,7 @@ export const POST = async (request) => {
           id: rp_id,
           serial: body.serial,
           statusAc: "อยู่ในขั้นตอนการซ่อม",
-          statusRp: "accepted_wait_fixing",
+          statusRp: "accepted_wait_write_requisition",
         }),
       }
     );
