@@ -40,14 +40,14 @@ export default function CreateRequisition() {
       return;
     }
     try {
-      const response = await fetch("/api/", {
+      const response = await fetch("/api/createRequisition", {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          serial,
-          status,
+          rf_id,
+          q_id : data.quotation.Q_Id,
         }),
       });
 
