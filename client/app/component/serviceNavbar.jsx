@@ -65,7 +65,9 @@ function ServiceNavBar() {
             >
               ใบเสนอราคา
             </button>
-            <button className="text-left p-3 hover:bg-neutral-200">
+            <button className="text-left p-3 hover:bg-neutral-200"
+              onClick={() => router.push("/service/docs/distribute_voucher")}
+            >
               ใบสำคัญจ่าย
             </button>
             <button className="text-left p-3 hover:bg-neutral-200">
