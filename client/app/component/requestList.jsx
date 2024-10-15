@@ -5,6 +5,7 @@ export default function RequestList(props) {
   const status = {
     accepted_wait_write_quotation: "ออกใบเสนอราคา",
     accepted_wait_write_requisition: "ออกรายการเบิกอะไหล่",
+    accepted_wait_write_distribute_voucher: "ออกใบสำคัญจ่าย",
   };
   const handleClickButton = () => {
     switch (props.request.RP_Status) {
@@ -13,6 +14,9 @@ export default function RequestList(props) {
         break;
       case "accepted_wait_write_requisition":
         createRequisiton();
+        break;
+      case "accepted_wait_write_distribute_voucher":
+        createDistributeVoucher();
         break;
     }
   };
@@ -26,6 +30,12 @@ export default function RequestList(props) {
       `/mechanic/docs/requisition/create?RF_Id=${props.request.RF_Id}`
     );
   };
+
+  const createDistributeVoucher = () => {
+    router.push(
+      `/service/docs/distribute-voucher/create?RF_Id=${props.request.RF_Id}`
+    );
+  }
 
   return (
     <div className="grid grid-cols-[3fr_3fr_3fr_2fr_1fr_2fr] grid-rows-1 bg-primaryBg rounded-3xl p-3 items-center">
