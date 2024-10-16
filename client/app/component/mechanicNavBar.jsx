@@ -11,8 +11,15 @@ function MechanicNavBar() {
         className="flex items-center p-5 gap-5 hover:bg-neutral-200"
         onClick={() => router.push("/mechanic/docs/requisition")}
       >
-        <img src="/approve.png" alt="ac list icon" width={35} height={35} />
+        <img src="/list-items.png" alt="ac list icon" width={35} height={35} />
         <p className="font-bold">ออกใบขอเบิกอุปกรณ์</p>
+      </button>
+      <button
+        className="flex items-center p-5 gap-5 hover:bg-neutral-200"
+        onClick={() => router.push("/mechanic/work-list")}
+      >
+        <img src="/calendar.png" alt="ac list icon" width={35} height={35} />
+        <p className="font-bold">ตารางงาน</p>
       </button>
     </div>
   );

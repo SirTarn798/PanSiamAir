@@ -49,7 +49,7 @@ export default function ApproveDistributeVoucher() {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          statusRp: "approved_wait_fixing",
+          statusRp: "accepted_wait_fixing",
           id : data.requisition.RP_Id,
         }),
       });
