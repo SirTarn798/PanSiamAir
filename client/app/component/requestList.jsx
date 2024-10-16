@@ -1,11 +1,13 @@
 import { useRouter } from "next/navigation";
 
 export default function RequestList(props) {
+  console.log(props.request.RP_Status)
   const router = useRouter();
   const status = {
     accepted_wait_write_quotation: "ออกใบเสนอราคา",
     accepted_wait_write_requisition: "ออกรายการเบิกอะไหล่",
     accepted_wait_write_distribute_voucher: "ออกใบสำคัญจ่าย",
+    accepted_wait_approve_distribute_voucher: "ยืนยันใบสำคัญจ่าย"
   };
   const handleClickButton = () => {
     switch (props.request.RP_Status) {
@@ -17,6 +19,9 @@ export default function RequestList(props) {
         break;
       case "accepted_wait_write_distribute_voucher":
         createDistributeVoucher();
+        break;
+      case "accepted_wait_approve_distribute_voucher":
+        approveDistributeVoucher();
         break;
     }
   };
@@ -35,6 +40,12 @@ export default function RequestList(props) {
     router.push(
       `/service/docs/distribute-voucher/create?RF_Id=${props.request.RF_Id}`
     );
+  }
+
+  const approveDistributeVoucher = () => {
+    router.push(
+      `/store/docs/distribute-voucher/approve?RF_Id=${props.request.RF_Id}`
+    )
   }
 
   return (

@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function CreateDistributeVoucher() {
+export default function ApproveDistributeVoucher() {
   const searchParams = useSearchParams();
   const rf_id = searchParams.get("RF_Id");
   const [status, setStatus] = useState(true);
@@ -43,14 +43,14 @@ export default function CreateDistributeVoucher() {
       return;
     }
     try {
-      const response = await fetch("/api/createDistributeVoucher", {
+      const response = await fetch("/api/updateRequest", {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          rf_id,
-          re_id: data.requisition.RE_Id,
+          statusRp: "approved_wait_fixing",
+          id : data.requisition.RP_Id,
         }),
       });
 

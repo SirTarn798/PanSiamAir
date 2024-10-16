@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/dbA";
-import { error } from "console";
 
 export const POST = async (request) => {
   const body = await request.json();
@@ -9,6 +8,8 @@ export const POST = async (request) => {
       SELECT 
         re."RE_Id",
         re."RE_Date",
+        u."U_Name",
+        rp."RP_Id",
         json_agg(
           json_build_object(
             'SD_Quantity', sd."SD_Quantity",
@@ -21,11 +22,13 @@ export const POST = async (request) => {
         ) AS "Spare_detail"
       FROM "REQUISITION" re
       JOIN "REQUEST_FORM" rf on re."RF_Id" = rf."RF_Id"
+      JOIN "REQUEST_PROBLEM" rp on rf."RP_Id" = rp."RP_Id"
+      JOIN "USER" u on rf."Mech_Id" = u."U_Id"
       JOIN "QUOTATION" q on rf."RF_Id" = q."RF_Id" 
       LEFT JOIN "SPARE_DETAIL" sd ON q."Q_Id" = sd."Q_Id"
       LEFT JOIN "SPARE" s ON sd."S_Id" = s."S_Id"
       WHERE rf."RF_Id" = $1
-      GROUP BY re."RE_Id", re."RE_Date"
+      GROUP BY re."RE_Id", re."RE_Date", u."U_Name", rp."RP_Id"
     `, [(body.rf_id)]);
 
     if (result.rows.length > 0) {

@@ -9,11 +9,13 @@ export const POST = async (request) => {
     await db.query('BEGIN');
 
     // Update AIRCONDITION
+    if(body.statusAc) {
     await db.query(`
       UPDATE "AIRCONDITION"
       SET "AC_Status" = $1
       WHERE "AC_Serial" = $2
     `, [body.statusAc, body.serial]);
+    }
 
     // Update REQUEST_PROBLEM
     await db.query(`
