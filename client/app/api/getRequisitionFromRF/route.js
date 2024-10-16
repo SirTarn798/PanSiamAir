@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/dbA";
+import { error } from "console";
 
 export const POST = async (request) => {
   const body = await request.json();
@@ -25,7 +26,7 @@ export const POST = async (request) => {
       LEFT JOIN "SPARE" s ON sd."S_Id" = s."S_Id"
       WHERE rf."RF_Id" = $1
       GROUP BY re."RE_Id", re."RE_Date"
-    `, [parseInt(body.rf_id)]);
+    `, [(body.rf_id)]);
 
     if (result.rows.length > 0) {
       const requisition = result.rows[0];

@@ -59,7 +59,17 @@ export const POST = async (request) => {
     );
     data = await updateRequest.json();
 
-    if (result.rows.length > 0) {
+    const updateQuery = `
+      UPDATE "REQUEST_FORM"
+      SET "Mech_Id" = $1
+      WHERE "RF_Id" = $2
+    `
+
+    const updateValues = [u_id, rf_id]
+
+    const updateResult = await db.query(updateQuery, updateValues)
+
+    if (result.rows.length > 0 && updateResult.rows.length > 0) {
       return NextResponse.json({}, { status: 200 });
     } else {
       throw new Error("Failed to insert new schedule entry");

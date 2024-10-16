@@ -12,7 +12,7 @@ export const POST = async (request) => {
             RETURNING *
         `;
         
-        const values = [parseInt(body.id), date, body.estimatedFixTimeMinutes];
+        const values = [(body.id), date, body.estimatedFixTimeMinutes];
         
         const result = await db.query(query, values);
 

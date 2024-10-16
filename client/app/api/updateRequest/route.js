@@ -20,7 +20,7 @@ export const POST = async (request) => {
       UPDATE "REQUEST_PROBLEM"
       SET "RP_Status" = $1
       WHERE "RP_Id" = $2
-    `, [body.statusRp, parseInt(body.id)]);
+    `, [body.statusRp, (body.id)]);
 
     // Commit the transaction
     await db.query('COMMIT');

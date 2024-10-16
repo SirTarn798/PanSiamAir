@@ -27,7 +27,7 @@ export const POST = async (request) => {
       LEFT JOIN "SPARE" s ON sd."S_Id" = s."S_Id"
       WHERE q."Q_Id" = $1
       GROUP BY q."Q_Id", q."Q_Date", q."Q_Total", q."Q_Discount", q."Q_Vat", q."Q_Grand_total"
-    `, [parseInt(body.id)]);
+    `, [(body.id)]);
 
     if (result.rows.length > 0) {
       const quotation = result.rows[0];

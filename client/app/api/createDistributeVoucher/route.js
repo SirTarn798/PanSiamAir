@@ -6,13 +6,12 @@ export const POST = async (request) => {
   try {
     const body = await request.json();
 
-    // First, execute the INSERT statement
     const insertQuery = `
-      INSERT INTO "REQUISITION" ("RE_Date", "Q_Id", "RF_Id")
+      INSERT INTO "DISTRIBUTE_VOUCHER" ("DV_Date", "RF_Id", "RE_Id")
       VALUES ($1, $2, $3)
       RETURNING *;
     `;
-    const insertValues = [date, (body.q_id), (body.rf_id)];
+    const insertValues = [date, (body.rf_id), (body.re_id)];
     const insertResult = await db.query(insertQuery, insertValues);
 
     // Then, execute the UPDATE statement
@@ -24,7 +23,7 @@ export const POST = async (request) => {
         WHERE rf."RF_Id" = $1
       )
       UPDATE "REQUEST_PROBLEM" rp
-      SET "RP_Status" = 'accepted_wait_write_distribute_voucher'
+      SET "RP_Status" = 'accepted_wait_approve_distribute_voucher'
       FROM SelectedRecords sr
       WHERE rp."RP_Id" = sr."RP_Id";
     `;

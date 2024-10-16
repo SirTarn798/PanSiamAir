@@ -4,7 +4,7 @@ import db from "@/lib/dbA";
 export const POST = async (request) => {
   const body = await request.json();
   try {
-    const query = `
+    let query = `
       SELECT 
         rp.*, 
         rf.*, 
@@ -21,6 +21,11 @@ export const POST = async (request) => {
     `;
 
     const values = [body.type];
+
+    if (body.mech_id) {
+      query += ` AND rf."Mech_Id" = $2`;
+      values.push(body.mech_id);
+    }
 
     const requestProblems = await db.query(query, values);
     return NextResponse.json({ requestProblems: requestProblems.rows }, { status: 201 });

@@ -8,7 +8,6 @@ export default function CreateDistributeVoucher() {
   const rf_id = searchParams.get("RF_Id");
   const [status, setStatus] = useState(true);
   const [data, setData] = useState(null);
-  const [serial, setSerial] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -23,9 +22,13 @@ export default function CreateDistributeVoucher() {
             rf_id,
           }),
         });
+        if(!response.ok) {
+          throw new Error()
+        }
         const data = await response.json();
         setData(data);
       } catch (error) {
+        setStatus(false)
         console.error("Error in getQuotation:", error.message);
       }
     };
@@ -40,20 +43,20 @@ export default function CreateDistributeVoucher() {
       return;
     }
     try {
-      const response = await fetch("/api/createRequisition", {
+      const response = await fetch("/api/createDistributeVoucher", {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
         body: JSON.stringify({
           rf_id,
-          q_id: data.requisition.Q_Id,
+          re_id: data.requisition.RE_Id,
         }),
       });
 
       if (response.status === 200) {
         alert("ดำนเนินการสำเร็จ");
-        router.push("/");
+        router.push("/service/docs/distribute-voucher");
       } else {
         throw new Error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
       }
@@ -64,7 +67,7 @@ export default function CreateDistributeVoucher() {
 
   if (!status) {
     return (
-      <div className="flex flex-col w-screen h-screen pl-16 pt-5 pr-3 items-center justify-center">
+      <div className="flex flex-col w-screen h-screen pl-16 pt-5 pr-3 items-center justify-center cursor-not-allowed">
         <p className="text-white bg-primary p-4">
           !! ข้อมูลที่กรอกไม่ถูกต้อง คุณไม่มีสิทธิ์จัดการแอร์ตัวนี้
           ระบบอาจมีปัญหา หรือแอร์กำลังอยู่ในกระบวนการซ่อม กรุณาลองอีกครั้ง !!

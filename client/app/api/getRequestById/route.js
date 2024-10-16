@@ -21,7 +21,7 @@ export const POST = async (request) => {
       LEFT JOIN "AIRCONDITION" ac ON rp."AC_Serial" = ac."AC_Serial"
       LEFT JOIN "USER" u ON ac."U_Id" = u."U_Id"
       WHERE rp."RP_Id" = $1
-    `, [parseInt(body.id)]);
+    `, [(body.id)]);
 
     if (result.rows.length === 0) {
       return NextResponse.json({error: "Can't find request"}, {status: 400});
