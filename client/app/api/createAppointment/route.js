@@ -19,6 +19,7 @@ export const POST = async (request) => {
     const rf_id = data.requests.RF_Id;
     const rp_id = data.requests.RP_Id;
     const slotDate = new Date(body.slot);
+    const u_id = body.u_id;
 
     // Ensure slotDate is valid before proceeding
     if (isNaN(slotDate.getTime())) {
@@ -32,11 +33,11 @@ export const POST = async (request) => {
     const durationInMs = body.duration * 60 * 1000;
     const endDate = new Date(startDate.getTime() + durationInMs);
 
-    const values = [rf_id, startDate, endDate];
+    const values = [rf_id, startDate, endDate, u_id];
 
     const query = `
-        INSERT INTO "SCHEDULE" (rf_id, S_Start_time, S_End_time)
-        VALUES ($1, $2, $3)
+        INSERT INTO "SCHEDULE" (rf_id, S_Start_time, S_End_time, U_Id)
+        VALUES ($1, $2, $3, $4)
         RETURNING *;
         `;
 

@@ -40,8 +40,11 @@ const AppointmentCalendar = (props) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [allAppointments, setAllAppointments] = useState([]);
+  const [selectedMechAppointments, setselectedMechAppointments] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mechList, setMechList] = useState(null);
+  const [currentMech, setCurrentMech] = useState(null);
 
   const searchParams = useSearchParams();
   const serial = searchParams.get("serial");
@@ -61,9 +64,34 @@ const AppointmentCalendar = (props) => {
         console.error("Error fetching appointments:", error);
       }
     };
-
+    const getMechList = async () => {
+      try {
+        const response = await fetch("/api/getMechList");
+        if (response.ok) {
+          const data = await response.json();
+          setMechList(data.mechList);
+          setCurrentMech(data.mechList[0]);
+        } else {
+          console.error("Failed to fetch appointments");
+        }
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      }
+    };
     fetchAppointments();
+    getMechList();
   }, []);
+
+  useEffect(() => {
+    if (currentMech) {
+      console.log(currentMech);
+      const filteredAppointments = allAppointments.filter(
+        (appointment) => appointment.u_id === currentMech.U_Id
+      );
+      console.log(filteredAppointments);
+      setselectedMechAppointments(filteredAppointments);
+    }
+  }, [currentMech]);
 
   const getDaysInMonth = (year, month) =>
     new Date(year, month + 1, 0).getDate();
@@ -112,7 +140,7 @@ const AppointmentCalendar = (props) => {
     );
     const dateString = localDate.toISOString().split("T")[0];
 
-    const dayAppointments = allAppointments.filter((app) => {
+    const dayAppointments = selectedMechAppointments.filter((app) => {
       const appDate = new Date(app.start);
       const appLocalDate = new Date(
         appDate.getTime() - appDate.getTimezoneOffset() * 60000
@@ -188,6 +216,7 @@ const AppointmentCalendar = (props) => {
     }
 
     try {
+      const u_id = currentMech.U_Id;
       const response = await fetch("/api/createAppointment", {
         method: "POST",
         headers: {
@@ -197,6 +226,7 @@ const AppointmentCalendar = (props) => {
           slot: formattedSlot,
           duration: initialDuration,
           serial,
+          u_id,
         }),
       });
       router.push("/");
@@ -206,65 +236,85 @@ const AppointmentCalendar = (props) => {
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto bg-white">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <h2 className="text-2xl font-bold">
-          {MONTHS[currentDate.getMonth()]} {currentDate.getFullYear()}
-        </h2>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" size="icon" onClick={prevMonth}>
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon" onClick={nextMonth}>
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-7 gap-2 mb-2">
-          {DAYS.map((day) => (
-            <div key={day} className="text-center font-medium">
-              {day.slice(0, 3)}
-            </div>
-          ))}
-        </div>
-        <div className="grid grid-cols-7 gap-2">{generateCalendarDays()}</div>
-      </CardContent>
+    <div className="w-full max-w-3xl mx-auto bg-white flex flex-col gap-5">
+      <h1>หากเวลาที่ท่านต้องการนั้นไม่ว่าง โปรดลองเปลี่ยนช่างที่แถบด้านล่าง</h1>
+      <select
+        className="p-3 rounded bg-primaryBg"
+        required
+        name="role"
+        value={currentMech?.U_Id || ""}
+        onChange={(e) => {
+          const selectedMech = mechList.find(
+            (mech) => mech.U_Id === e.target.value
+          );
+          setCurrentMech(selectedMech);
+        }}
+      >
+        {mechList?.map((mech) => (
+          <option key={mech.U_Id} value={mech.U_Id}>
+            {mech.U_Name}
+          </option>
+        ))}
+      </select>
 
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[425px] bg-white">
-          <DialogHeader>
-            <DialogTitle>
-              Available Time Slots for {selectedDate?.toDateString()}
-            </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="h-[300px] w-full rounded-md border p-4 bg-primaryBg">
-            <div className="grid grid-cols-2 gap-2">
-              {availableSlots.map((slot, index) => (
-                <div className={slot.isPast ? "cursor-not-allowed" : ""}>
-                  <Button
-                    key={index}
-                    onClick={() =>
-                      !slot.isPast && handleSlotSelection(slot.time)
-                    }
-                    variant="outline"
-                    className={`w-full ${
-                      slot.isPast ? "text-gray-400" : ""
-                    }`}
-                    disabled={slot.isPast}
-                  >
-                    {formatTime(slot.time)}
-                  </Button>
-                </div>
-              ))}
-            </div>
-            {availableSlots.length === 0 && (
-              <p>No available slots for this date.</p>
-            )}
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
-    </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <h2 className="text-2xl font-bold">
+            {MONTHS[currentDate.getMonth()]} {currentDate.getFullYear()}
+          </h2>
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" size="icon" onClick={prevMonth}>
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" onClick={nextMonth}>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-7 gap-2 mb-2">
+            {DAYS.map((day) => (
+              <div key={day} className="text-center font-medium">
+                {day.slice(0, 3)}
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-7 gap-2">{generateCalendarDays()}</div>
+        </CardContent>
+
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="sm:max-w-[425px] bg-white">
+            <DialogHeader>
+              <DialogTitle>
+                Available Time Slots for {selectedDate?.toDateString()}
+              </DialogTitle>
+            </DialogHeader>
+            <ScrollArea className="h-[300px] w-full rounded-md border p-4 bg-primaryBg">
+              <div className="grid grid-cols-2 gap-2">
+                {availableSlots.map((slot, index) => (
+                  <div className={slot.isPast ? "cursor-not-allowed" : ""}>
+                    <Button
+                      key={index}
+                      onClick={() =>
+                        !slot.isPast && handleSlotSelection(slot.time)
+                      }
+                      variant="outline"
+                      className={`w-full ${slot.isPast ? "text-gray-400" : ""}`}
+                      disabled={slot.isPast}
+                    >
+                      {formatTime(slot.time)}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+              {availableSlots.length === 0 && (
+                <p>No available slots for this date.</p>
+              )}
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
+      </Card>
+    </div>
   );
 };
 
