@@ -53,7 +53,7 @@ export default function RequestList(props) {
   };
 
   const manageWork = () => {
-    router.push(`/mech/work/RF_Id=${props.request.RF_Id}`);
+    router.push(`/mechanic/work?RF_Id=${props.request.RF_Id}`);
   };
 
   const formatDate = (dateString) => {

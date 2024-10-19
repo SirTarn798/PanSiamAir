@@ -47,7 +47,7 @@ export default function RequisitionPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 1 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(1, "accepted_wait_write_quotation")}
+          onClick={() => getRequests(1, "accepted_wait_write_requisition")}
         >
           รอการออกใบรายการเบิกอะไหล่
         </p>
@@ -56,7 +56,7 @@ export default function RequisitionPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 2 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(2, "accepted_wait_leader_quotation")}
+          onClick={() => getRequests(2, "wait for update")}
         >
           เสร็จสิ้น
         </p>

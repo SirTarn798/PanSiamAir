@@ -49,6 +49,11 @@ const AppointmentCalendar = (props) => {
   const searchParams = useSearchParams();
   const serial = searchParams.get("serial");
   const router = useRouter();
+  let reschedule = false;
+  if(props.reschedule === "true") {
+    reschedule = true
+  }
+  console.log(reschedule)
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -84,11 +89,9 @@ const AppointmentCalendar = (props) => {
 
   useEffect(() => {
     if (currentMech) {
-      console.log(currentMech);
       const filteredAppointments = allAppointments.filter(
         (appointment) => appointment.u_id === currentMech.U_Id
       );
-      console.log(filteredAppointments);
       setselectedMechAppointments(filteredAppointments);
     }
   }, [currentMech]);
@@ -227,6 +230,7 @@ const AppointmentCalendar = (props) => {
           duration: initialDuration,
           serial,
           u_id,
+          reschedule,
         }),
       });
       router.push("/");

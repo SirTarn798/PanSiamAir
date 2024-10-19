@@ -26,7 +26,8 @@ export const POST = async (request) => {
       SELECT * 
       FROM "REQUEST_PROBLEM"
       WHERE "AC_Serial" = $1
-        AND "RP_Status" = 'accepted_wait_pick_calendar'
+        AND "RP_Status" = 'accepted_wait_pick_calendar' 
+        OR "RP_Status" = 'accepted_fail_wait_reschedule' 
       LIMIT 1
     `;
 

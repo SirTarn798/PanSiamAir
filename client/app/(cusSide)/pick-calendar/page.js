@@ -8,6 +8,7 @@ import AppointmentCalendar from "@/app/component/appointmentCalendar";
 export default function PickCalendarPage() {
   const searchParams = useSearchParams();
   const serial = searchParams.get("serial");
+  const reschedule = searchParams.get("reschedule");
   const id = useSelector((state) => state.user.id);
   const [status, setStatus] = useState(null);
   const [duration, setDuration] = useState(null);
@@ -42,7 +43,7 @@ export default function PickCalendarPage() {
   if (status) {
     return (
       <div className="w-screen h-screen flex justify-center items-center">
-        <AppointmentCalendar initialDuration={duration} />
+        <AppointmentCalendar initialDuration={duration} reschedule={reschedule}/>
       </div>
     );
   } else {

@@ -9,7 +9,7 @@ export default function WorkListPage() {
   const [requests, setRequests] = useState();
   const id = useSelector((state) => state.user.id);
 
-  const getRequests = async (state) => {
+  const getRequests = async (state, status) => {
     setReqState(state);
     try {
       const response = await fetch("/api/getWorkList", {
@@ -19,6 +19,7 @@ export default function WorkListPage() {
         },
         body: JSON.stringify({
           id,
+          status,
         }),
       });
       if (response.status === 201) {
@@ -33,19 +34,19 @@ export default function WorkListPage() {
   };
 
   useEffect(() => {
-    getRequests(1);
+    getRequests(1, "accepted_wait_fixing, accepted_wait_write_requisition");
   }, []);
 
   return (
     <div className="flex flex-col gap-10 w-screen h-screen p-10">
-      <p className="text-4xl font-bold">ใบสำคัญจ่าย</p>
+      <p className="text-4xl font-bold">ตารางงาน</p>
       <div className="flex gap-20 text-lg">
         <p
           className={
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 1 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(1)}
+          onClick={() => getRequests(1, "accepted_wait_fixing, accepted_wait_write_requisition")}
         >
           งานที่กำลังจะถึง
         </p>
@@ -54,7 +55,7 @@ export default function WorkListPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 2 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(2)}
+          onClick={() => getRequests(2, "finished")}
         >
           เสร็จสิ้น
         </p>
