@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { setId } from "@/state/user/userSlice";
+import { setId, setName } from "@/state/user/userSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 
@@ -32,6 +32,7 @@ export default function Login() {
       if (response.status === 201) {
         const data = await response.json();
         dispatch(setId(data.user.id));
+        dispatch(setName(data.user.name))
         router.push("/")
       } else if (response.status === 401) {
         setError("Wrong email or password");

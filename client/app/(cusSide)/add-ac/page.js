@@ -4,6 +4,7 @@ import BackBtn from "@/app/component/backBtn";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import upload from "@/lib/upload";
+import { useRouter } from "next/navigation";
 
 export default function AddAC() {
   const id = useSelector((state) => state.user.id);
@@ -13,6 +14,7 @@ export default function AddAC() {
   });
   const [status, setStatus] = useState(0);
   const statusList = ["", "ทำการเพิ่มแอร์สำเร็จแล้ว", "ข้อมูลไม่ถูกต้อง", "โปรดอัปโหลดรูปใบรับประกันด้วย", "มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง"]
+  const router = useRouter();
 
   const handleAddAC = async (e) => {
     e.preventDefault();
@@ -37,6 +39,7 @@ export default function AddAC() {
       });
       if (response.status === 201) {
         setStatus(1); //"ทำการเพิ่มแอร์สำเร็จแล้ว"
+        router.push("/")
       } else if (response.status === 400) {
         setStatus(2); //"ข้อมูลไม่ถูกต้อง"
       } else if (response.status === 500) {

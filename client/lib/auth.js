@@ -46,7 +46,7 @@ export async function signIn(credential) {
     if (status) {
       const data = {
         id: user.U_Id,
-        email: user.U_Email,
+        name: user.U_Name,
         role: user.U_Role,
       };
       await login(data);

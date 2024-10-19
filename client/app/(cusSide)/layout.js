@@ -1,8 +1,7 @@
 import "../globals.css";
 import { UserProvider } from "@/state/UserProvider";
 import Header from "../component/header";
-import NavBar from "../component/navBar";
-
+import CusNavBar from "../component/cusNavBar"
 export const metadata = {
   title: "CentralAir",
 };
@@ -15,7 +14,7 @@ export default function RootLayout({ children }) {
         <UserProvider>
           <Header />
           <div className="flex">
-            <NavBar />
+            <CusNavBar />
             {children}
           </div>
         </UserProvider>

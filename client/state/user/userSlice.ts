@@ -2,12 +2,12 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface UserSlice {
   id: string;
-  email: string;
+  name: string;
 }
 
 const initialState: UserSlice = {
   id: "",
-  email: "",
+  name: "",
 };
 
 const counterSlice = createSlice({
@@ -17,8 +17,11 @@ const counterSlice = createSlice({
     setId: (state, action: PayloadAction<string>) => {
       state.id = action.payload;
     },
+    setName: (state, action: PayloadAction<string>) => {
+      state.name = action.payload;
+    },
   },
 });
 
-export const { setId } = counterSlice.actions;
+export const { setId, setName } = counterSlice.actions;
 export default counterSlice.reducer;

@@ -2,10 +2,12 @@
 
 import BackBtn from "@/app/component/backBtn";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AddAC() {
 
   const [status, setStatus] = useState(1);
+  const router = useRouter();
   const handleAddAC = async (e) => {
     e.preventDefault();
     setStatus(2);
@@ -21,7 +23,7 @@ export default function AddAC() {
           ACData,
         }),
       });
-      setStatus(1)
+      router.push("/service")
     } catch (err) {
       console.log(err.message);
     }

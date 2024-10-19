@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 function Header() {
   const router = useRouter();
-  const id = useSelector((state) => state.user.id);
+  const name = useSelector((state) => state.user.name);
 
   const logout = async () => {
     try {
@@ -28,7 +28,7 @@ function Header() {
       <img src="/logo.png" alt="logo" className="w-auto h-20 cursor-pointer" onClick={() => router.push("/")}/>
       <div className="flex items-center gap-5">
         <img src="/user.png" alt="userPic" className="profile" />
-        <h1>{id}</h1>
+        <h1>{name}</h1>
         <button className="text-white font-bold" onClick={logout}>
           ออกจากระบบ
         </button>
