@@ -31,6 +31,7 @@ export default function ListAC(props) {
     อยู่ในขั้นตอนการซ่อม: "bg-black text-white cursor-not-allowed",
     รอการเลือกวันใหม่อีกครั้ง: "bg-black text-white cursor-pointer",
     รอยืนยันใบขอรับบริการ: "bg-black text-white cursor-pointer",
+    "ซ่อมสำเร็จ รอกระบวนการเสร็จสิ้น": "bg-black text-white cursor-not-allowed",
   };
 
   return (
