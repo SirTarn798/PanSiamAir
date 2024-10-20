@@ -17,6 +17,8 @@ export default function ListAC(props) {
       router.push(`/pick-calendar?serial=${ac.AC_Serial}`);
     } else if (ac.AC_Status === "รอการเลือกวันใหม่อีกครั้ง") {
       router.push(`/pick-calendar?serial=${ac.AC_Serial}&reschedule=true`);
+    } else if (ac.AC_Status === "รอยืนยันใบขอรับบริการ") {
+      router.push(`/approve-docs/request-form?serial=${ac.AC_Serial}&reschedule=true`);
     }
   };
 
@@ -28,6 +30,7 @@ export default function ListAC(props) {
     รอเลือกวันนัดหมาย: "bg-black text-white cursor-pointer",
     อยู่ในขั้นตอนการซ่อม: "bg-black text-white cursor-not-allowed",
     รอการเลือกวันใหม่อีกครั้ง: "bg-black text-white cursor-pointer",
+    รอยืนยันใบขอรับบริการ: "bg-black text-white cursor-pointer",
   };
 
   return (

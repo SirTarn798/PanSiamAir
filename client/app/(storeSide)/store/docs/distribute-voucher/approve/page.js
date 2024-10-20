@@ -130,12 +130,7 @@ export default function ApproveDistributeVoucher() {
           >
             ยืนยัน
           </button>
-          <button
-            className="bg-gray-500 text-white font-bold rounded-3xl p-3"
-            onClick={() => handleApprove(false)}
-          >
-            ไม่ยืนยัน
-          </button>
+          
         </div>
       </div>
     );
