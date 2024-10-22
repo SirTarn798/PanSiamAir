@@ -2,17 +2,135 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// enum REQUEST_STATUS {
-//   waiting
-//   accepted_wait_write_quotation
-//   accepted_wait_leader_quotation
-//   accepted_wait_cus_quotation
-//   accepted_wait_pick_calendar
-//   rejected
-//   finished
-// }
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
-enum ROLE {
+model AIRCONDITION {
+  AC_Serial            String            @id @db.VarChar(255)
+  AC_Model             String            @db.VarChar(255)
+  U_Id                 String?           @db.Uuid
+  AC_Store             String            @db.VarChar(255)
+  AC_Status            String            @db.VarChar(255)
+  AC_Address           String            @db.VarChar(255)
+  AC_Image_link        String?           @db.VarChar(255)
+  AC_Installation_date DateTime          @db.Timestamp(6)
+  USER                 USER?             @relation(fields: [U_Id], references: [U_Id], onUpdate: NoAction)
+  REQUEST_PROBLEM      REQUEST_PROBLEM[]
+}
+
+model DISTRIBUTE_VOUCHER {
+  DV_Id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  DV_Date      DateTime?    @db.Timestamptz(6)
+  RF_Id        Int
+  RE_Id        Int
+  REQUISITION  REQUISITION  @relation(fields: [RE_Id], references: [RE_Id], onDelete: NoAction, onUpdate: NoAction)
+  REQUEST_FORM REQUEST_FORM @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model MESSAGE {
+  M_Id       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  M_Message  String?
+  M_Image    String?   @db.VarChar(255)
+  M_Sender   String
+  M_Receiver String
+  M_DateTime DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model QUOTATION {
+  Q_Id              Int            @id @default(autoincrement())
+  Q_Customer_stauts Boolean?
+  Q_Manager_stauts  Boolean?
+  Q_Total           Float?
+  Q_Discount        Float?
+  Q_Vat             Float?
+  Q_Grand_total     Float?
+  Q_Date            DateTime?      @db.Timestamptz(6)
+  RF_Id             Int            @unique
+  REQUEST_FORM      REQUEST_FORM   @relation(fields: [RF_Id], references: [RF_Id], onDelete: Cascade, onUpdate: NoAction)
+  REQUISITION       REQUISITION[]
+  SPARE_DETAIL      SPARE_DETAIL[]
+}
+
+model REQUEST_FORM {
+  RF_Id              Int                  @id @default(autoincrement())
+  RF_Cause           String?
+  RF_Repair_details  String?
+  RF_Date            DateTime             @db.Timestamptz(6)
+  RP_Id              Int                  @unique
+  RF_EFT             Int
+  Mech_Id            String?              @db.Uuid
+  DISTRIBUTE_VOUCHER DISTRIBUTE_VOUCHER[]
+  QUOTATION          QUOTATION?
+  USER               USER?                @relation(fields: [Mech_Id], references: [U_Id], onDelete: NoAction, onUpdate: NoAction)
+  REQUEST_PROBLEM    REQUEST_PROBLEM      @relation(fields: [RP_Id], references: [RP_Id], onDelete: Cascade, onUpdate: NoAction)
+  REQUISITION        REQUISITION[]
+  SCHEDULE           SCHEDULE[]
+}
+
+model REQUEST_PROBLEM {
+  RP_Id        Int           @id @default(autoincrement())
+  AC_Serial    String        @db.VarChar(255)
+  RP_Detail    String
+  RP_Status    String        @db.VarChar(255)
+  Request_form Int?
+  REQUEST_FORM REQUEST_FORM?
+  AIRCONDITION AIRCONDITION  @relation(fields: [AC_Serial], references: [AC_Serial], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model REQUISITION {
+  RE_Id              Int                  @id @default(autoincrement())
+  RE_Date            DateTime             @db.Timestamp(6)
+  Q_Id               Int
+  RF_Id              Int
+  DISTRIBUTE_VOUCHER DISTRIBUTE_VOUCHER[]
+  QUOTATION          QUOTATION            @relation(fields: [Q_Id], references: [Q_Id], onDelete: NoAction, onUpdate: NoAction)
+  REQUEST_FORM       REQUEST_FORM         @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model SCHEDULE {
+  rf_id        Int?
+  s_start_time DateTime      @db.Timestamptz(6)
+  s_end_time   DateTime      @db.Timestamptz(6)
+  u_id         String        @db.Uuid
+  REQUEST_FORM REQUEST_FORM? @relation(fields: [rf_id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+  USER         USER          @relation(fields: [u_id], references: [U_Id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([u_id, s_start_time])
+}
+
+model SPARE {
+  S_Id         Int            @id @default(autoincrement())
+  S_Name       String         @unique @db.VarChar(255)
+  S_Price      Float
+  SPARE_DETAIL SPARE_DETAIL[]
+}
+
+model SPARE_DETAIL {
+  Q_Id        Int
+  S_Id        Int
+  SD_Quantity Int
+  QUOTATION   QUOTATION @relation(fields: [Q_Id], references: [Q_Id], onDelete: Cascade, onUpdate: NoAction)
+  SPARE       SPARE     @relation(fields: [S_Id], references: [S_Id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([Q_Id, S_Id])
+}
+
+model USER {
+  U_Id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  U_Email      String         @unique @db.VarChar(255)
+  U_Password   String         @db.VarChar(255)
+  U_Tel        String         @db.VarChar(255)
+  U_Name       String         @db.VarChar(255)
+  U_Role       role?          @default(CUSTOMER)
+  U_Profile    String?        @default("/user.png") @db.VarChar(255)
+  AIRCONDITION AIRCONDITION[]
+  REQUEST_FORM REQUEST_FORM[]
+  SCHEDULE     SCHEDULE[]
+}
+
+enum role {
   ADMIN
   CUSTOMER
   SERVICE
@@ -20,92 +138,4 @@ enum ROLE {
   MECHANIC
   STORE
   FINANCE
-}
-
-model USER {
-  U_Id       String         @id @default(uuid())
-  U_Email    String         @unique
-  U_Password String
-  U_Tel      String
-  U_Name     String
-  AC         AIRCONDITION[]
-  U_Role     ROLE           @default(CUSTOMER)
-  U_Profile  String         @default("/user.png")
-}
-
-model MESSAGE {
-  M_Id       String   @id @default(uuid())
-  M_Message  String?
-  M_Image    String?
-  M_Sender   String
-  M_Receiver String
-  M_DateTime DateTime @default(now())
-}
-
-model AIRCONDITION {
-  AC_Serial            String            @id
-  AC_Model             String
-  Customer             USER?             @relation(fields: [U_Id], references: [U_Id])
-  U_Id                 String?
-  AC_Store             String
-  AC_Status            String
-  AC_Address           String
-  AC_Image_link        String?
-  AC_Installation_date DateTime
-  Request              REQUEST_PROBLEM[]
-}
-
-model REQUEST_PROBLEM {
-  RP_Id        Int            @id @default(autoincrement())
-  AC_Serial    String
-  AC           AIRCONDITION  @relation(fields: [AC_Serial], references: [AC_Serial])
-  RP_Detail    String
-  RP_Status    String
-  Request_form REQUEST_FORM?
-}
-
-model REQUEST_FORM {
-  RF_Id             Int            @id @default(autoincrement())
-  RF_Cause          String?
-  RF_Repair_details String?
-  RF_Date           DateTime
-  RP_Id             Int          @unique
-  Request_problem   REQUEST_PROBLEM @relation(fields: [RP_Id], references: [RP_Id])
-  QUOTATION         QUOTATION?
-}
-
-model QUOTATION {
-  Q_Id              Int            @id @default(autoincrement())
-  Spare_detail      SPARE_DETAIL[]
-  Q_Customer_stauts Boolean?
-  Q_Manager_stauts  Boolean?
-  Q_Total           Float?
-  Q_Discount        Float?
-  Q_Vat             Float?
-  Q_Grand_total     Float?
-  Q_Date            DateTime?
-  RF_Id             Int         @unique
-  Request_form     REQUEST_FORM   @relation(fields: [RF_Id], references: [RF_Id])
-}
-
-model SPARE {
-  S_Id         Int            @id @default(autoincrement())
-  S_Name       String         @unique
-  S_Price      Float
-  Spare_detail SPARE_DETAIL[]
-}
-
-model SPARE_DETAIL {
-  Q_Id        Int
-  S_Id        Int
-  SD_Quantity Int
-  Quotation   QUOTATION @relation(fields: [Q_Id], references: [Q_Id])
-  Spare       SPARE     @relation(fields: [S_Id], references: [S_Id])
-
-  @@id([Q_Id, S_Id])
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
