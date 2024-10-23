@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 export default function QuotationPage() {
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const rf_id = searchParams.get("rf_id");
   const [error, setError] = useState(null);
   const [quotation, setQuotation] = useState();
   const router = useRouter();
@@ -14,13 +14,13 @@ export default function QuotationPage() {
   useEffect(() => {
     const getQuotation = async () => {
       try {
-        const response = await fetch("/api/getQuotation", {
+        const response = await fetch("/api/getQuotationFromRF", {
           method: "POST",
           headers: {
             "content-type": "application/json",
           },
           body: JSON.stringify({
-            id,
+            rf_id,
           }),
         });
         const data = await response.json();

@@ -15,7 +15,8 @@ export const POST = async (request) => {
         JOIN 
             "AIRCONDITION" ac ON rp."AC_Serial" = ac."AC_Serial"
         WHERE 
-            ac."AC_Serial" = $1;
+            ac."AC_Serial" = $1
+            AND rp."RP_Status" LIKE 'accepted%'
     `;
 
     const values = [body.serial];

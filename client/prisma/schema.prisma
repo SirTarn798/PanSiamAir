@@ -62,6 +62,7 @@ model REQUEST_FORM {
   RF_EFT             Int
   Mech_Id            String?              @db.Uuid
   DISTRIBUTE_VOUCHER DISTRIBUTE_VOUCHER[]
+  PAYMENT_REQUEST    PAYMENT_REQUEST[]
   QUOTATION          QUOTATION?
   USER               USER?                @relation(fields: [Mech_Id], references: [U_Id], onDelete: NoAction, onUpdate: NoAction)
   REQUEST_PROBLEM    REQUEST_PROBLEM      @relation(fields: [RP_Id], references: [RP_Id], onDelete: Cascade, onUpdate: NoAction)
@@ -130,7 +131,28 @@ model USER {
   SCHEDULE     SCHEDULE[]
 }
 
+model PAYMENT_REQUEST {
+  PR_Id        Int           @id @default(autoincrement())
+  PR_Pic       String
+  PR_Name      String
+  PR_Bank      String
+  PR_Price     Float
+  PR_Date      DateTime      @db.Timestamptz(6)
+  RF_Id        Int?
+  REQUEST_FORM REQUEST_FORM? @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+}
+
 enum role {
+  ADMIN
+  CUSTOMER
+  SERVICE
+  HEAD
+  MECHANIC
+  STORE
+  FINANCE
+}
+
+enum ROLE {
   ADMIN
   CUSTOMER
   SERVICE

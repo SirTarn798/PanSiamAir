@@ -14,6 +14,7 @@ export const POST = async (request) => {
         LEFT JOIN "REQUEST_FORM" rf on rp."RP_Id" = rf."RP_Id"
         WHERE ac."AC_Serial" = $1
         AND ac."U_Id" = $2
+        AND rp."RP_Status" = 'accepted_wait_cus_request_form'
     `;
 
     const values = [body.serial, body.id];

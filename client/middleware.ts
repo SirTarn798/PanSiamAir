@@ -83,9 +83,13 @@ export const config = {
     "/register",
     "/chat",
     "/add-ac",
-    "/",
+    "/addprove-docs/:path*",
+    "/pick-calendar",
     "/fixing",
+    "/head/:path*",
+    "/mechanic/:path*",
     "/admin/:path*",
     "/service/:path*",
+    "/store/:path*"
   ],
 };

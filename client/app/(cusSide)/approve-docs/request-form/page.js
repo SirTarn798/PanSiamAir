@@ -29,7 +29,6 @@ export default function ApproveReqiestForm() {
         });
         const data = await response.json();
         if (response.status === 200) {
-          console.log(data.request);
           setRequest(data.request);
           setInsurance(checkInsurance(data.request.AC_Installation_date));
         } else {
@@ -47,6 +46,10 @@ export default function ApproveReqiestForm() {
     if (!confirmProceed) {
       return;
     }
+
+    const statusAc = insurance ? "ซ่อมสำเร็จ รอกระบวนการเสร็จสิ้น" : "อัปโหลดหลักฐานการชำระเงิน"
+    const statusRp = insurance ? "accepted_wait_write_receive_voucher" : "accepted_wait_confirm_payment"
+
     try {
       const response = await fetch("/api/updateRequest", {
         method: "POST",
@@ -56,8 +59,8 @@ export default function ApproveReqiestForm() {
         body: JSON.stringify({
           serial,
           id : request.RF_Id,
-          statusAc : "ซ่อมสำเร็จ รอกระบวนการเสร็จสิ้น",
-          statusRp : "accepted_wait_confirm_payment"
+          statusAc,
+          statusRp,
         }),
       });
       router.push("/")

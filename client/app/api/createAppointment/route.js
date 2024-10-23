@@ -12,7 +12,7 @@ export const POST = async (request) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ serial: body.serial }),
+        body: JSON.stringify({ serial: body.serial,status :"accepted" }),
       }
     );
 

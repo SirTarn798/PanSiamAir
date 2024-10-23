@@ -13,7 +13,7 @@ export default function DocsCard(props) {
       <p>ราคาสุทธิ: {quotation.Request_form?.QUOTATION?.Q_Grand_total}</p>
       <button
         className="bg-primary p-3 rounded-3xl mt-3 w-fit"
-        onClick={() => router.push(`/head/quotation?id=` + quotation.Request_form?.QUOTATION.Q_Id)}
+        onClick={() => router.push(`/head/quotation?rf_id=` + quotation.Request_form?.RF_Id)}
       >
         ดูรายละเอียด
       </button>
