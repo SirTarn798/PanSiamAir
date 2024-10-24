@@ -2,11 +2,14 @@
 
 import BackBtn from "@/app/component/backBtn";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function AddEmployee() {
+  const [status, setStatus] = useState(true)
   const router = useRouter();
   const addEmployee = async (e) => {
     e.preventDefault();
+    setStatus(false)
     const formData = new FormData(e.target);
     const userData = Object.fromEntries(formData);
     try {
@@ -25,12 +28,13 @@ export default function AddEmployee() {
       });
       if(response.status === 201) {
         alert("เพิ่มพนักงานสำเร็จ")
-        router.push("/admin/add-employee")
+        router.push("/admin")
       } else if(response.status === 500) {
         throw new Error("อีเมลล์ได้ถูกใช้ไปแล้ว โปรดลองอีเมลล์อื่น");
       }
     } catch (err) {
       alert(err.message)
+      setStatus(true)
     }
   }
   return (
@@ -56,7 +60,7 @@ export default function AddEmployee() {
           <option value="HEAD">หัวหน้าแผนก</option>
           <option value="MECHANIC">ช่าง</option>
         </select>
-        <button className="bg-primary w-28 p-2 rounded-3xl self-center">
+        <button className={`w-28 p-2 rounded-3xl self-center1 ${status ? "bg-primary" : "bg-primaryBg cursor-not-allowed"}`}>
           บันทึกข้อมูล
         </button>
       </form>

@@ -47,7 +47,7 @@ export default function CreateRequisition() {
         },
         body: JSON.stringify({
           rf_id,
-          q_id : data.quotation.Q_Id,
+          q_id : data.Q_Id,
         }),
       });
 
@@ -75,11 +75,12 @@ export default function CreateRequisition() {
     return (
       <div className="flex flex-col w-screen p-16 bg-primaryBg m-10 rounded-3xl gap-10">
         <div className="flex flex-col gap-3 font-bold">
-          <p>หมายเลขใบขอเสนอราคา : {data?.quotation.Q_Id}</p>
-          <p>ราคารวม : {data?.quotation.Q_Total}</p>
-          <p>ส่วนลด : {data?.quotation.Q_Discount}</p>
-          <p>ภาษีมูลค่าเพิ่ม : {data?.quotation.Q_Vat}</p>
-          <p>ราคาสุทธิ : {data?.quotation.Q_Grand_total}</p>
+          {console.log(data)}
+          <p>หมายเลขใบขอเสนอราคา : {data?.Q_Id}</p>
+          <p>ราคารวม : {data?.Q_Total}</p>
+          <p>ส่วนลด : {data?.Q_Discount}</p>
+          <p>ภาษีมูลค่าเพิ่ม : {data?.Q_Vat}</p>
+          <p>ราคาสุทธิ : {data?.Q_Grand_total}</p>
         </div>
         <table className="w-full border-collapse rounded-lg overflow-hidden p-5">
           <thead>
@@ -94,7 +95,7 @@ export default function CreateRequisition() {
             </tr>
           </thead>
           <tbody>
-            {data?.quotation.Spare_detail.map((item, index) => (
+            {data?.Spare_detail.map((item, index) => (
               <tr
                 key={index}
                 className={`odd:bg-gray-100 even:bg-gray-200`} // Alternating row colors

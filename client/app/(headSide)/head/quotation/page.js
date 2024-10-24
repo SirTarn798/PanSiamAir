@@ -24,7 +24,7 @@ export default function QuotationPage() {
           }),
         });
         const data = await response.json();
-        if (response.status === 200) {
+        if (response.status === 201) {
           setQuotation(data.quotation);
         } else {
           setError(data.error);
@@ -34,7 +34,7 @@ export default function QuotationPage() {
       }
     };
     getQuotation();
-  }, [id]);
+  }, [rf_id]);
 
   const handleApprove = async (status) => {
     const confirmProceed = window.confirm("ท่านแน่ใจหรือไม่ว่าต้องการ " + (status ? "อนุมัติ" : "ไม่อนุมัติ"));
@@ -49,7 +49,7 @@ export default function QuotationPage() {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          id,
+          rf_id,
           status,
         }),
       });

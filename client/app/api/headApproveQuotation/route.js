@@ -11,9 +11,9 @@ export const POST = async (request) => {
         `
         UPDATE "QUOTATION"
         SET "Q_Manager_stauts" = true
-        WHERE "Q_Id" = $1
+        WHERE "RF_Id" = $1
       `,
-        [body.id]
+        [body.rf_id]
       );
 
       await db.query(
@@ -23,14 +23,10 @@ export const POST = async (request) => {
         WHERE "RP_Id" = (
           SELECT "RP_Id"
           FROM "REQUEST_FORM"
-          WHERE "RF_Id" = (
-            SELECT "RF_Id"
-            FROM "QUOTATION"
-            WHERE "Q_Id" = $1
-          )
+          WHERE "RF_Id" = $1
         )
       `,
-        [body.id]
+        [body.rf_id]
       );
 
       await db.query(
@@ -43,15 +39,11 @@ export const POST = async (request) => {
           WHERE "RP_Id" = (
             SELECT "RP_Id"
             FROM "REQUEST_FORM"
-            WHERE "RF_Id" = (
-              SELECT "RF_Id"
-              FROM "QUOTATION"
-              WHERE "Q_Id" = $1
-            )
+            WHERE "RF_Id" = $1
           )
         )
       `,
-        [body.id]
+        [body.rf_id]
       );
     } else {
       // Update REQUEST_PROBLEM status
@@ -62,11 +54,7 @@ export const POST = async (request) => {
         WHERE "RP_Id" = (
           SELECT "RP_Id"
           FROM "REQUEST_FORM"
-          WHERE "RF_Id" = (
-            SELECT "RF_Id"
-            FROM "QUOTATION"
-            WHERE "Q_Id" = $1
-          )
+          WHERE "RF_Id" = $1 
         )
       `,
         [body.id]
@@ -76,9 +64,13 @@ export const POST = async (request) => {
       await db.query(
         `
         DELETE FROM "SPARE_DETAIL"
-        WHERE "Q_Id" = $1
+        WHERE "Q_Id" = (
+          SELECT "Q_Id"
+          FROM "QUOTATION"
+          WHERE "RF_Id" = $1
+        )
       `,
-        [body.id]
+        [body.rf_id]
       );
     }
 

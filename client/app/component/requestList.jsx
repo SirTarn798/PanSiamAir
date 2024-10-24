@@ -8,6 +8,7 @@ export default function RequestList(props) {
     accepted_wait_write_requisition: "ออกรายการเบิกอะไหล่",
     accepted_wait_write_distribute_voucher: "ออกใบสำคัญจ่าย",
     accepted_wait_approve_distribute_voucher: "ยืนยันใบสำคัญจ่าย",
+    accepted_wait_finance_approve_payment: "ยืนยันการชำระเงิน",
   };
 
   const handleClickButton = () => {
@@ -26,6 +27,9 @@ export default function RequestList(props) {
         break;
       case "accepted_wait_fixing":
         manageWork();
+        break;
+      case "accepted_wait_finance_approve_payment":
+        approvePayment();
         break;
     }
   };
@@ -55,6 +59,10 @@ export default function RequestList(props) {
   const manageWork = () => {
     router.push(`/mechanic/work?RF_Id=${props.request.RF_Id}`);
   };
+
+  const approvePayment = () => {
+    router.push(`/finance/docs/receipt/create?RF_Id=${props.request.RF_Id}`)
+  }
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

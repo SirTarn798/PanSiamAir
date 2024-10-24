@@ -73,7 +73,7 @@ export default function Login() {
         >
           Login
         </button>
-        <h4 className="self-end text-rose-500 hover:underline underline-offset-1 cursor-pointer">
+        <h4 className="self-end text-rose-500 hover:underline underline-offset-1 cursor-pointer" onClick={() => router.push("/register")}>
           Don't have an account?
         </h4>
         <p className="text-red-500">{error}</p>

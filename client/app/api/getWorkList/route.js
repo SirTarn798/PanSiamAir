@@ -24,7 +24,7 @@ export const POST = async (request) => {
         FROM 
             "SCHEDULE" s
             LEFT JOIN "REQUEST_FORM" rf ON s."rf_id" = rf."RF_Id"
-            LEFT JOIN "REQUEST_PROBLEM" rp ON rf."RF_Id" = rp."RP_Id"
+            LEFT JOIN "REQUEST_PROBLEM" rp ON rf."RP_Id" = rp."RP_Id"
             LEFT JOIN "AIRCONDITION" ac ON rp."AC_Serial" = ac."AC_Serial"
         WHERE 
             s.u_id = $1

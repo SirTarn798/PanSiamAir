@@ -3,8 +3,10 @@
 import { useState } from "react";
 import "./register.css";
 import upload from "../../../lib/upload";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -15,8 +17,10 @@ export default function Register() {
     url: "/user.png",
   });
   const [pfpStatus, setPfpStatus] = useState(false);
+  const [status, setStatus] = useState(true);
 
   const register = async (e) => {
+    setStatus(false);
     e.preventDefault();
     try {
       let pfpLink = "/user.png"
@@ -37,8 +41,12 @@ export default function Register() {
           profile: pfpLink
         }),
       });
+      alert("สมัครสำเร็จ")
+      router.push("/login")
     } catch (err) {
-      console.log(err.message);
+      alert(err.message);
+    } finally {
+      setStatus(true);
     }
   };
 
@@ -113,7 +121,8 @@ export default function Register() {
         />
         <button
           type="submit"
-          className="text-white bg-rose-500 p-5 w-64 rounded drop-shadow-md cursor-pointer"
+          className={`text-white p-5 w-64 rounded drop-shadow-md ${status ? "bg-primary cursor-pointer" : "bg-primaryBg cursor-not-allowed"}` }
+          
         >
           Sign Up
         </button>

@@ -50,6 +50,11 @@ export async function middleware(request: NextRequest) {
         !(pathname.startsWith("/mechanic"))
       ) {
         return NextResponse.redirect(new URL("/mechanic", request.url));
+      } else if (
+        decryptedSession.user.role === "FINANCE" &&
+        !(pathname.startsWith("/finance"))
+      ) {
+        return NextResponse.redirect(new URL("/finance", request.url));
       }
     } else {
       if (pathname !== "/login") {
@@ -81,6 +86,7 @@ export const config = {
   matcher: [
     "/login",
     "/register",
+    "/",
     "/chat",
     "/add-ac",
     "/addprove-docs/:path*",

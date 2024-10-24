@@ -152,22 +152,23 @@ export default function RequestPage() {
             <p className="font-bold">รายละเอียด</p>
             <p>{request.RP_Detail}</p>
           </div>
-          {/* Input estimate fix time */}
-          <div className="flex flex-col gap-2">
-            <p className="font-bold">ประมาณเวลาซ่อม</p>
-            <div className="flex gap-4">
-              <input
-                type="number"
-                min="0"
-                max="59"
-                value={estimatedMinutes}
-                onChange={(e) => setEstimatedMinutes(e.target.value)}
-                className="w-20 p-2 border rounded"
-                placeholder="นาที"
-                required
-              />
+          {request.RP_Status === "waiting" ? 
+            <div className="flex flex-col gap-2">
+              <p className="font-bold">ประมาณเวลาซ่อม</p>
+              <div className="flex gap-4">
+                <input
+                  type="number"
+                  min="0"
+                  max="59"
+                  value={estimatedMinutes}
+                  onChange={(e) => setEstimatedMinutes(e.target.value)}
+                  className="w-20 p-2 border rounded"
+                  placeholder="นาที"
+                  required
+                />
+              </div>
             </div>
-          </div>
+          : null}
         </div>
         <div
           className="flex items-center justify-center bg-primary mx-5 rounded-b w-9/12 text-white font-bold h-14 text-2xl cursor-pointer"
