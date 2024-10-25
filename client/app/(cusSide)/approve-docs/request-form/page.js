@@ -47,8 +47,12 @@ export default function ApproveReqiestForm() {
       return;
     }
 
-    const statusAc = insurance ? "ซ่อมสำเร็จ รอกระบวนการเสร็จสิ้น" : "อัปโหลดหลักฐานการชำระเงิน"
-    const statusRp = insurance ? "accepted_wait_write_receive_voucher" : "accepted_wait_confirm_payment"
+    const statusAc = insurance
+      ? "ซ่อมสำเร็จ รอกระบวนการเสร็จสิ้น"
+      : "อัปโหลดหลักฐานการชำระเงิน";
+    const statusRp = insurance
+      ? "accepted_wait_write_receive_voucher"
+      : "accepted_wait_upload_payment";
 
     try {
       const response = await fetch("/api/updateRequest", {
@@ -58,12 +62,12 @@ export default function ApproveReqiestForm() {
         },
         body: JSON.stringify({
           serial,
-          id : request.RF_Id,
+          id: request.RF_Id,
           statusAc,
           statusRp,
         }),
       });
-      router.push("/")
+      router.push("/");
     } catch (err) {
       console.log(err.message);
     }
@@ -99,7 +103,10 @@ export default function ApproveReqiestForm() {
         <p className="font-bold text-2xl">วิธีการซ่อม</p>
         <p className="w-8/12 h-32 rounded">{request.RF_Repair_details}</p>
         <div className="flex gap-10">
-          <button className="bg-primary font-bold text-lg text-white w-fit p-3 rounded-3xl" onClick={approveRequestForm}>
+          <button
+            className="bg-primary font-bold text-lg text-white w-fit p-3 rounded-3xl"
+            onClick={approveRequestForm}
+          >
             ยืนยัน
           </button>
         </div>

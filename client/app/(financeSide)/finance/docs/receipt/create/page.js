@@ -36,14 +36,39 @@ export default function CreateReceipt() {
     getRequest();
   }, [rf_id]);
 
-  const approvePayment = () => {
+  const approvePayment = async () => {
+    try {
+      const response = await fetch("/api/approvePayment", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          status : true,
+          rf_id,
+        }),
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
-  }
-
-  const disapprovePayment = () => {
-    
-  }
-
+  const disapprovePayment = async () => {
+    try {
+      const response = await fetch("/api/approvePayment", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          status : false,
+          rf_id,
+        }),
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   if (error) {
     return (
       <div className="flex flex-col w-screen h-screen pl-16 pt-5 pr-3 items-center justify-center cursor-not-allowed">
@@ -71,8 +96,18 @@ export default function CreateReceipt() {
           </div>
           <img src={request.PR_Pic} alt="หลักฐานการชำระเงิน" />
           <div className="flex gap-3">
-            <button className="bg-primary text-white font-bold p-3 rounded" onClick={approvePayment}>ยืนยัน</button>
-            <button className="bg-white text-black font-bold p-3 rounded" onClick={disapprovePayment}>ไม่ยืนยัน</button>
+            <button
+              className="bg-primary text-white font-bold p-3 rounded"
+              onClick={approvePayment}
+            >
+              ยืนยัน
+            </button>
+            <button
+              className="bg-white text-black font-bold p-3 rounded"
+              onClick={disapprovePayment}
+            >
+              ไม่ยืนยัน
+            </button>
           </div>
         </div>
       </div>
