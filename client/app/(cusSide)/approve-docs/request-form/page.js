@@ -62,7 +62,7 @@ export default function ApproveReqiestForm() {
         },
         body: JSON.stringify({
           serial,
-          id: request.RF_Id,
+          id: request.RP_Id,
           statusAc,
           statusRp,
         }),

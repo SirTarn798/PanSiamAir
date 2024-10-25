@@ -5,7 +5,6 @@ export const POST = async (request) => {
   const body = await request.json();
   try {
     if (body.status) {
-      await db.query("BEGIN");
       const query = `
         INSERT INTO "RECEIPT"("RC_Date", "RF_Id")
         VALUES
@@ -13,6 +12,7 @@ export const POST = async (request) => {
     `;
       const values = [new Date(), body.rf_id];
       await db.query(query, values);
+      console.log("Finish add receipt")
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/checkFinish`,
         {
@@ -21,13 +21,37 @@ export const POST = async (request) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            form: "finance",
+            from: "finance",
             rf_id: body.rf_id,
           }),
         }
       );
+      let statusAc, statusRp;
+      if(response.status === 201) {
+        statusAc = "สถานะปกติ"
+        statusRp=  "finished"
+      } else {
+        statusAc = null;
+        statusRp = "approved_payment_accepted"
+      }
+      console.log("here")
+      const updateRequest = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/updateRequest`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: rp_id,
+            serial: body.serial,
+            statusAc,
+            statusRp,
+          }),
+        }
+      );
+      console.log("finish update status")
     } else {
-      await db.query("BEGIN");
       const query = `
             DELETE FROM "PAYMENT_REQUEST" WHERE "RF_Id" = $1
         `;
@@ -49,8 +73,9 @@ export const POST = async (request) => {
         }
       );
     }
-    return NextResponse.json({ user: result }, { status: 200 });
+    return NextResponse.json({ status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "User not found" }, { status: 403 });
+    console.log(error)
+    return NextResponse.json({error : ""}, { status: 400 });
   }
 };

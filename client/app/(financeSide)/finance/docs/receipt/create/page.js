@@ -14,6 +14,7 @@ export default function CreateReceipt() {
     const getRequest = async () => {
       try {
         const response = await fetch("/api/getPaymentRequest", {
+          //GET RP ID AS WELL
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -47,7 +48,12 @@ export default function CreateReceipt() {
           status : true,
           rf_id,
         }),
-      });
+      }
+    );
+    if(response.status === 200) {
+      alert("ยืนยันสำเร็จ");
+      router.push("/");
+    }
     } catch (error) {
       console.log(error.message);
     }
@@ -65,6 +71,10 @@ export default function CreateReceipt() {
           rf_id,
         }),
       });
+      if(response.status === 200) {
+        alert("ยกเลิกสำเร็จ");
+        router.push("/");
+      }
     } catch (error) {
       console.log(error.message);
     }

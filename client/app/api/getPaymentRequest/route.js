@@ -8,6 +8,7 @@ export const POST = async (request) => {
         SELECT *
         FROM "PAYMENT_REQUEST"
         WHERE "RF_Id" = $1
+        AND "PR_Status" = false
     `;
     const values = [parseInt(body.rf_id)];
     const result = await db.query(query, values);
