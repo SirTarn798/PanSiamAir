@@ -39,16 +39,17 @@ model MESSAGE {
 }
 
 model QUOTATION {
-  Q_Id              Int            @id @default(autoincrement())
+  Q_Id              Int               @id @default(autoincrement())
   Q_Customer_stauts Boolean?
   Q_Manager_stauts  Boolean?
   Q_Total           Float?
   Q_Discount        Float?
   Q_Vat             Float?
   Q_Grand_total     Float?
-  Q_Date            DateTime?      @db.Timestamptz(6)
-  RF_Id             Int            @unique
-  REQUEST_FORM      REQUEST_FORM   @relation(fields: [RF_Id], references: [RF_Id], onDelete: Cascade, onUpdate: NoAction)
+  Q_Date            DateTime?         @db.Timestamptz(6)
+  RF_Id             Int               @unique
+  REQUEST_FORM      REQUEST_FORM      @relation(fields: [RF_Id], references: [RF_Id], onDelete: Cascade, onUpdate: NoAction)
+  RECEIVE_VOUCHER   RECEIVE_VOUCHER[]
   REQUISITION       REQUISITION[]
   SPARE_DETAIL      SPARE_DETAIL[]
 }
@@ -59,11 +60,13 @@ model REQUEST_FORM {
   RF_Repair_details  String?
   RF_Date            DateTime             @db.Timestamptz(6)
   RP_Id              Int                  @unique
-  RF_EFT             Int
   Mech_Id            String?              @db.Uuid
+  RF_EFT             Int
   DISTRIBUTE_VOUCHER DISTRIBUTE_VOUCHER[]
   PAYMENT_REQUEST    PAYMENT_REQUEST[]
   QUOTATION          QUOTATION?
+  RECEIPT            RECEIPT[]
+  RECEIVE_VOUCHER    RECEIVE_VOUCHER[]
   USER               USER?                @relation(fields: [Mech_Id], references: [U_Id], onDelete: NoAction, onUpdate: NoAction)
   REQUEST_PROBLEM    REQUEST_PROBLEM      @relation(fields: [RP_Id], references: [RP_Id], onDelete: Cascade, onUpdate: NoAction)
   REQUISITION        REQUISITION[]
@@ -102,10 +105,11 @@ model SCHEDULE {
 }
 
 model SPARE {
-  S_Id         Int            @id @default(autoincrement())
-  S_Name       String         @unique @db.VarChar(255)
-  S_Price      Float
-  SPARE_DETAIL SPARE_DETAIL[]
+  S_Id                        Int                           @id @default(autoincrement())
+  S_Name                      String                        @unique @db.VarChar(255)
+  S_Price                     Float
+  RECEIVE_VOUCER_SPARE_DETAIL RECEIVE_VOUCER_SPARE_DETAIL[]
+  SPARE_DETAIL                SPARE_DETAIL[]
 }
 
 model SPARE_DETAIL {
@@ -139,7 +143,34 @@ model PAYMENT_REQUEST {
   PR_Price     Float
   PR_Date      DateTime      @db.Timestamptz(6)
   RF_Id        Int?
+  PR_Status    Boolean       @default(false)
   REQUEST_FORM REQUEST_FORM? @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model RECEIPT {
+  RC_Id        Int          @id @default(autoincrement())
+  RC_Date      DateTime?    @db.Timestamptz(6)
+  RF_Id        Int
+  REQUEST_FORM REQUEST_FORM @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model RECEIVE_VOUCER_SPARE_DETAIL {
+  RSD_Quantity Int
+  S_Id         Int
+  RV_Id        Int
+  SPARE        SPARE @relation(fields: [S_Id], references: [S_Id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([S_Id, RV_Id])
+}
+
+model RECEIVE_VOUCHER {
+  RV_Id        Int          @id @default(autoincrement())
+  RV_Date      DateTime     @db.Timestamptz(6)
+  Q_Id         Int
+  RF_Id        Int
+  RV_Approve   Boolean?     @default(false)
+  QUOTATION    QUOTATION    @relation(fields: [Q_Id], references: [Q_Id], onDelete: NoAction, onUpdate: NoAction)
+  REQUEST_FORM REQUEST_FORM @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum role {
