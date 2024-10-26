@@ -1,7 +1,6 @@
 import { useRouter } from "next/navigation";
 
 export default function RequestList(props) {
-  console.log(props.request);
   const router = useRouter();
   const status = {
     accepted_wait_write_quotation: "ออกใบเสนอราคา",

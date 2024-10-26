@@ -11,7 +11,7 @@ export default function CreateDistributeVoucher() {
   const router = useRouter();
 
   useEffect(() => {
-    const getQuotation = async () => {
+    const getRequisition = async () => {
       try {
         const response = await fetch("/api/getRequisitionFromRF", {
           method: "POST",
@@ -32,7 +32,7 @@ export default function CreateDistributeVoucher() {
         console.error("Error in getQuotation:", error.message);
       }
     };
-    getQuotation();
+    getRequisition();
   }, [rf_id]);
 
   const handleApprove = async (status) => {
@@ -50,7 +50,6 @@ export default function CreateDistributeVoucher() {
         },
         body: JSON.stringify({
           rf_id,
-          re_id: data.requisition.RE_Id,
         }),
       });
 

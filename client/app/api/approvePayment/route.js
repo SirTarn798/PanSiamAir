@@ -3,6 +3,7 @@ import db from "@/lib/dbA";
 
 export const POST = async (request) => {
   const body = await request.json();
+  const rp_id = body.rp_id;
   try {
     if (body.status) {
       const query = `
@@ -12,29 +13,11 @@ export const POST = async (request) => {
     `;
       const values = [new Date(), body.rf_id];
       await db.query(query, values);
-      console.log("Finish add receipt")
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/checkFinish`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: "finance",
-            rf_id: body.rf_id,
-          }),
-        }
-      );
+
       let statusAc, statusRp;
-      if(response.status === 201) {
-        statusAc = "สถานะปกติ"
-        statusRp=  "finished"
-      } else {
-        statusAc = null;
-        statusRp = "approved_payment_accepted"
-      }
-      console.log("here")
+      statusAc = "สถานะปกติ";
+      statusRp = "finished";
+
       const updateRequest = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/updateRequest`,
         {
@@ -50,7 +33,6 @@ export const POST = async (request) => {
           }),
         }
       );
-      console.log("finish update status")
     } else {
       const query = `
             DELETE FROM "PAYMENT_REQUEST" WHERE "RF_Id" = $1
@@ -75,7 +57,7 @@ export const POST = async (request) => {
     }
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log(error)
-    return NextResponse.json({error : ""}, { status: 400 });
+    console.log(error);
+    return NextResponse.json({ error: "" }, { status: 400 });
   }
 };

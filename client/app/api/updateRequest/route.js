@@ -4,7 +4,6 @@ import db from "@/lib/dbA";
 export const POST = async (request) => {
   try {
     const body = await request.json();
-
     // Start a transaction
     await db.query('BEGIN');
 
@@ -18,11 +17,13 @@ export const POST = async (request) => {
     }
 
     // Update REQUEST_PROBLEM
+    if(body.statusRp) {
     await db.query(`
       UPDATE "REQUEST_PROBLEM"
       SET "RP_Status" = $1
       WHERE "RP_Id" = $2
     `, [body.statusRp, (body.id)]);
+    }
 
     // Commit the transaction
     await db.query('COMMIT');

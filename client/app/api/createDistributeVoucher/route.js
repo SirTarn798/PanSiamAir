@@ -7,11 +7,11 @@ export const POST = async (request) => {
     const body = await request.json();
 
     const insertQuery = `
-      INSERT INTO "DISTRIBUTE_VOUCHER" ("DV_Date", "RF_Id", "RE_Id")
-      VALUES ($1, $2, $3)
+      INSERT INTO "DISTRIBUTE_VOUCHER" ("DV_Date", "RF_Id")
+      VALUES ($1, $2)
       RETURNING *;
     `;
-    const insertValues = [date, (body.rf_id), (body.re_id)];
+    const insertValues = [date, (body.rf_id)];
     const insertResult = await db.query(insertQuery, insertValues);
 
     // Then, execute the UPDATE statement

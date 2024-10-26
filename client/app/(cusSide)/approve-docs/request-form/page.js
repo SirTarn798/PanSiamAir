@@ -48,10 +48,10 @@ export default function ApproveReqiestForm() {
     }
 
     const statusAc = insurance
-      ? "ซ่อมสำเร็จ รอกระบวนการเสร็จสิ้น"
+      ? "สถานะปกติ"
       : "อัปโหลดหลักฐานการชำระเงิน";
     const statusRp = insurance
-      ? "accepted_wait_write_receive_voucher"
+      ? "finished"
       : "accepted_wait_upload_payment";
 
     try {

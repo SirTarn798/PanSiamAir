@@ -47,6 +47,8 @@ export default function CreateReceipt() {
         body: JSON.stringify({
           status : true,
           rf_id,
+          rp_id: request.RP_Id,
+          serial : request.AC_Serial,
         }),
       }
     );
@@ -69,6 +71,8 @@ export default function CreateReceipt() {
         body: JSON.stringify({
           status : false,
           rf_id,
+          rp_id : request.RP_Id,
+          serial : request.AC_Serial,
         }),
       });
       if(response.status === 200) {
@@ -104,7 +108,7 @@ export default function CreateReceipt() {
             <p>{request.PR_Price}</p>
             <p className="font-bold">หลักฐานการชำระเงิน</p>
           </div>
-          <img src={request.PR_Pic} alt="หลักฐานการชำระเงิน" />
+          <img src={request.PR_Pic} alt="หลักฐานการชำระเงิน" width={400}/>
           <div className="flex gap-3">
             <button
               className="bg-primary text-white font-bold p-3 rounded"

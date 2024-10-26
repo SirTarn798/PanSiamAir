@@ -35,7 +35,7 @@ export default function WorkListPage() {
   };
 
   useEffect(() => {
-    getRequests(1, "accepted_wait_fixing, accepted_wait_write_requisition");
+    getRequests(1, "accepted_wait_fixing, accepted_wait_write_requisition, accepted_wait_write_distribute_voucher");
   }, []);
 
   return (
@@ -47,7 +47,7 @@ export default function WorkListPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 1 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(1, "accepted_wait_fixing, accepted_wait_write_requisition")}
+          onClick={() => getRequests(1, "accepted_wait_fixing, accepted_wait_write_distribute_voucher")}
         >
           งานที่กำลังจะถึง
         </p>

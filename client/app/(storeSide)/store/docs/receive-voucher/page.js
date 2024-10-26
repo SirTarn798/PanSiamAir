@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import RequestList from "@/app/component/requestList";
+import RVDocsCard from "../../../../component/rvDocsCard";
 
-export default function DistributeVoucherPage() {
+export default function ReceiveVoucherPage() {
   const [reqState, setReqState] = useState(1);
-  const [requests, setRequests] = useState();
+  const [vouchers, setVouchers] = useState();
 
   const getRequests = async (state, type) => {
     setReqState(state);
     try {
-      const response = await fetch("/api/getRequestsOnStatus", {
+      const response = await fetch("/api/getReceiveVouchers", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -19,9 +19,10 @@ export default function DistributeVoucherPage() {
           type,
         }),
       });
-      if (response.status === 201) {
+      if (response.status === 200) {
         const data = await response.json();
-        setRequests(data.requestProblems);
+        setVouchers(data.receiveVouchers);
+        console.log(data.receiveVouchers)
       } else {
         throw new Error(response.error);
       }
@@ -31,44 +32,35 @@ export default function DistributeVoucherPage() {
   };
 
   useEffect(() => {
-    getRequests(1, "accepted_wait_approve_distribute_voucher");
+    getRequests(1, false);
   }, []);
 
   return (
     <div className="flex flex-col gap-10 w-screen h-screen p-10">
-      <p className="text-4xl font-bold">ใบสำคัญจ่าย</p>
+      <p className="text-4xl font-bold">ใบสำคัญรับ</p>
       <div className="flex gap-20 text-lg">
         <p
           className={
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 1 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(1, "accepted_wait_approve_distribute_voucher")}
+          onClick={() => getRequests(1, false)}
         >
-          รอยืนยันใบสำคัญจ่าย
+          รอยืนยันใบสำคัญรับ
         </p>
         <p
           className={
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 2 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(2, "wait for update")}
+          onClick={() => getRequests(2, true)}
         >
           เสร็จสิ้น
         </p>
-        
       </div>
       <div className="flex flex-col gap-3">
-      <div className="grid grid-cols-[3fr_3fr_3fr_2fr_1fr_2fr] grid-rows-1 bg-primaryBg rounded-3xl p-3 font-bold">
-          <p>เลขที่ใบขอรับบริการ</p>
-          <p>วันที่ออกใบขอรับบริการ</p>
-          <p>หมายเลขเครื่อง</p>
-          <p>รุ่น</p>
-          <p>เอกสาร</p>
-          <p></p>
-        </div>
-        {requests?.map((request) => {
-          return <RequestList request={request} key={request.RP_Id}/>;
+        {vouchers?.map((voucher) => {
+          return <RVDocsCard key={voucher.RV_Id} voucher={voucher}/>;
         })}
       </div>
     </div>

@@ -55,12 +55,6 @@ function ServiceNavBar() {
           <div className="flex flex-col gap-2 pl-16">
             <button
               className="text-left p-3 hover:bg-neutral-200"
-              onClick={() => router.push("/service/docs/request_form")}
-            >
-              ใบขอรับบริการ
-            </button>
-            <button
-              className="text-left p-3 hover:bg-neutral-200"
               onClick={() => router.push("/service/docs/quotation")}
             >
               ใบเสนอราคา
@@ -70,21 +64,12 @@ function ServiceNavBar() {
             >
               ใบสำคัญจ่าย
             </button>
-            <button className="text-left p-3 hover:bg-neutral-200">
+            <button className="text-left p-3 hover:bg-neutral-200" onClick={() => router.push("/service/docs/receive-voucher/create")}>
               ใบสำคัญรับ
             </button>
           </div>
         </div>
       </div>
-
-      <button className="flex items-center p-5 gap-5 hover:bg-neutral-200">
-        <img src="/approve.png" alt="ac list icon" width={35} height={35} />
-        <p className="font-bold">การอนุมัติเอกสาร</p>
-      </button>
-      <button className="flex items-center p-5 gap-5 hover:bg-neutral-200">
-        <img src="/calendar.png" alt="ac list icon" width={35} height={35} />
-        <p className="font-bold">ปฏิทินการนัดเวลา</p>
-      </button>
     </div>
   );
 }

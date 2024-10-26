@@ -24,8 +24,6 @@ model DISTRIBUTE_VOUCHER {
   DV_Id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   DV_Date      DateTime?    @db.Timestamptz(6)
   RF_Id        Int
-  RE_Id        Int
-  REQUISITION  REQUISITION  @relation(fields: [RE_Id], references: [RE_Id], onDelete: NoAction, onUpdate: NoAction)
   REQUEST_FORM REQUEST_FORM @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -39,17 +37,16 @@ model MESSAGE {
 }
 
 model QUOTATION {
-  Q_Id              Int               @id @default(autoincrement())
+  Q_Id              Int            @id @default(autoincrement())
   Q_Customer_stauts Boolean?
   Q_Manager_stauts  Boolean?
   Q_Total           Float?
   Q_Discount        Float?
   Q_Vat             Float?
   Q_Grand_total     Float?
-  Q_Date            DateTime?         @db.Timestamptz(6)
-  RF_Id             Int               @unique
-  REQUEST_FORM      REQUEST_FORM      @relation(fields: [RF_Id], references: [RF_Id], onDelete: Cascade, onUpdate: NoAction)
-  RECEIVE_VOUCHER   RECEIVE_VOUCHER[]
+  Q_Date            DateTime?      @db.Timestamptz(6)
+  RF_Id             Int            @unique
+  REQUEST_FORM      REQUEST_FORM   @relation(fields: [RF_Id], references: [RF_Id], onDelete: Cascade, onUpdate: NoAction)
   REQUISITION       REQUISITION[]
   SPARE_DETAIL      SPARE_DETAIL[]
 }
@@ -60,8 +57,8 @@ model REQUEST_FORM {
   RF_Repair_details  String?
   RF_Date            DateTime             @db.Timestamptz(6)
   RP_Id              Int                  @unique
-  Mech_Id            String?              @db.Uuid
   RF_EFT             Int
+  Mech_Id            String?              @db.Uuid
   DISTRIBUTE_VOUCHER DISTRIBUTE_VOUCHER[]
   PAYMENT_REQUEST    PAYMENT_REQUEST[]
   QUOTATION          QUOTATION?
@@ -84,13 +81,12 @@ model REQUEST_PROBLEM {
 }
 
 model REQUISITION {
-  RE_Id              Int                  @id @default(autoincrement())
-  RE_Date            DateTime             @db.Timestamp(6)
-  Q_Id               Int
-  RF_Id              Int
-  DISTRIBUTE_VOUCHER DISTRIBUTE_VOUCHER[]
-  QUOTATION          QUOTATION            @relation(fields: [Q_Id], references: [Q_Id], onDelete: NoAction, onUpdate: NoAction)
-  REQUEST_FORM       REQUEST_FORM         @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+  RE_Id        Int          @id @default(autoincrement())
+  RE_Date      DateTime     @db.Timestamp(6)
+  Q_Id         Int
+  RF_Id        Int
+  QUOTATION    QUOTATION    @relation(fields: [Q_Id], references: [Q_Id], onDelete: NoAction, onUpdate: NoAction)
+  REQUEST_FORM REQUEST_FORM @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model SCHEDULE {
@@ -105,11 +101,11 @@ model SCHEDULE {
 }
 
 model SPARE {
-  S_Id                        Int                           @id @default(autoincrement())
-  S_Name                      String                        @unique @db.VarChar(255)
-  S_Price                     Float
-  RECEIVE_VOUCER_SPARE_DETAIL RECEIVE_VOUCER_SPARE_DETAIL[]
-  SPARE_DETAIL                SPARE_DETAIL[]
+  S_Id                         Int                            @id @default(autoincrement())
+  S_Name                       String                         @unique @db.VarChar(255)
+  S_Price                      Float
+  RECEIVE_VOUCHER_SPARE_DETAIL RECEIVE_VOUCHER_SPARE_DETAIL[]
+  SPARE_DETAIL                 SPARE_DETAIL[]
 }
 
 model SPARE_DETAIL {
@@ -154,23 +150,21 @@ model RECEIPT {
   REQUEST_FORM REQUEST_FORM @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model RECEIVE_VOUCER_SPARE_DETAIL {
+model RECEIVE_VOUCHER {
+  RV_Date      DateTime     @db.Timestamptz(6)
+  RF_Id        Int
+  RV_Approve   Boolean?     @default(false)
+  RV_Id        Int          @id @default(autoincrement())
+  REQUEST_FORM REQUEST_FORM @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model RECEIVE_VOUCHER_SPARE_DETAIL {
   RSD_Quantity Int
   S_Id         Int
   RV_Id        Int
-  SPARE        SPARE @relation(fields: [S_Id], references: [S_Id], onDelete: NoAction, onUpdate: NoAction)
+  SPARE        SPARE @relation(fields: [S_Id], references: [S_Id], onDelete: NoAction, onUpdate: NoAction, map: "RECEIVE_VOUCER_SPARE_DETAIL_S_Id_fkey")
 
-  @@id([S_Id, RV_Id])
-}
-
-model RECEIVE_VOUCHER {
-  RV_Id        Int          @id @default(autoincrement())
-  RV_Date      DateTime     @db.Timestamptz(6)
-  Q_Id         Int
-  RF_Id        Int
-  RV_Approve   Boolean?     @default(false)
-  QUOTATION    QUOTATION    @relation(fields: [Q_Id], references: [Q_Id], onDelete: NoAction, onUpdate: NoAction)
-  REQUEST_FORM REQUEST_FORM @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+  @@id([S_Id, RV_Id], map: "RECEIVE_VOUCER_SPARE_DETAIL_pkey")
 }
 
 enum role {

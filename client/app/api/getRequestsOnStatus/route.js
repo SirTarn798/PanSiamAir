@@ -17,10 +17,10 @@ export const POST = async (request) => {
       LEFT JOIN 
         "AIRCONDITION" ac ON rp."AC_Serial" = ac."AC_Serial"
       WHERE 
-        rp."RP_Status" = $1
+        rp."RP_Status" LIKE $1
     `;
 
-    const values = [body.type];
+    const values = [`${body.type}%`];
 
     if (body.mech_id) {
       query += ` AND rf."Mech_Id" = $2`;
