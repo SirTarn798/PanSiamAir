@@ -22,7 +22,6 @@ export default function ReceiveVoucherPage() {
       if (response.status === 200) {
         const data = await response.json();
         setVouchers(data.receiveVouchers);
-        console.log(data.receiveVouchers)
       } else {
         throw new Error(response.error);
       }

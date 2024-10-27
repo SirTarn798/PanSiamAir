@@ -8,11 +8,11 @@ export const POST = async (request) => {
 
     // First, execute the INSERT statement
     const insertQuery = `
-      INSERT INTO "REQUISITION" ("RE_Date", "Q_Id", "RF_Id")
-      VALUES ($1, $2, $3)
+      INSERT INTO "REQUISITION" ("RE_Date", "RF_Id")
+      VALUES ($1, $2)
       RETURNING *;
     `;
-    const insertValues = [date, (body.q_id), (body.rf_id)];
+    const insertValues = [date, (body.rf_id)];
     const insertResult = await db.query(insertQuery, insertValues);
 
     // Then, execute the UPDATE statement

@@ -13,7 +13,13 @@ export default function AddAC() {
     url: "",
   });
   const [status, setStatus] = useState(0);
-  const statusList = ["", "ทำการเพิ่มแอร์สำเร็จแล้ว", "ข้อมูลไม่ถูกต้อง", "โปรดอัปโหลดรูปใบรับประกันด้วย", "มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง"]
+  const statusList = [
+    "",
+    "ทำการเพิ่มแอร์สำเร็จแล้ว",
+    "ข้อมูลไม่ถูกต้อง",
+    "โปรดอัปโหลดรูปใบรับประกันด้วย",
+    "มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง",
+  ];
   const router = useRouter();
 
   const handleAddAC = async (e) => {
@@ -21,7 +27,7 @@ export default function AddAC() {
     const formData = new FormData(e.target);
     const WCData = Object.fromEntries(formData);
     if (!wc.file) {
-      setStatus(3); //"โปรดอัปโหลดรูปใบรับประกันด้วย"
+      alert("โปรดอัปโหลดรูปใบรับประกันด้วย");
       return;
     }
     const wcPicLink = await upload(wc.file, "wcs");
@@ -38,15 +44,15 @@ export default function AddAC() {
         }),
       });
       if (response.status === 201) {
-        setStatus(1); //"ทำการเพิ่มแอร์สำเร็จแล้ว"
-        router.push("/")
+        alert("ทำการเพิ่มแอร์สำเร็จแล้ว");
+        router.push("/");
       } else if (response.status === 400) {
-        setStatus(2); //"ข้อมูลไม่ถูกต้อง"
+        alert("ข้อมูลไม่ถูกต้อง");
       } else if (response.status === 500) {
-        setStatus(4); //"มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง"
+        alert("มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง");
       }
     } catch (err) {
-      setStatus(4);
+      alert("มีข้อผิดพลาดกับเซิร์ฟเวอร์ ลองใหม่อีกครั้ง");
     }
   };
 
@@ -91,7 +97,14 @@ export default function AddAC() {
           style={{ display: "none" }}
           onChange={handleFileChange}
         />
-        <p className={`bg-zinc-800 font-bold p-2 rounded w-fit ` + (status === 1 ? "text-lime-500" : "text-rose-500")}>{statusList[status]}</p>
+        <p
+          className={
+            `bg-zinc-800 font-bold p-2 rounded w-fit ` +
+            (status === 1 ? "text-lime-500" : "text-rose-500")
+          }
+        >
+          {statusList[status]}
+        </p>
         <button className="bg-primary w-28 p-2 rounded-3xl self-center">
           บันทึกข้อมูล
         </button>

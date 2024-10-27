@@ -47,13 +47,12 @@ export default function CreateRequisition() {
         },
         body: JSON.stringify({
           rf_id,
-          q_id : data.Q_Id,
         }),
       });
 
       if (response.status === 200) {
         alert("ดำนเนินการสำเร็จ");
-        router.push("/");
+        router.push("/mechanic/docs/requisition");
       } else {
         throw new Error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
       }
@@ -75,7 +74,6 @@ export default function CreateRequisition() {
     return (
       <div className="flex flex-col w-screen p-16 bg-primaryBg m-10 rounded-3xl gap-10">
         <div className="flex flex-col gap-3 font-bold">
-          {console.log(data)}
           <p>หมายเลขใบขอเสนอราคา : {data?.Q_Id}</p>
           <p>ราคารวม : {data?.Q_Total}</p>
           <p>ส่วนลด : {data?.Q_Discount}</p>

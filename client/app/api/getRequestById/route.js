@@ -9,6 +9,7 @@ export const POST = async (request) => {
       SELECT 
         rp.*,
         ac.*,
+        rf.*,
         json_build_object(
           'U_Id', u."U_Id",
           'U_Email', u."U_Email",
@@ -20,6 +21,7 @@ export const POST = async (request) => {
       FROM "REQUEST_PROBLEM" rp
       LEFT JOIN "AIRCONDITION" ac ON rp."AC_Serial" = ac."AC_Serial"
       LEFT JOIN "USER" u ON ac."U_Id" = u."U_Id"
+      LEFT JOIN "REQUEST_FORM" rf on rp."RP_Id" = rf."RF_Id"
       WHERE rp."RP_Id" = $1
     `, [(body.id)]);
 

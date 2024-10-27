@@ -50,10 +50,9 @@ const AppointmentCalendar = (props) => {
   const serial = searchParams.get("serial");
   const router = useRouter();
   let reschedule = false;
-  if(props.reschedule === "true") {
-    reschedule = true
+  if (props.reschedule === "true") {
+    reschedule = true;
   }
-  console.log(reschedule)
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -75,7 +74,7 @@ const AppointmentCalendar = (props) => {
         if (response.ok) {
           const data = await response.json();
           setMechList(data.mechList);
-          setCurrentMech(data.mechList[0]);
+          setCurrentMech(null);
         } else {
           console.error("Failed to fetch appointments");
         }
@@ -106,6 +105,11 @@ const AppointmentCalendar = (props) => {
     const daysInMonth = getDaysInMonth(year, month);
     const days = [];
 
+    // Get tomorrow's date for comparison
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+
     for (let i = 0; i < firstDay; i++) {
       days.push(<div key={`empty-${i}`} className="h-12"></div>);
     }
@@ -115,13 +119,19 @@ const AppointmentCalendar = (props) => {
       const isSelected =
         selectedDate && date.toDateString() === selectedDate.toDateString();
       const isToday = date.toDateString() === new Date().toDateString();
+      
+      // Check if the date is before tomorrow
+      const isPastOrToday = date < tomorrow;
 
       days.push(
         <Button
           key={day}
           variant={isSelected ? "default" : "outline"}
-          className={`h-12 ${isToday ? "border-primary" : ""}`}
+          className={`h-12 ${isToday ? "border-primary" : ""} ${
+            isPastOrToday ? "opacity-50" : ""
+          }`}
           onClick={() => handleDateClick(date)}
+          disabled={isPastOrToday || !currentMech} // Disable if date is today or in the past
         >
           {day}
         </Button>
@@ -153,7 +163,10 @@ const AppointmentCalendar = (props) => {
     });
 
     const slots = [];
-    const now = new Date();
+    // Get tomorrow's date for comparison
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
 
     for (let hour = 8; hour < 20; hour++) {
       for (let minute = 0; minute < 60; minute += 15) {
@@ -166,24 +179,28 @@ const AppointmentCalendar = (props) => {
         );
         const endTime = new Date(startTime.getTime() + initialDuration * 60000);
 
-        const isAvailable = !dayAppointments.some((appointment) => {
-          const appointmentStart = new Date(appointment.start);
-          const appointmentEnd = new Date(appointment.end);
+        // Check if the slot is after tomorrow
+        if (startTime >= tomorrow) {
+          const isAvailable = !dayAppointments.some((appointment) => {
+            const appointmentStart = new Date(appointment.start);
+            const appointmentEnd = new Date(appointment.end);
 
-          return startTime < appointmentEnd && endTime > appointmentStart;
-        });
-
-        if (isAvailable) {
-          slots.push({
-            time: startTime,
-            isPast: startTime < now,
+            return startTime < appointmentEnd && endTime > appointmentStart;
           });
+
+          if (isAvailable) {
+            slots.push({
+              time: startTime,
+              isPast: false // Since we're only showing future slots, this will always be false
+            });
+          }
         }
       }
     }
 
     setAvailableSlots(slots);
   };
+
 
   const nextMonth = () => {
     setCurrentDate(
@@ -254,23 +271,42 @@ const AppointmentCalendar = (props) => {
           setCurrentMech(selectedMech);
         }}
       >
+        <option value="" disabled selected>
+          เลือกช่าง
+        </option>
         {mechList?.map((mech) => (
           <option key={mech.U_Id} value={mech.U_Id}>
             {mech.U_Name}
           </option>
         ))}
       </select>
-
-      <Card>
+      <Card
+        className={`relative ${
+          !currentMech ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        {!currentMech && (
+          <div className="absolute inset-0 z-10" aria-hidden="true" />
+        )}
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <h2 className="text-2xl font-bold">
             {MONTHS[currentDate.getMonth()]} {currentDate.getFullYear()}
           </h2>
           <div className="flex items-center space-x-2">
-            <Button variant="outline" size="icon" onClick={prevMonth}>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={prevMonth}
+              disabled={!currentMech}
+            >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon" onClick={nextMonth}>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={nextMonth}
+              disabled={!currentMech}
+            >
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
@@ -296,15 +332,17 @@ const AppointmentCalendar = (props) => {
             <ScrollArea className="h-[300px] w-full rounded-md border p-4 bg-primaryBg">
               <div className="grid grid-cols-2 gap-2">
                 {availableSlots.map((slot, index) => (
-                  <div className={slot.isPast ? "cursor-not-allowed" : ""}>
+                  <div
+                    key={index}
+                    className={slot.isPast ? "cursor-not-allowed" : ""}
+                  >
                     <Button
-                      key={index}
                       onClick={() =>
                         !slot.isPast && handleSlotSelection(slot.time)
                       }
                       variant="outline"
                       className={`w-full ${slot.isPast ? "text-gray-400" : ""}`}
-                      disabled={slot.isPast}
+                      disabled={slot.isPast || !currentMech}
                     >
                       {formatTime(slot.time)}
                     </Button>

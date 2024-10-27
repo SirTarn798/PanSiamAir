@@ -54,7 +54,7 @@ export default function CreateDistributeVoucher() {
       });
 
       if (response.status === 200) {
-        alert("ดำนเนินการสำเร็จ");
+        alert("ดำเนินการสำเร็จ");
         router.push("/service/docs/distribute-voucher");
       } else {
         throw new Error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");

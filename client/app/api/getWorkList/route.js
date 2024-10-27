@@ -37,7 +37,7 @@ export const POST = async (request) => {
     const values = [body.id, ...status];
 
     const requestProblems = await db.query(query, values);
-
+    console.log(requestProblems.rows)
     return NextResponse.json(
       { requestProblems: requestProblems.rows },
       { status: 201 }

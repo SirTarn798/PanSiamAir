@@ -2,15 +2,25 @@ import { useRouter } from "next/navigation";
 
 export default function RequestList(props) {
   const router = useRouter();
+  console.log(props);
   const status = {
     accepted_wait_write_quotation: "ออกใบเสนอราคา",
     accepted_wait_write_requisition: "ออกรายการเบิกอะไหล่",
     accepted_wait_write_distribute_voucher: "ออกใบสำคัญจ่าย",
     accepted_wait_approve_distribute_voucher: "ยืนยันใบสำคัญจ่าย",
     accepted_wait_finance_approve_payment: "ยืนยันการชำระเงิน",
+    accepted_wait_fixing: "ยืนยันการซ่อม",
+    accepted_wait_write_distribute_voucher : "ดูรายละเอียด"
   };
 
   const handleClickButton = () => {
+    if (props.mech) {
+      switch (props.request.RP_Status) {
+        case "accepted_wait_write_distribute_voucher":
+          waitDistributeVoucher();
+          return;
+      }
+    }
     switch (props.request.RP_Status) {
       case "accepted_wait_write_quotation":
         createQuotation();
@@ -60,8 +70,12 @@ export default function RequestList(props) {
   };
 
   const approvePayment = () => {
-    router.push(`/finance/docs/receipt/create?RF_Id=${props.request.RF_Id}`)
-  }
+    router.push(`/finance/docs/receipt/create?RF_Id=${props.request.RF_Id}`);
+  };
+
+  const waitDistributeVoucher = () => {
+    return;
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -108,7 +122,7 @@ export default function RequestList(props) {
         className="bg-primary text-white font-bold w-fit p-2 rounded-3xl cursor-pointer"
         onClick={handleClickButton}
       >
-        {!props.mech ? status[props.request.RP_Status] : "ดูรายละเอียด"}
+        {status[props.request.RP_Status]}
       </p>
     </div>
   );

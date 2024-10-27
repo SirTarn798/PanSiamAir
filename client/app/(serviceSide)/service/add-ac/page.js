@@ -23,8 +23,10 @@ export default function AddAC() {
           ACData,
         }),
       });
+      alert("เพิ่มแอร์สำเร็จ")
       router.push("/service")
     } catch (err) {
+      alert("มีข้อผิดพลาด ลองใหม่อีกครั้ง")
       console.log(err.message);
     }
   };

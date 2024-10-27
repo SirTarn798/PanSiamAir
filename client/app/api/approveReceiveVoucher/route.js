@@ -3,7 +3,6 @@ import db from "@/lib/dbA";
 
 export const POST = async (request) => {
   const body = await request.json();
-    console.log("lmao")
   try {
     const query = `
         UPDATE "RECEIVE_VOUCHER"
