@@ -47,7 +47,6 @@ model QUOTATION {
   Q_Date            DateTime?      @db.Timestamptz(6)
   RF_Id             Int            @unique
   REQUEST_FORM      REQUEST_FORM   @relation(fields: [RF_Id], references: [RF_Id], onDelete: Cascade, onUpdate: NoAction)
-  REQUISITION       REQUISITION[]
   SPARE_DETAIL      SPARE_DETAIL[]
 }
 
@@ -82,9 +81,7 @@ model REQUEST_PROBLEM {
 model REQUISITION {
   RE_Id        Int          @id @default(autoincrement())
   RE_Date      DateTime     @db.Timestamp(6)
-  Q_Id         Int
   RF_Id        Int
-  QUOTATION    QUOTATION    @relation(fields: [Q_Id], references: [Q_Id], onDelete: NoAction, onUpdate: NoAction)
   REQUEST_FORM REQUEST_FORM @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -150,18 +147,20 @@ model RECEIPT {
 }
 
 model RECEIVE_VOUCHER {
-  RV_Date      DateTime     @db.Timestamptz(6)
-  RF_Id        Int
-  RV_Approve   Boolean?     @default(false)
-  RV_Id        Int          @id @default(autoincrement())
-  REQUEST_FORM REQUEST_FORM @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+  RV_Date                      DateTime                       @db.Timestamptz(6)
+  RF_Id                        Int
+  RV_Approve                   Boolean?                       @default(false)
+  RV_Id                        Int                            @id @default(autoincrement())
+  REQUEST_FORM                 REQUEST_FORM                   @relation(fields: [RF_Id], references: [RF_Id], onDelete: NoAction, onUpdate: NoAction)
+  RECEIVE_VOUCHER_SPARE_DETAIL RECEIVE_VOUCHER_SPARE_DETAIL[]
 }
 
 model RECEIVE_VOUCHER_SPARE_DETAIL {
-  RSD_Quantity Int
-  S_Id         Int
-  RV_Id        Int
-  SPARE        SPARE @relation(fields: [S_Id], references: [S_Id], onDelete: NoAction, onUpdate: NoAction, map: "RECEIVE_VOUCER_SPARE_DETAIL_S_Id_fkey")
+  RSD_Quantity    Int
+  S_Id            Int
+  RV_Id           Int
+  RECEIVE_VOUCHER RECEIVE_VOUCHER @relation(fields: [RV_Id], references: [RV_Id], onDelete: NoAction, onUpdate: NoAction, map: "RECEIVE_VOUCER_SPARE_DETAIL_RV_Id_fkey")
+  SPARE           SPARE           @relation(fields: [S_Id], references: [S_Id], onDelete: NoAction, onUpdate: NoAction, map: "RECEIVE_VOUCER_SPARE_DETAIL_S_Id_fkey")
 
   @@id([S_Id, RV_Id], map: "RECEIVE_VOUCER_SPARE_DETAIL_pkey")
 }

@@ -9,7 +9,8 @@ export const POST = async (request) => {
         rp.*, 
         rf.*, 
         ac."AC_Serial", 
-        ac."AC_Model"
+        ac."AC_Model",
+        ac."AC_Installation_date"
       FROM 
         "REQUEST_PROBLEM" rp
       LEFT JOIN 

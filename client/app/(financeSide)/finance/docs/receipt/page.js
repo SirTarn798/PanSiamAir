@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import RequestList from "@/app/component/requestList";
+import checkInsurance from "@/lib/checkInsurance"
 
 export default function ReceiptPage() {
   const [reqState, setReqState] = useState(1);
@@ -21,7 +22,15 @@ export default function ReceiptPage() {
       });
       if (response.status === 201) {
         const data = await response.json();
-        setRequests(data.requestProblems);
+        if(state === 2) {
+          const filteredRequests = data.requestProblems.filter(item => 
+            checkInsurance(item.AC_Installation_date) === false
+          );
+          setRequests(filteredRequests);
+        } else {
+          setRequests(data.requestProblems);
+        }
+        console.log(data.requestProblems);
       } else {
         throw new Error(response.error);
       }
@@ -33,7 +42,7 @@ export default function ReceiptPage() {
   useEffect(() => {
     getRequests(1, "accepted_wait_finance_approve_payment");
   }, []);
-
+  
   return (
     <div className="flex flex-col gap-10 w-screen h-screen p-10">
       <p className="text-4xl font-bold">ใบเสร็จรับเงิน</p>
@@ -52,9 +61,9 @@ export default function ReceiptPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 2 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(2, "wait for implement")}
+          onClick={() => getRequests(2, "finished")}
         >
-           ใบเสร็จรับเงินที่ออกไปแล้ว
+           รายการที่ออกใบเสร็จไปแล้ว
         </p>
         
       </div>

@@ -50,7 +50,8 @@ export default function ApproveQuotation() {
           }),
         });
         const data = await response.json();
-        setData(data.quotation.result);
+        setData(data);
+        console.log(data.quotation)
       } catch (error) {
         console.error("Error in getQuotation:", error.message);
       }
@@ -128,18 +129,18 @@ export default function ApproveQuotation() {
             </tr>
           </thead>
           <tbody>
-            {data?.Spare_detail.map((item, index) => (
+            {data?.quotation.Spare_detail.map((item, index) => (
               <tr
                 key={index}
                 className={`odd:bg-gray-100 even:bg-gray-200`} // Alternating row colors
               >
-                <td className="p-3">{item.S_Name}</td>
+                <td className="p-3">{item.Spare.S_Name}</td>
                 <td className="p-3">
                   <span className="px-2">{item.SD_Quantity}</span>
                 </td>
-                <td className="p-3">{item.S_Price}</td>
+                <td className="p-3">{item.Spare.S_Price}</td>
                 <td className="p-3">
-                  {(item.S_Price * item.SD_Quantity).toFixed(2)}
+                  {(item.Spare.S_Price * item.SD_Quantity).toFixed(2)}
                 </td>
                 <td className="p-3"></td>
               </tr>
