@@ -118,10 +118,10 @@ export default function RequestList(props) {
         </p>
       )}
       <p
-        className="bg-primary text-white font-bold w-fit p-2 rounded-3xl cursor-pointer"
+        className="bg-primary text-white font-bold w-9/12 p-2 rounded-3xl cursor-pointer text-center"
         onClick={handleClickButton}
       >
-        {status[props.request.RP_Status]}
+        {status[props.request.RP_Status] ? status[props.request.RP_Status] : "-"}
       </p>
     </div>
   );

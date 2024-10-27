@@ -9,8 +9,12 @@ export default function QuotationPage() {
 
   const getRequests = async (state, type) => {
     setReqState(state);
+    let api = "/api/getRequestsOnStatus";
+    if(state === 4) {
+      api = "/api/getFinishEachRequest/getQuotation"
+    }
     try {
-      const response = await fetch("/api/getRequestsOnStatus", {
+      const response = await fetch(api, {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -70,7 +74,7 @@ export default function QuotationPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 4 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(4, "finished")}
+          onClick={() => getRequests(4, "")}
         >
           เสร็จสิ้น
         </p>

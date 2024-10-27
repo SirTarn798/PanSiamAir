@@ -9,8 +9,12 @@ export default function DistributeVoucherPage() {
 
   const getRequests = async (state, type) => {
     setReqState(state);
+    let api = "/api/getRequestsOnStatus";
+    if(state === 2) {
+      api = "/api/getFinishEachRequest/getDistributeVoucher"
+    }
     try {
-      const response = await fetch("/api/getRequestsOnStatus", {
+      const response = await fetch(api, {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -52,7 +56,7 @@ export default function DistributeVoucherPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 2 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(2, "wait for update")}
+          onClick={() => getRequests(2, "")}
         >
           เสร็จสิ้น
         </p>

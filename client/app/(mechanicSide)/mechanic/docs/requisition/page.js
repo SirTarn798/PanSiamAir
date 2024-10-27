@@ -12,8 +12,12 @@ export default function RequisitionPage() {
 
   const getRequests = async (state, type) => {
     setReqState(state);
+    let api = "/api/getRequestsOnStatus";
+    if(state === 2) {
+      api = "/api/getFinishEachRequest/getRequisition"
+    }
     try {
-      const response = await fetch("/api/getRequestsOnStatus", {
+      const response = await fetch(api, {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -56,7 +60,7 @@ export default function RequisitionPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 2 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(2, "wait for update")}
+          onClick={() => getRequests(2, "")}
         >
           เสร็จสิ้น
         </p>

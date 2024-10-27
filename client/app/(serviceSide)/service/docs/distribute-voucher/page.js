@@ -52,7 +52,7 @@ export default function QuotationPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 2 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(2, "wait implement")}
+          onClick={() => getRequests(2, "accepted_wait_approve_distribute_voucher")}
         >
           ส่งให้แผนก Store แล้ว
         </p>
