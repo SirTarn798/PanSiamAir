@@ -75,7 +75,6 @@ model REQUEST_PROBLEM {
   AC_Serial    String        @db.VarChar(255)
   RP_Detail    String
   RP_Status    String        @db.VarChar(255)
-  Request_form Int?
   REQUEST_FORM REQUEST_FORM?
   AIRCONDITION AIRCONDITION  @relation(fields: [AC_Serial], references: [AC_Serial], onDelete: Cascade, onUpdate: NoAction)
 }
