@@ -39,7 +39,7 @@ export default function CreateReceipt() {
 
     const getRequestForm = async () => {
       try {
-        const response = await fetch("/api/getRequestById", {
+        const response = await fetch("/api/getRequestFormInfo", {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -156,17 +156,17 @@ export default function CreateReceipt() {
         </p>
         <div className="grid grid-cols-2 grid-rows-5 gap-x-40 gap-y-5 w-fit">
           <p className="font-bold">ชื่อเจ้าของแอร์</p>
-          <p>{rf.AC.Customer.U_Name}</p>
+          <p>{rf?.AC.Customer.U_Name}</p>
           <p className="font-bold">รุ่นแอร์</p>
-          <p>{rf.AC.AC_Model}</p>
+          <p>{rf?.AC.AC_Model}</p>
           <p className="font-bold">รหัสแอร์</p>
-          <p>{rf.AC.AC_Serial}</p>
+          <p>{rf?.AC.AC_Serial}</p>
           <p className="font-bold">อาการ</p>
-          <p>{rf.RP_Detail}</p>
+          <p>{rf?.RP_Detail}</p>
           <p className="font-bold">สาเหตุ</p>
-          <p>{rf.RF_Cause}</p>
+          <p>{rf?.RF_Cause}</p>
           <p className="font-bold">วิธีการซ่อม</p>
-          <p>{rf.RF_Repair_details}</p>
+          <p>{rf?.RF_Repair_details}</p>
         </div>
       </div>
     </div>

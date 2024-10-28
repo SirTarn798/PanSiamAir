@@ -67,7 +67,7 @@ export const POST = async (request) => {
     // Update the status of the Request_Problem
     const updateRequestProblemQuery = `
       UPDATE "REQUEST_PROBLEM" 
-      SET "RP_Status" = 'accepted_wait_leader_quotation'
+      SET "RP_Status" = 'accepted_wait_head_quotation'
       WHERE "RP_Id" = $1
     `;
     await db.query(updateRequestProblemQuery, [rpId]);

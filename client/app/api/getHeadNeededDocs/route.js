@@ -25,7 +25,7 @@ export const GET = async (request) => {
       JOIN "REQUEST_FORM" rf ON rp."RP_Id" = rf."RP_Id"
       JOIN "QUOTATION" q ON rf."RF_Id" = q."RF_Id"
       LEFT JOIN "SPARE_DETAIL" sd ON q."Q_Id" = sd."Q_Id"
-      WHERE rp."RP_Status" = 'accepted_wait_leader_quotation'
+      WHERE rp."RP_Status" = 'accepted_wait_head_quotation'
       GROUP BY rf."RF_Id", q."Q_Id", q."Q_Date", q."Q_Total", q."Q_Discount", q."Q_Vat", q."Q_Grand_total"
     `);
 

@@ -56,7 +56,7 @@ export default function QuotationPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 2 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(2, "accepted_wait_leader_quotation")}
+          onClick={() => getRequests(2, "accepted_wait_head_quotation")}
         >
           รอการอนุมัติจาก Head
         </p>

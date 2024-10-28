@@ -8,7 +8,7 @@ export default function RequestPage() {
   const searchParams = useSearchParams();
   const [request, setRequest] = useState();
   const [error, setError] = useState(null);
-  const [estimatedMinutes, setEstimatedMinutes] = useState(null);
+  const [estimatedMinutes, setEstimatedMinutes] = useState(0);
   const id = searchParams.get("id") || "";
   const router = useRouter();
 
@@ -43,8 +43,13 @@ export default function RequestPage() {
 
   const handleAcceptRequest = async (e) => {
     e.preventDefault();
-    await updateRequest("รอทางบริษัทเสนอราคา", "accepted_wait_write_quotation");
-    await createRequestForm();
+    const temp = await createRequestForm();
+    if (temp) {
+      await updateRequest(
+        "รอทางบริษัทเสนอราคา",
+        "accepted_wait_write_quotation"
+      );
+    }
   };
 
   const handleRejectRequest = async (e) => {
@@ -67,6 +72,7 @@ export default function RequestPage() {
         }),
       });
       if (response.status === 200) {
+        alert("ดำเนินการสำเร็จ")
         router.push("/");
       } else {
         throw new Error("ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
@@ -79,25 +85,27 @@ export default function RequestPage() {
   const createRequestForm = async () => {
     if (estimatedMinutes === 0) {
       alert("โปรดประมาณเวลาในการซ่อม");
-      return;
-    }
-    try {
-      const totalMinutes = parseInt(estimatedMinutes);
-      const response = await fetch("/api/createRequestForm", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          estimatedFixTimeMinutes: totalMinutes,
-        }),
-      });
-      if (response.status != 200) {
-        throw new Error("ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
+      return false;
+    } else {
+      try {
+        const totalMinutes = parseInt(estimatedMinutes);
+        const response = await fetch("/api/createRequestForm", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            id,
+            estimatedFixTimeMinutes: totalMinutes,
+          }),
+        });
+        if (response.status != 200) {
+          throw new Error("ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง");
+        }
+        return true;
+      } catch (error) {
+        alert(error.message);
       }
-    } catch (error) {
-      alert(error.message);
     }
   };
 
@@ -152,7 +160,7 @@ export default function RequestPage() {
             <p className="font-bold">รายละเอียด</p>
             <p>{request.RP_Detail}</p>
           </div>
-          {request.RP_Status === "waiting" ? 
+          {request.RP_Status === "waiting" ? (
             <div className="flex flex-col gap-2">
               <p className="font-bold">ประมาณเวลาซ่อม</p>
               <div className="flex gap-4">
@@ -168,7 +176,7 @@ export default function RequestPage() {
                 />
               </div>
             </div>
-          : null}
+          ) : null}
         </div>
         <div
           className="flex items-center justify-center bg-primary mx-5 rounded-b w-9/12 text-white font-bold h-14 text-2xl cursor-pointer"

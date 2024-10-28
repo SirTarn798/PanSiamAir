@@ -326,7 +326,7 @@ const AppointmentCalendar = (props) => {
           <DialogContent className="sm:max-w-[425px] bg-white">
             <DialogHeader>
               <DialogTitle>
-                Available Time Slots for {selectedDate?.toDateString()}
+                ช่วงเวลที่ว่างของวันที่ {selectedDate?.toDateString()}
               </DialogTitle>
             </DialogHeader>
             <ScrollArea className="h-[300px] w-full rounded-md border p-4 bg-primaryBg">

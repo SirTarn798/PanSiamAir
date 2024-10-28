@@ -67,6 +67,12 @@ function ServiceNavBar() {
             <button className="text-left p-3 hover:bg-neutral-200" onClick={() => router.push("/service/docs/receive-voucher/create")}>
               ใบสำคัญรับ
             </button>
+            <button className="text-left p-3 hover:bg-neutral-200" onClick={() => router.push("/service/docs/ac-causes-report")}>
+              รายงานสาเหตุของแอร์ที่เสีย
+            </button>
+            <button className="text-left p-3 hover:bg-neutral-200" onClick={() => router.push("/service/docs/ac-ages-report")}>
+              รายงานอายุของแอร์ก่อนมีอาการพัง
+            </button>
           </div>
         </div>
       </div>
