@@ -7,6 +7,7 @@ import { useState } from "react";
 export default function AddEmployee() {
   const [status, setStatus] = useState(true)
   const router = useRouter();
+  
   const addEmployee = async (e) => {
     e.preventDefault();
     setStatus(false)

@@ -14,6 +14,13 @@ function CusNavBar() {
         <img src="/ac-ventilation.png" alt="ac list icon" width={35} height={35} />
         <p className="font-bold">การจัดการแอร์</p>
       </button>
+      <button
+        className="flex items-center p-5 gap-5 hover:bg-neutral-200"
+        onClick={() => router.push("/chat")}
+      >
+        <img src="/message.png" alt="ac list icon" width={35} height={35} />
+        <p className="font-bold">เข้าสู่แชท</p>
+      </button>
     </div>
   );
 }

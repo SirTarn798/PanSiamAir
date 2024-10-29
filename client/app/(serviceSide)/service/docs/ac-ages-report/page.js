@@ -1,17 +1,28 @@
+"use client"
+
+import { useEffect, useState } from "react";
 import AgesReport from "../../../../component/agesReport";
 
-export default async function ReportAges() {
-  const getReport = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/getAcAges`,
-    {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-      },
-    }
-  );
-  const data = await getReport.json();
-  const ages = data.causes;
+
+export default function ReportAges() {
+  const [ages, setAges] = useState(null)
+  useEffect(() => {
+    const getReport = async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/getAcAges`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      setAges(data.ages);
+      console.log(data)
+    };
+    getReport()
+  }, []);
   return (
     <div className="w-screen h-screen">
       <AgesReport ages={ages} />

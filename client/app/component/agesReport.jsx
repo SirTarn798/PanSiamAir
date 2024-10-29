@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import {
   Table,
@@ -32,7 +34,7 @@ const AgesReport = ({ ages }) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {ages.map((age, index) => (
+                {ages?.map((age, index) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">{age.AC_Model}</TableCell>
                     <TableCell className="text-right">{age['Number of Repairs']}</TableCell>

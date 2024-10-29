@@ -9,7 +9,7 @@ export default function RequestList(props) {
     accepted_wait_approve_distribute_voucher: "ยืนยันใบสำคัญจ่าย",
     accepted_wait_finance_approve_payment: "ยืนยันการชำระเงิน",
     accepted_wait_fixing: "ยืนยันการซ่อม",
-    accepted_wait_write_distribute_voucher : "ดูรายละเอียด"
+    accepted_wait_write_distribute_voucher : (props.mech ? "ดูรายละเอียด" : "ออกใบสำคัญจ่าย")
   };
 
   const handleClickButton = () => {
