@@ -7,7 +7,7 @@ export default function ReceiveVoucherPage() {
   const [reqState, setReqState] = useState(1);
   const [vouchers, setVouchers] = useState();
 
-  const getRequests = async (state, type) => {
+  const getReceiveVouchers = async (state, type) => {
     setReqState(state);
     try {
       const response = await fetch("/api/getReceiveVouchers", {
@@ -31,7 +31,7 @@ export default function ReceiveVoucherPage() {
   };
 
   useEffect(() => {
-    getRequests(1, false);
+    getReceiveVouchers(1, false);
   }, []);
 
   return (
@@ -43,7 +43,7 @@ export default function ReceiveVoucherPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 1 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(1, false)}
+          onClick={() => getReceiveVouchers(1, false)}
         >
           รอยืนยันใบสำคัญรับ
         </p>
@@ -52,7 +52,7 @@ export default function ReceiveVoucherPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 2 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(2, true)}
+          onClick={() => getReceiveVouchers(2, true)}
         >
           เสร็จสิ้น
         </p>

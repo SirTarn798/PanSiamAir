@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import BackBtn from "../../component/backBtn";
 import SubmitBtn from "../../component/submitBtn";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -92,12 +91,14 @@ export default function FixRequest() {
   return (
     <div className="flex flex-col w-screen h-screen pl-16 pt-5 pr-3">
       <h1>แจ้งซ่อม</h1>
-      <BackBtn />
       <div className="flex flex-col bg-primaryBg p-5 rounded gap-5">
         <div className="flex gap-40 justify-center">
           <div className="flex flex-col gap-5">
             <p>หมายเลขเครื่อง {ac?.AC_Serial}</p>
             <p>รุ่น {ac?.AC_Model}</p>
+          </div>
+          <div className="flex flex-col gap-5">
+            <p>ที่อยู่ {ac?.AC_Address}</p>
             <div className="flex gap-3">
               <p>สถานะรับประกัน {ac?.AC_WarrantyStatus}</p>
               <p
@@ -109,11 +110,6 @@ export default function FixRequest() {
                 {insurance ? "อยู่ในประกัน" : "ไม่อยู่ในประกัน"}
               </p>
             </div>
-          </div>
-          <div className="flex flex-col gap-5">
-            <p>ชื่อ-นามสกุล ปีปี้ โปโป้</p>
-            <p>ที่อยู่ {ac?.AC_Address}</p>
-            <p>เบอร์โทร 19195195194</p>
           </div>
         </div>
         <h1>รายละเอียดปัญหา</h1>

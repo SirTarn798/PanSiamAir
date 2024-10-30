@@ -9,7 +9,7 @@ export default function WorkListPage() {
   const [requests, setRequests] = useState();
   const id = useSelector((state) => state.user.id);
 
-  const getRequests = async (state, status) => {
+  const getWorkList = async (state, status) => {
     setReqState(state);
     try {
       const response = await fetch("/api/getWorkList", {
@@ -34,7 +34,7 @@ export default function WorkListPage() {
   };
 
   useEffect(() => {
-    getRequests(1, "accepted_wait_fixing, accepted_wait_write_requisition, accepted_wait_write_distribute_voucher, accepted_wait_approve_distribute_voucher");
+    getWorkList(1, "accepted_wait_fixing, accepted_wait_write_requisition, accepted_wait_write_distribute_voucher, accepted_wait_approve_distribute_voucher");
   }, []);
 
   return (
@@ -46,7 +46,7 @@ export default function WorkListPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 1 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(1, "accepted_wait_fixing, accepted_wait_write_requisition, accepted_wait_write_distribute_voucher")}
+          onClick={() => getWorkList(1, "accepted_wait_fixing, accepted_wait_write_requisition, accepted_wait_write_distribute_voucher")}
         >
           งานที่กำลังจะถึง
         </p>
@@ -55,7 +55,7 @@ export default function WorkListPage() {
             "p-4 hover:bg-primary rounded-full cursor-pointer font-bold " +
             (reqState === 2 ? "bg-primary" : "")
           }
-          onClick={() => getRequests(2, "finished")}
+          onClick={() => getWorkList(2, "finished")}
         >
           เสร็จสิ้น
         </p>

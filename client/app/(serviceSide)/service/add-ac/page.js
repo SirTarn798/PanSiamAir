@@ -1,6 +1,5 @@
 "use client";
 
-import BackBtn from "@/app/component/backBtn";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -32,7 +31,6 @@ export default function AddAC() {
   };
   return (
     <div className="flex flex-col w-screen h-screen pl-16 pt-5 pr-3">
-      <BackBtn />
       <form
         className="flex flex-col bg-primaryBg p-5 gap-2 rounded"
         onSubmit={handleAddAC}

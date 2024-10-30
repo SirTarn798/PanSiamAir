@@ -1,6 +1,5 @@
 "use client"
 
-import BackBtn from "@/app/component/backBtn";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -40,7 +39,6 @@ export default function AddEmployee() {
   }
   return (
     <div className="flex flex-col w-screen h-screen pl-16 pt-5 pr-3">
-      <BackBtn />
       <form className="flex flex-col bg-primaryBg p-5 gap-2 rounded" onSubmit={addEmployee}>
         <p>ชื่อ - นามสกุล</p>
         <input type="text" required name="name"/>
