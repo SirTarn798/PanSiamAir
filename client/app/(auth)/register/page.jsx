@@ -18,12 +18,19 @@ export default function Register() {
   });
   const [pfpStatus, setPfpStatus] = useState(false);
   const [status, setStatus] = useState(true);
+  const [emailError, setEmailError] = useState("");
 
   const register = async (e) => {
-    setStatus(false);
     e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Invalid email format");
+      return;
+    }
+    setEmailError("");
+    setStatus(false);
     try {
-      let pfpLink = "/user.png"
+      let pfpLink = "/user.png";
       if (pfp.file != null) {
         pfpLink = await upload(pfp.file, "profiles");
       }
@@ -38,11 +45,11 @@ export default function Register() {
           tel: tel,
           name: name,
           role: "CUSTOMER",
-          profile: pfpLink
+          profile: pfpLink,
         }),
       });
-      alert("สมัครสำเร็จ")
-      router.push("/login")
+      alert("สร้างแอคเคาท๋สำเร็จ");
+      router.push("/login");
     } catch (err) {
       alert(err.message);
     } finally {
@@ -119,6 +126,7 @@ export default function Register() {
           onChange={(e) => setTel(e.target.value)}
           className="p-2 w-64 bg-zinc-200 rounded"
         />
+        {emailError && <div className="text-red-500">{emailError}</div>}
         <button
           type="submit"
           className={`text-white p-5 w-64 rounded drop-shadow-md ${status ? "bg-primary cursor-pointer" : "bg-primaryBg cursor-not-allowed"}` }
