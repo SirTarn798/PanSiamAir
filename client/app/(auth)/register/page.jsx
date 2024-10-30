@@ -18,10 +18,17 @@ export default function Register() {
   });
   const [pfpStatus, setPfpStatus] = useState(false);
   const [status, setStatus] = useState(true);
+  const [emailError, setEmailError] = useState("");
 
   const register = async (e) => {
-    setStatus(false);
     e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Invalid email format");
+      return;
+    }
+    setEmailError("");
+    setStatus(false);
     try {
       let pfpLink = "/user.png";
       if (pfp.file != null) {
@@ -41,7 +48,7 @@ export default function Register() {
           profile: pfpLink,
         }),
       });
-      alert("สมัครสำเร็จ");
+      alert("สร้างแอคเคาท๋สำเร็จ");
       router.push("/login");
     } catch (err) {
       alert(err.message);
@@ -63,18 +70,6 @@ export default function Register() {
 
   const handleImageClick = () => {
     document.getElementById("fileInput").click();
-  };
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  const handleEmailChange = (e) => {
-    const email = e.target.value;
-    if (emailRegex.test(email)) {
-      setEmail(email);
-    } else {
-      // Display an error message or perform other validation actions
-      console.log("Invalid email format");
-    }
   };
 
   return (
@@ -113,7 +108,7 @@ export default function Register() {
         <input
           placeholder="Email"
           value={email}
-          onChange={handleEmailChange}
+          onChange={(e) => setEmail(e.target.value)}
           className="p-2 w-64 bg-zinc-200 rounded"
         />
         <input
@@ -131,13 +126,11 @@ export default function Register() {
           onChange={(e) => setTel(e.target.value)}
           className="p-2 w-64 bg-zinc-200 rounded"
         />
+        {emailError && <div className="text-red-500">{emailError}</div>}
         <button
           type="submit"
-          className={`text-white p-5 w-64 rounded drop-shadow-md ${
-            status
-              ? "bg-primary cursor-pointer"
-              : "bg-primaryBg cursor-not-allowed"
-          }`}
+          className={`text-white p-5 w-64 rounded drop-shadow-md ${status ? "bg-primary cursor-pointer" : "bg-primaryBg cursor-not-allowed"}` }
+          
         >
           Sign Up
         </button>
