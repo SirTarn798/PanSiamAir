@@ -23,7 +23,7 @@ export default function Register() {
     setStatus(false);
     e.preventDefault();
     try {
-      let pfpLink = "/user.png"
+      let pfpLink = "/user.png";
       if (pfp.file != null) {
         pfpLink = await upload(pfp.file, "profiles");
       }
@@ -38,11 +38,11 @@ export default function Register() {
           tel: tel,
           name: name,
           role: "CUSTOMER",
-          profile: pfpLink
+          profile: pfpLink,
         }),
       });
-      alert("สมัครสำเร็จ")
-      router.push("/login")
+      alert("สมัครสำเร็จ");
+      router.push("/login");
     } catch (err) {
       alert(err.message);
     } finally {
@@ -63,6 +63,18 @@ export default function Register() {
 
   const handleImageClick = () => {
     document.getElementById("fileInput").click();
+  };
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    if (emailRegex.test(email)) {
+      setEmail(email);
+    } else {
+      // Display an error message or perform other validation actions
+      console.log("Invalid email format");
+    }
   };
 
   return (
@@ -101,7 +113,7 @@ export default function Register() {
         <input
           placeholder="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
           className="p-2 w-64 bg-zinc-200 rounded"
         />
         <input
@@ -121,8 +133,11 @@ export default function Register() {
         />
         <button
           type="submit"
-          className={`text-white p-5 w-64 rounded drop-shadow-md ${status ? "bg-primary cursor-pointer" : "bg-primaryBg cursor-not-allowed"}` }
-          
+          className={`text-white p-5 w-64 rounded drop-shadow-md ${
+            status
+              ? "bg-primary cursor-pointer"
+              : "bg-primaryBg cursor-not-allowed"
+          }`}
         >
           Sign Up
         </button>
