@@ -48,6 +48,7 @@ export async function signIn(credential) {
         id: user.U_Id,
         name: user.U_Name,
         role: user.U_Role,
+        image: user.U_Profile,
       };
       await login(data);
       return data;
