@@ -6,7 +6,6 @@ export const POST = async (request) => {
 
   try {
     const query = `
-        -- Query to get all receipts with spare parts details for a specific user
 WITH spare_details AS (
     SELECT 
         q."RF_Id",
@@ -37,10 +36,8 @@ SELECT DISTINCT
     rp."RP_Detail" as problem_detail,
     rf."RF_Cause" as repair_cause,
     rf."RF_Repair_details" as repair_details,
-    -- Spare parts information
     COALESCE(sd.spare_parts_details, 'No spare parts used') as spare_parts_details,
     COALESCE(sd.total_spare_parts_cost, 0) as spare_parts_cost,
-    -- Quotation details
     q."Q_Total" as subtotal,
     q."Q_Discount" as discount,
     q."Q_Vat" as vat,
