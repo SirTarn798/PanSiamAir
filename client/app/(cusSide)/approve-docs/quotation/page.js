@@ -51,7 +51,6 @@ export default function ApproveQuotation() {
         });
         const data = await response.json();
         setData(data);
-        console.log(data.quotation)
       } catch (error) {
         console.error("Error in getQuotation:", error.message);
       }

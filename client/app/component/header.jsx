@@ -8,7 +8,6 @@ function Header() {
   const router = useRouter();
   const name = useSelector((state) => state.user.name);
   const image = useSelector((state) => state.user.image)
-  console.log(image)
   const logout = async () => {
     try {
       const response = await fetch("/api/logoutAPI", {

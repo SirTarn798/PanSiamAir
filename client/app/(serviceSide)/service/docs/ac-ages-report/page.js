@@ -19,7 +19,6 @@ export default function ReportAges() {
       );
       const data = await response.json();
       setAges(data.ages);
-      console.log(data)
     };
     getReport()
   }, []);

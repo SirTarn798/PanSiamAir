@@ -56,7 +56,6 @@ export default function CreateReceipt() {
         
         const data = await response.json();
         setRF(data.requests);
-        console.log(data.requests)
       } catch (error) {
         setError(error.message || 'เกิดข้อผิดพลาดในการดึงข้อมูลคำขอ');
         console.error('Request form error:', error);

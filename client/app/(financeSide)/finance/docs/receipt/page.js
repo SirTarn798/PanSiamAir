@@ -30,7 +30,6 @@ export default function ReceiptPage() {
         } else {
           setRequests(data.requestProblems);
         }
-        console.log(data.requestProblems);
       } else {
         throw new Error(response.error);
       }
